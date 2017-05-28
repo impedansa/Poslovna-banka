@@ -1,0 +1,185 @@
+#{extends 'standardForm.html' /}
+#{set title:'Naseljena mesta' /}
+
+<script>
+$(document).ready(function(){
+	$("#drzavaPickup").click(function(){
+		dr_id = $(".highlighted").find(".dr_id").html();
+		$("select").val(dr_id);
+		$('#drzaveModal').modal('toggle');
+	});
+});
+function sync(item){
+	oznaka = item.find(".oznaka").html()
+    naziv = item.find(".naziv").html()
+    postanskiBroj = item.find(".postanskiBroj").html()
+    id = item.find(".id").html()
+    dr_id = item.find(".dr_id").html()
+    $("#oznaka").val(oznaka);
+    $("#naziv").val(naziv);
+    $("#postanskiBroj").val(postanskiBroj);
+    $("#id").val(id);
+    $("select").val(dr_id);
+}
+
+function remove(id) {
+	$(location).attr('href', '/NaseljenaMesta/delete?id='+id);
+}
+
+function next() {
+	dr_id = $(".highlighted").find(".dr_id").html()
+	console.log(dr_id)
+}
+
+</script>
+
+<div class="container">
+<p>
+<ul class="tb-ulist">
+  <li class="tb-listitem"><a #{if mode == 'locked edit'} href="@{NaseljenaMesta.shownext("locked search",s,id)}" #{/if} #{elseif mode == 'locked add'} href="@{NaseljenaMesta.shownext("locked search",s,id)}" #{/elseif} #{else} href="@{NaseljenaMesta.show("search")}" #{/else} id = "search"><img src="@{'/public/images/search.gif'}"/></a></li>
+  <li class="tb-listitem"><a #{if mode == 'locked edit'} href="@{NaseljenaMesta.shownext("",s,id)}" #{/if} #{elseif mode == 'locked add'} href="@{NaseljenaMesta.shownext("",s,id)}" #{/elseif} #{elseif mode == 'locked search'} href="@{NaseljenaMesta.shownext("",s,id)}" #{/elseif} #{else} href="@{NaseljenaMesta.show()}" #{/else} id = "refresh"><img src="@{'/public/images/refresh.gif'}"/></a></li>
+  <li class="tb-listitem"><a href="#" id = "pickup"><img src="@{'/public/images/zoom-pickup.gif'}"/></a></li>
+  <li class="tb-listitem"><a href="#" id = "help"><img src="@{'/public/images/help.gif'}"/></a></li>
+  <li class="tb-listitem"><a  id = "first"><img src="@{'/public/images/first.gif'}"/></a></li>
+  <li class="tb-listitem"><a  id = "prev"><img src="@{'/public/images/prev.gif'}"/></a></li>
+  <li class="tb-listitem"><a  id = "next"><img src="@{'/public/images/next.gif'}"/></a></li>
+  <li class="tb-listitem"><a  id = "last"><img src="@{'/public/images/last.gif'}"/></a></li>
+  <li class="tb-listitem"><a #{if mode == 'locked edit'} href="@{NaseljenaMesta.shownext("locked add",s,id)}" #{/if} #{elseif mode == 'locked search'} href="@{NaseljenaMesta.shownext("locked add",s,id)}" #{/elseif} #{else} href="@{NaseljenaMesta.show("add")}" #{/else} id = "add"><img src="@{'/public/images/add.gif'}"/></a></li>
+  <li class="tb-listitem"><a href="#" id = "remove"><img src="@{'/public/images/remove.gif'}"/></a></li>
+  <li class="tb-listitem"><a href="#" id = "nextform"><img src="@{'/public/images/nextform.gif'}"/></a></li>
+</ul>
+</p>
+
+<div class = "container-fluid">
+
+<p> Trenutno ste u ${mode} rezimu rada.</p>
+
+<h1>Naseljena mesta</h1>
+
+<table id = "table">
+	<tr class = "header">
+	   <th>Oznaka</th> 
+	   <th>Naziv</th>
+	   <th width="20%">Poštanski broj</th>
+	   <th>Država</th>
+	</tr>
+#{list items:naseljenaMesta, as:'naseljenoMesto'}
+	<tr #{if naseljenoMesto.id == s} class = "highlighted" #{/if}>
+		<td class = "oznaka">${naseljenoMesto.oznaka}</td>
+		<td class = "naziv">${naseljenoMesto.naziv}</td>
+		<td class = "postanskiBroj">${naseljenoMesto.postanskiBroj}</td>
+		<td class = "drzava">${naseljenoMesto.drzava.naziv}</td>
+		<td style = "visibility: hidden; max-width: 0px" class = "dr_id">${naseljenoMesto.drzava.id}</td>
+		<td style = "visibility: hidden; max-width: 0px" class = "id">${naseljenoMesto.id}</td>
+	</tr>
+#{/list}
+</table>
+
+#{set 'action'}
+    #{if mode == 'add'}
+        @{NaseljenaMesta.createNormal()}
+    #{/if}
+    #{elseif mode == 'locked add'} 
+        @{NaseljenaMesta.createNext()}
+    #{/elseif}
+    #{elseif mode == 'edit'}
+        @{NaseljenaMesta.editNormal()}
+    #{/elseif}
+    #{elseif mode== 'locked edit'} 
+        @{NaseljenaMesta.editNext()}
+    #{/elseif}
+    #{elseif mode== 'locked search'} 
+        @{NaseljenaMesta.filterNext()}
+    #{/elseif}
+    #{else}
+       @{NaseljenaMesta.filterNormal()}
+    #{/else}
+  #{/set}
+  
+<div class = "panel">
+	<p>
+	
+		<form action = "${action}" method="post">
+		
+				#{field 'id'}
+					<input type = "hidden" name = "${field.name}" id = "${field.id}"/>
+				#{/}
+				
+				<p>
+				#{field 'oznaka'}
+					<label for = "${field.id}">Oznaka</label>
+					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+					<span>#{error field.name /}</span>
+				#{/}
+				</p>
+				<p>
+				#{field 'naziv'}
+					<label for = "${field.id}">Naziv</label>
+					<input type = "text" name = "${field.name}" id = "${field.name}"/>
+					<span>#{error field.name /}</span>
+				#{/}
+				</p>
+				<p>
+				#{field 'postanskiBroj'}
+					<label for = "${field.id}">Poštanski broj</label>
+					<input type = "text" name = "${field.name}" id = "${field.name}"/>
+					<span>#{error field.name /}</span>
+				#{/}
+				</p>
+				<p>
+				#{field 'drzava'}
+					<label for = "${field.id}">Država</label>
+					<select name = "${field.name}" id = "${field.id}"/>
+					#{list items:drzave, as:'drzava'}
+					<option value = "${drzava.id}">${drzava.naziv}</option>
+					#{/list}
+					</select>
+					
+					 <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#drzaveModal">... </button>
+				#{/}
+				</p>
+				<div id = "formActions">
+					<input type = "submit" value = "Potvrda" style="margin-left:6em"/>
+					<a #{if mode == 'locked edit'} href="@{NaseljenaMesta.shownext("",s,id)}" #{/if} #{elseif mode == 'locked add'} href="@{NaseljenaMesta.shownext("",s,id)}" #{/elseif} #{elseif mode == 'locked search'} href="@{NaseljenaMesta.shownext("",s,id)}" #{/elseif} #{else} href="@{NaseljenaMesta.show()}" #{/else}  style="margin-left:1em">Rollback</a>
+				</div>			
+				
+		</form>
+	</p>
+</div>
+
+ <!-- Modal -->
+ 	<div class="modal fade" id="drzaveModal" role="dialog">
+  	<div class="modal-dialog">
+    	<div class="modal-content">
+    		 <div class="modal-header">
+      	Države
+      </div>
+      <div class="modal-body">
+      	<div>
+      	<p>
+      	<input oninput="w3.filterHTML('#tableD', '.item', this.value)">
+      	</p>
+      	</div>
+	    <table style = "padding:2em" id="tableD">
+		<tr class = "header">
+		   <th>Oznaka</th> 
+		   <th>Naziv</th>
+		</tr>
+		#{list items:drzave, as:'drzava'}
+		<tr class = "item">
+			<td class = "dr_oznaka">${drzava.oznaka}</td>
+			<td class = "dr_naziv">${drzava.naziv}</td>
+			<td style = "visibility: hidden; max-width: 0px" class = "dr_id">${drzava.id}</td>
+		</tr>
+		#{/list}
+		</table>
+	
+		<div class="modal-footer">
+			<input id = "drzavaPickup" type = "button" value = "izbor"/>
+		</div>
+		</div>
+    	</div>
+  	</div>
+	</div>
+</div>
+</div>

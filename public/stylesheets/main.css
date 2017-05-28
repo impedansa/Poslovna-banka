@@ -1,0 +1,65 @@
+table {
+	border-collapse: collapse;	
+	width:100%;
+}
+
+table, th, td {
+	border: 1px solid black;
+}
+
+table tr.highlighted{
+	background: yellow;	
+}
+
+table tr.highlighted_modal{
+	background: yellow;	
+}
+
+div.panel{
+	margin-top:2em;
+	border:solid 1px;
+}
+
+body.index { 
+    background-image: url('../images/loading.jpg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: center; 
+}
+
+ul {
+	list-style-type: none;
+}
+
+ul.tb-ulist {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333;
+}
+
+li.tb-listitem {
+    float: left;
+}
+
+li.tb-listitem a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+li.tb-listitem a:hover {
+    background-color: #111;
+}
+
+form label, form input{
+	margin-left:1em;
+}
+
+form label{
+	width:3em;
+	display:inline-block
+}

@@ -1,0 +1,232 @@
+#{extends 'standardForm.html' /}
+#{set title:'Analitike izvoda' /}
+
+#{set 'action'}
+	#{if mode == 'add'}
+		@{AnalitikeIzvoda.filter()}
+	#{/if}
+#{/set}
+
+<script>
+
+function sync(item){
+	datumAnalitike = item.find(".datumAnalitike").html()
+    smer = item.find(".smer").html()
+    duznikNalogodavac = item.find(".duznikNalogodavac").html()
+    svrhaPlacanja = item.find(".svrhaPlacanja").html()
+    poverilacPrimalac = item.find(".poverilacPrimalac").html()
+    datumPrijema = item.find(".datumPrijema").html()
+    datumValute = item.find(".datumValute").html()
+    racunDuznika = item.find(".racunDuznika").html()
+    modelZaduzenja = item.find(".modelZaduzenja").html()
+    pozivNaBrojZaduzenja = item.find(".pozivNaBrojZaduzenja").html()
+    racunPoverioca = item.find(".racunPoverioca").html()
+    modelOdobrenja = item.find(".modelOdobrenja").html()
+    pozivNaBrojOdobrenja = item.find(".pozivNaBrojOdobrenja").html()
+    hitno = item.find(".hitno").html()
+    iznos = item.find(".iznos").html()
+    tipGreske = item.find(".tipGreske").html()
+    status = item.find(".status").html()
+    id = item.find(".id").html()
+    $("#datumAnalitike").val(datumAnalitike);
+    $("#smer").val(smer);
+    $("#duznikNalogodavac").val(duznikNalogodavac);
+    $("#svrhaPlacanja").val(svrhaPlacanja);
+    $("#poverilacPrimalac").val(poverilacPrimalac);
+    $("#datumPrijema").val(datumPrijema);
+    $("#datumValute").val(datumValute);
+    $("#racunDuznika").val(racunDuznika);
+    $("#modelZaduzenja").val(modelZaduzenja);
+    $("#pozivNaBrojZaduzenja").val(pozivNaBrojZaduzenja);
+    $("#racunPoverioca").val(racunPoverioca);
+    $("#modelOdobrenja").val(modelOdobrenja);
+    $("#pozivNaBrojOdobrenja").val(pozivNaBrojOdobrenja);
+    $("#hitno").val(hitno);
+    $("#iznos").val(iznos);
+    $("#tipGreske").val(tipGreske);
+    $("#status").val(status);
+    $("#id").val(id);
+}
+
+</script>
+
+<div class="container">
+
+<p>
+<ul class="tb-ulist">
+  <li class="tb-listitem"><a href="@{AnalitikeIzvoda.show("search")}" id = "search"><img src="@{'/public/images/search.gif'}"/></a></li>
+  <li class="tb-listitem"><a href="#" id = "refresh"><img src="@{'/public/images/refresh.gif'}"/></a></li>
+  <li class="tb-listitem"><a href="#" id = "pickup"><img src="@{'/public/images/zoom-pickup.gif'}"/></a></li>
+  <li class="tb-listitem"><a href="#" id = "help"><img src="@{'/public/images/help.gif'}"/></a></li>
+  <li class="tb-listitem"><a id = "first"><img src="@{'/public/images/first.gif'}"/></a></li>
+  <li class="tb-listitem"><a id = "prev"><img src="@{'/public/images/prev.gif'}"/></a></li>
+  <li class="tb-listitem"><a id = "next"><img src="@{'/public/images/next.gif'}"/></a></li>
+  <li class="tb-listitem"><a id = "last"><img src="@{'/public/images/last.gif'}"/></a></li>
+  <li class="tb-listitem"><a href="@{AnalitikeIzvoda.show("add")}" id = "add"><img src="@{'/public/images/add.gif'}"/></a></li>
+  <li class="tb-listitem"><a href="#" id = "remove"><img src="@{'/public/images/remove.gif'}"/></a></li>
+  <li class="tb-listitem"><a href="#" id = "nextform"><img src="@{'/public/images/nextform.gif'}"/></a></li>
+</ul>
+</p>
+
+<h1>Analitika izvoda</h1>
+
+<table>
+	<tr class = "header">
+	   <th>Datum analitike</th> 
+	   <th>Smer</th>
+	   <th>Duznik/nalogodavac</th>
+	   <th>Svrha placanja</th>
+	   <th>Poverilac/primalac</th>
+	   <th>Datum prijema</th>
+	   <th>Datum valute</th>
+	   <th>Racun duznika</th>
+	   <th>Model zaduzenja</th>
+	   <th>Poziv na broj zaduzenja</th>
+	   <th>Racun poverioca</th>
+	   <th>Model odobrenja</th>
+	   <th>Poziv na broj odobrenja</th>
+	   <th>Hitno?</th>
+	   <th>Iznos</th>
+	   <th>Tip greske</th>
+	   <th>Status</th>
+	</tr>
+#{list items:analitikeIzvoda, as:'analitikaIzvoda'}
+	<tr class="main_tr">
+		<td class = "datumAnalitike">${analitikaIzvoda.datumAnalitike}</td>
+		<td class = "smer">${analitikaIzvoda.smer}</td>
+		<td class = "duznikNalogodavac">${analitikaIzvoda.duznikNalogodavac}</td>
+		<td class = "svrhaPlacanja">${analitikaIzvoda.svrhaPlacanja}</td>
+		<td class = "poverilacPrimalac">${analitikaIzvoda.poverilacPrimalac}</td>
+		<td class = "datumPrijema">${analitikaIzvoda.datumPrijema}</td>
+		<td class = "datumValute">${analitikaIzvoda.datumValute}</td>
+		<td class = "racunDuznika">${analitikaIzvoda.racunDuznika}</td>
+		<td class = "modelZaduzenja">${analitikaIzvoda.modelZaduzenja}</td>
+		<td class = "pozivNaBrojZaduzenja">${analitikaIzvoda.pozivNaBrojZaduzenja}</td>
+		<td class = "racunPoverioca">${analitikaIzvoda.racunPoverioca}</td>
+		<td class = "modelOdobrenja">${analitikaIzvoda.modelOdobrenja}</td>
+		<td class = "pozivNaBrojOdobrenja">${analitikaIzvoda.pozivNaBrojOdobrenja}</td>
+		<td class = "hitno">${analitikaIzvoda.hitno}</td>
+		<td class = "iznos">${analitikaIzvoda.iznos}</td>
+		<td class = "tipGreske">${analitikaIzvoda.tipGreske}</td>
+		<td class = "status">${analitikaIzvoda.status}</td>
+		<td style = "visibility: hidden; max-width: 0px" class = "id">${analitikaIzvoda.id}</td>
+	</tr>
+#{/list}
+</table>
+
+<!--div class = "panel">
+	<p>
+	<form action=${action} method = "post">
+		<!-- #{form @AnalitikeIzvoda.show()} ->
+		
+				#{field 'id'}
+					<input type = "hidden" name = "${field.name}" id = "${field.id}"/>
+				#{/}
+				
+				<p>
+				#{field 'datumAnalitike'}
+					<label for = "${field.id}">Datum analitike</label>
+					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+				#{/}
+				</p>
+				<p>
+				#{field 'smer'}
+					<label for = "${field.id}">Smer</label>
+					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+				#{/}
+				</p>
+				<p>
+				#{field 'duznikNalogodavac'}
+					<label for = "${field.id}">Duznik/nalogodavac</label>
+					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+				#{/}
+				</p>
+				<p>
+				#{field 'svrhaPlacanja'}
+					<label for = "${field.id}">Poverilac/primalac</label>
+					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+				#{/}
+				</p>
+				<p>
+				#{field 'datumPrijema'}
+					<label for = "${field.id}">Datum prijema</label>
+					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+				#{/}
+				</p>
+				<p>
+				#{field 'datumValute'}
+					<label for = "${field.id}">Datum valute</label>
+					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+				#{/}
+				</p>
+				<p>
+				#{field 'racunDuznika'}
+					<label for = "${field.id}">Racun duznika</label>
+					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+				#{/}
+				</p>
+				<p>
+				#{field 'modelZaduzenja'}
+					<label for = "${field.id}">Model zaduzenja</label>
+					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+				#{/}
+				</p>
+				<p>
+				#{field 'pozivNaBrojZaduzenja'}
+					<label for = "${field.id}">Poziv na broj zaduzenja</label>
+					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+				#{/}
+				</p>
+				<p>
+				#{field 'racunPoverioca'}
+					<label for = "${field.id}">Racun poverioca</label>
+					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+				#{/}
+				</p>
+				<p>
+				#{field 'modelOdobrenja'}
+					<label for = "${field.id}">Model odobrenja</label>
+					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+				#{/}
+				</p>
+				<p>
+				#{field 'pozivNaBrojOdobrenja'}
+					<label for = "${field.id}">Poziv na broj odobrenja</label>
+					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+				#{/}
+				</p>
+				<p>
+				#{field 'hitno'}
+					<label for = "${field.id}">Hitno?</label>
+					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+				#{/}
+				</p>
+				<p>
+				#{field 'iznos'}
+					<label for = "${field.id}">Iznos</label>
+					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+				#{/}
+				</p>
+				<p>
+				#{field 'tipGreske'}
+					<label for = "${field.id}">Tip greske</label>
+					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+				#{/}
+				</p>
+				<p>
+				#{field 'status'}
+					<label for = "${field.id}">Status</label>
+					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+				#{/}
+				</p>
+				<div id = "formActions">
+					<input type = "submit" value = "Potvrda" style="margin-left:6em"/>
+					<a href = "#" style="margin-left:1em"></a>
+				</div>			
+				
+		<!-- #{/form} ->
+	</form>
+	</p>
+</div-->
+</div>
+
