@@ -18,7 +18,11 @@ public class Zaposlenii extends Controller{
 		render(zaposleni, mode, s);
 	}
 	
-	public static void create(String korisnickoIme, String lozinka) {
+	public static void create(@Required String korisnickoIme,@Required String lozinka) {
+		if(validation.hasErrors()) {
+	          validation.keep(); 
+	          renderTemplate("Zaposlenii/show.html");
+	    }
 		String hashedPassword = BCrypt.hashpw(lozinka, BCrypt.gensalt(12));
 		Zaposleni z = new Zaposleni(korisnickoIme, hashedPassword);
 		z.save();
@@ -43,7 +47,32 @@ public class Zaposlenii extends Controller{
 		show("show",s);
 	} 
 	
-	public static void editPassword(){
+	public static void editPassword(@Required String lozinka,@Required String ponovljenaLozinka,@Required String novaLozinka){
+		validation.equals(lozinka, ponovljenaLozinka);
+		if(validation.hasErrors()) {
+	          validation.keep(); 
+	          renderTemplate("Zaposlenii/promenaLozinke.html");
+	    }
+		boolean password_verified = false;
+		String hashedNewPassword = BCrypt.hashpw(novaLozinka, BCrypt.gensalt(12));
+		List<Zaposleni> zaposleni = Zaposleni.findAll();
+		for(Zaposleni z: zaposleni) {
+			if(password_verified = BCrypt.checkpw(lozinka, z.getLozinka())){
+				z.korisnickoIme = z.korisnickoIme;
+				z.lozinka = hashedNewPassword;
+				z.save();
+				flash.remove("error");
+				flash.put("success", "true");
+				renderTemplate("Zaposlenii/promenaLozinke.html");
+			}
+		}
+		flash.remove("success");
+		flash.put("error", "true");
+		renderTemplate("Zaposlenii/promenaLozinke.html");
 		
+	}
+	
+	public static void promenaLozinke() {
+		renderTemplate("Zaposlenii/promenaLozinke.html");
 	}
 }

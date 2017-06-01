@@ -4,3 +4,7 @@
 
 validation.maxSize = Maksimalna duzina polja %s je %d
 validation.required=%s je obavezno polje
+validation.equals = Lozinke nisu iste
+
+secure.error=Neispravno korisnicko ime ili lozinka.
+secure.logout=Odjavljeni ste sa sistema.

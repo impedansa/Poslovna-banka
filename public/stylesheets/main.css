@@ -63,3 +63,32 @@ form label{
 	width:3em;
 	display:inline-block
 }
+
+#promenaLozinke {
+    width: 500px;
+    margin: 50px auto;
+    text-align: center;
+}
+
+#promenaLozinke form {
+    border: 10px solid #ccc;
+    background: #fff;
+    padding: 10px;
+    text-align: left;
+}
+
+#promenaLozinke .error, #promenaLozinke .success  {
+    color: #fff;
+    font-size: 12px;
+    text-align: center;
+    margin-bottom: 10px;
+    padding: 5px;
+}
+
+#promenaLozinke .error {
+    background: #c00 !important;
+}
+
+#promenaLozinke .success {
+    background: #008800 !important;
+}

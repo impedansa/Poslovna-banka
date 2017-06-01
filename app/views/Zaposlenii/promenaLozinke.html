@@ -1,0 +1,46 @@
+#{extends 'main.html'/}
+<div id="promenaLozinke">
+	
+	<h1 align="center">Promena lozinke</h1>
+		#{if flash.success}
+			<p class="success" style="color:white" >
+				Lozinka je uspesno izmenjena!
+			</p>
+		#{/if}
+		
+		#{if flash.error}
+			<p class="error" style="color:white" >
+				Lozinka je neispravna!
+			</p>
+		#{/if}
+	
+	<form action="@{Zaposlenii.editPassword()}" method = "post">
+		<!-- #{form @Drzave.show()} -->
+				
+				#{field 'lozinka'}
+					<label for="${field.id}">Lozinka</label>
+					<input type="password" name="lozinka" id="${field.id}"/>
+					<span>#{error field.name /}</span>
+				#{/}
+				<p>
+				#{field 'ponovljenaLozinka'}
+					<label for = "${field.id}">Ponovljena lozinka</label>
+					<input type = "password" name = "${field.name}" id = "${field.id}"/>
+					<span>#{error field.name /}</span>
+				#{/}
+				</p>
+				<p>
+				#{field 'novaLozinka'}
+					<label for = "${field.id}">Nova lozinka</label>
+					<input type = "password" name = "${field.name}" id = "${field.id}"/>
+					<span>#{error field.name /}</span>
+					
+				#{/}
+				</p>
+				<div id = "formActions">
+					<input type = "submit" value = "Potvrda" style="margin-left:6em"/>
+				</div>			
+				
+		<!-- #{/form} -->
+	</form>
+</div>
