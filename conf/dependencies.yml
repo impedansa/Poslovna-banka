@@ -2,3 +2,5 @@
 
 require:
     - play
+    - org.mindrot -> jbcrypt 0.3m
+    - play -> secure

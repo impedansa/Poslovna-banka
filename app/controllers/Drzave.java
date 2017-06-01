@@ -11,7 +11,7 @@ public class Drzave extends Controller{
 	public static void show(String mode, Long s){
 		List<Drzava> drzave = Drzava.findAll();
 		if (mode == null || mode.equals(""))
-			mode = "edit";
+			mode="edit";
 		render(drzave, mode, s);
 	}
 	
@@ -51,7 +51,6 @@ public class Drzave extends Controller{
 			}
 
 		}
-		
 		String mode = "edit";
 		show(mode, s);
 	}

@@ -1,0 +1,104 @@
+#{extends 'standardForm.html' /}
+#{set title:'Zaposleni' /}
+
+
+#{set 'action'}
+	#{if mode == 'add'}
+		@{Zaposlenii.create()}
+	#{/if}
+	#{elseif mode == 'show'}
+		@{Zaposlenii.show()}
+	#{/elseif}
+	#{else}
+		@{Zaposlenii.filter()}
+	#{/else}
+#{/set}
+
+<script>
+
+function sync(item){
+	korisnickoIme = item.find(".korisnickoIme").html()
+    lozinka = item.find(".lozinka").html()
+    id = item.find(".id").html()
+    $("#korisnickoIme").val(korisnickoIme);
+    $("#lozinka").val(lozinka);
+    $("#id").val(id);
+}
+
+function remove(id) {
+	$(location).attr('href', '/Zaposlenii/delete?id='+id);
+	
+}
+
+</script>
+
+<p>
+<ul class="tb-ulist">
+  <li class="tb-listitem"><a href="@{Zaposlenii.show("search")}" id = "search"><img src="@{'/public/images/search.gif'}"/></a></li>
+  <li class="tb-listitem"><a href="@{Zaposlenii.show()}" id = "refresh"><img src="@{'/public/images/refresh.gif'}"/></a></li>
+  <li class="tb-listitem"><a href="#" id = "pickup"><img src="@{'/public/images/zoom-pickup.gif'}"/></a></li>
+  <li class="tb-listitem"><a href="#" id = "help"><img src="@{'/public/images/help.gif'}"/></a></li>
+  <li class="tb-listitem"><a id = "first"><img src="@{'/public/images/first.gif'}"/></a></li>
+  <li class="tb-listitem"><a id = "prev"><img src="@{'/public/images/prev.gif'}"/></a></li>
+  <li class="tb-listitem"><a id = "next"><img src="@{'/public/images/next.gif'}"/></a></li>
+  <li class="tb-listitem"><a id = "last"><img src="@{'/public/images/last.gif'}"/></a></li>
+  <li class="tb-listitem"><a href="@{Zaposlenii.show("add")}" id = "add"><img src="@{'/public/images/add.gif'}"/></a></li>
+  <li class="tb-listitem"><a href="#" id = "remove"><img src="@{'/public/images/remove.gif'}"/></a></li>
+  <li class="tb-listitem"><a href="#" id = "nextform"><img src="@{'/public/images/nextform.gif'}"/></a></li>
+</ul>
+</p>
+
+<p> Trenutno ste u ${mode} rezimu rada. </p>
+
+<h1>Zaposleni</h1>
+
+<table id = "table">
+	<tr class = "header">
+	   <th>Korisnicko Ime</th> 
+	   <th>Lozinka</th>
+	</tr>
+#{list items:zaposleni, as:'zaposlen'}
+	<tr  #{if zaposlen.id == s} class = "highlighted" #{/if}>
+		<td class = "korisnickoIme">${zaposlen.korisnickoIme}</td>
+		<td class = "lozinka">${zaposlen.lozinka}</td>
+		<td style = "visibility: hidden; max-width: 0px" class = "id">${zaposlen.id}</td>
+	</tr>
+#{/list}
+</table>
+
+<div class = "panel">
+	<p>
+		<form action=${action} method = "post">
+		<!-- #{form @Zaposlenii.show()} -->
+		
+				#{field 'id'}
+					<input type = "hidden" name = "${field.name}" id = "${field.id}"/>
+				#{/}
+				
+				<p>
+				#{field 'korisnickoIme'}
+					<label for = "${field.id}">Korisnicko Ime</label>
+					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+					<span>#{error field.name /}</span>
+					
+				#{/}
+				</p>
+				<p>
+				#{field 'lozinka'}
+					<label for = "${field.id}">Lozinka</label>
+					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+					<span>#{error field.name /}</span>
+					
+				#{/}
+				</p>
+				<div id = "formActions">
+					<input type = "submit" value = "Potvrda" style="margin-left:6em"/>
+					<a href = "@{Zaposlenii.show()}" style="margin-left:1em">Rollback</a>
+				</div>			
+				
+		<!-- #{/form} -->
+	</form>
+		
+	</p>
+</div>
+
