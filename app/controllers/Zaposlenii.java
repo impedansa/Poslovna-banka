@@ -2,15 +2,26 @@ package controllers;
 
 import java.util.List;
 
+import models.Zaposleni;
+
 import org.mindrot.jbcrypt.BCrypt;
 
-import models.Drzava;
-import models.Zaposleni;
 import play.data.validation.Required;
 import play.mvc.Controller;
+import play.mvc.With;
+import controllers.deadbolt.Deadbolt;
+import controllers.deadbolt.Restrict;
+import controllers.deadbolt.Restrictions;
 
+@With(Deadbolt.class)
 public class Zaposlenii extends Controller{
 	
+	public Zaposlenii() {
+		super();
+		// TODO Auto-generated constructor stub
+	}
+
+	@Restrictions(@Restrict("zaposleni.view"))
 	public static void show(String mode, Long s){
 		List<Zaposleni> zaposleni = Zaposleni.findAll();
 		if (mode == null || mode.equals(""))
@@ -18,6 +29,7 @@ public class Zaposlenii extends Controller{
 		render(zaposleni, mode, s);
 	}
 	
+	@Restrictions(@Restrict("zaposleni.create"))
 	public static void create(@Required String korisnickoIme,@Required String lozinka) {
 		if(validation.hasErrors()) {
 	          validation.keep(); 

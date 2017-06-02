@@ -4,3 +4,4 @@ require:
     - play
     - org.mindrot -> jbcrypt 0.3m
     - play -> secure
+    - play -> deadbolt 1.5.4

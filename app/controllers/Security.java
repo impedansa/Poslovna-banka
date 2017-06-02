@@ -15,7 +15,12 @@ public class Security extends Secure.Security{
 			throw new java.lang.IllegalArgumentException("Invalid hash provided for comparison");
 
 		password_verified = BCrypt.checkpw(password, lozinka);
-        return zaposlen != null && password_verified;
+		
+		if(zaposlen != null && password_verified) {
+			session.put("user", (zaposlen.id).toString());
+		}
+        
+		return zaposlen != null && password_verified;
     }
 
 }
