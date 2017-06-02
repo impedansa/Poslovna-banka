@@ -2,12 +2,13 @@ package controllers;
 
 import models.Zaposleni;
 import models.deadbolt.RoleHolder;
+import play.mvc.Controller;
 import play.mvc.Scope.Session;
 import controllers.deadbolt.DeadboltHandler;
 import controllers.deadbolt.ExternalizedRestrictionsAccessor;
 import controllers.deadbolt.RestrictedResourcesHandler;
 
-public class MyDeadboltHandler implements DeadboltHandler {
+public class MyDeadboltHandler extends Controller implements DeadboltHandler {
 	
 	public MyDeadboltHandler() {
 		super();
@@ -32,6 +33,7 @@ public class MyDeadboltHandler implements DeadboltHandler {
 	@Override
 	public void onAccessFailure(String controllerClassName) {
 		// TODO Auto-generated method stub
+		redirect("http://localhost:8080");
 		
 	}
 

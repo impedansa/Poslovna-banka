@@ -21,7 +21,7 @@ public class Zaposlenii extends Controller{
 		// TODO Auto-generated constructor stub
 	}
 
-	@Restrictions(@Restrict("zaposleni.view"))
+	@Restrict("zaposleni.view")
 	public static void show(String mode, Long s){
 		List<Zaposleni> zaposleni = Zaposleni.findAll();
 		if (mode == null || mode.equals(""))
@@ -29,7 +29,7 @@ public class Zaposlenii extends Controller{
 		render(zaposleni, mode, s);
 	}
 	
-	@Restrictions(@Restrict("zaposleni.create"))
+	@Restrict("zaposleni.create")
 	public static void create(@Required String korisnickoIme,@Required String lozinka) {
 		if(validation.hasErrors()) {
 	          validation.keep(); 
@@ -46,6 +46,7 @@ public class Zaposlenii extends Controller{
 		String mode = "show";
 	}
 	
+	@Restrict("zaposleni.remove")
 	public static void delete(Long id) {
 		Long s = null;
 		List<Zaposleni> zaposleni = Zaposleni.findAll();

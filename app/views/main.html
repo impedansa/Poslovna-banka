@@ -29,9 +29,9 @@
  	 	
         <a class="navbar-brand" href="@{Drzave.show()}">Države</a>
         <a class="navbar-brand" href="@{NaseljenaMesta.show()}">Naseljena Mesta</a>
-        #{deadbolt.restrict roles:[['zaposleni.view']]}
+      	#{deadbolt.restrict roles:[['zaposleni.view']]}
         <a class="navbar-brand" href="@{Zaposlenii.show()}">Zaposleni</a>
-        #{/deadbolt.restrict}
+   		#{/deadbolt.restrict}
         <a href="@{Zaposlenii.promenaLozinke()}">Promena lozinke</a>
         <a href="/logout">Odjava</a>
 	  </nav>
