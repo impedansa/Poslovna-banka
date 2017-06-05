@@ -10,50 +10,69 @@ import play.mvc.Controller;
 
 public class NaseljenaMesta extends Controller {
 	
-	public static void show(String mode, Long s){
+	public static void show(){
 		List<Drzava> drzave = Drzava.findAll();
 		List<NaseljenoMesto> naseljenaMesta = NaseljenoMesto.findAll();
-		if (mode == null || mode.equals("")) {
-			mode = "edit";
+		String mode = "";
+		String s = "";
+		if(params.get("mode") != null) {
+			mode = params.get("mode");
+			s = params.get("s");
+		} else {
+			mode = session.get("mode");
+			s = session.get("s");
+			if(mode == null || mode =="") {
+				mode = "edit";
+			}
 		}
-		render(naseljenaMesta, mode, drzave, s);
+		session.put("mode", mode);
+		session.put("s", s);
+		render(naseljenaMesta, drzave);
 	}
 	
-	public static void shownext(String mode, Long s, Long id) {
-		List<Drzava> drzave = new ArrayList<Drzava>();
-		drzave.add(Drzava.findById(id));
-		List<NaseljenoMesto> naseljenaMesta = NaseljenoMesto.find("byDrzava", drzave.get(0)).fetch();
-		if (mode == null || mode.equals("")) {
-			mode = "locked edit";
+	public static void shownext() {
+		String modeN = "";
+		String sN = "";
+		String id = "0";
+		if(params.get("mode") != null) {
+			modeN = params.get("mode");
+			sN = params.get("s");
+			id = params.get("id");
+		} else {
+			modeN = session.get("mode");
+			sN = session.get("s");
+			id = session.get("id");
+			if(modeN == null || modeN =="") {
+				modeN = "locked edit";
+			}
 		}
-		renderTemplate("NaseljenaMesta/show.html", mode, naseljenaMesta, drzave, s, id);
-	}
-	
-	public static void nextshow(Long id) {
-		System.out.println("id: " + id);
+		session.put("mode", modeN);
+		session.put("s", sN);
+		session.put("id", id);
 		List<Drzava> drzave = new ArrayList<Drzava>();
-		drzave.add(Drzava.findById(id));
+		drzave.add(Drzava.findById(Long.parseLong(id)));
 		List<NaseljenoMesto> naseljenaMesta = NaseljenoMesto.find("byDrzava", drzave.get(0)).fetch();
-		System.out.println(naseljenaMesta);
-		String mode = "locked edit";
-		renderTemplate("NaseljenaMesta/show.html", mode, naseljenaMesta, drzave, id);
+		renderTemplate("NaseljenaMesta/show.html", naseljenaMesta, drzave, id);
 	}
 	
-	public static void filterNormal(String oznaka, String naziv, Integer postanskiBroj, Long drzava) {
-		List<NaseljenoMesto> naseljenaMesta = filter(oznaka, naziv, postanskiBroj, drzava);
-		String mode = "edit";
-		renderTemplate("NaseljenaMesta/show.html",mode, naseljenaMesta);
+	public static void filter(String oznaka, String naziv, Integer postanskiBroj, Long drzava) {
+		List<NaseljenoMesto> naseljenaMesta = filterBasic(oznaka, naziv, postanskiBroj, drzava);
+		session.put("mode", "edit");
+		session.put("s", null);
+		renderTemplate("NaseljenaMesta/show.html",naseljenaMesta);
 	}
 	
 	public static void filterNext(String oznaka, String naziv, Integer postanskiBroj, Long drzava) {
 		Long id = drzava;
-		List<NaseljenoMesto> naseljenaMesta = filter(oznaka, naziv, postanskiBroj, drzava);
-		String mode = "locked edit";
-		renderTemplate("NaseljenaMesta/show.html",mode, naseljenaMesta, id);
+		List<NaseljenoMesto> naseljenaMesta = filterBasic(oznaka, naziv, postanskiBroj, drzava);
+		session.put("mode", "locked edit");
+		session.put("s", null);
+		session.put("id", drzava);
+		renderTemplate("NaseljenaMesta/show.html",naseljenaMesta, id);
 	}
 	
 	
-	public static List<NaseljenoMesto> filter(String oznaka, String naziv, Integer postanskiBroj, Long drzava) {
+	public static List<NaseljenoMesto> filterBasic(String oznaka, String naziv, Integer postanskiBroj, Long drzava) {
 		Drzava d = Drzava.findById(drzava);
 		List<NaseljenoMesto> naseljenaMesta;
 		if(postanskiBroj == null){
@@ -64,16 +83,19 @@ public class NaseljenaMesta extends Controller {
 		return naseljenaMesta;
 	}
 	
-	public static void createNormal(@Required String oznaka, @Required String naziv, @Required Integer postanskiBroj, Long drzava) {
+	public static void create(@Required String oznaka, @Required String naziv, @Required Integer postanskiBroj, Long drzava) {
 		validation.maxSize(oznaka, 2);
 		validation.maxSize(postanskiBroj, 5);
 		if(validation.hasErrors()) {
 	          validation.keep();
-	          show("add",null);
+	          session.put("mode", "add");
+	  		  session.put("s", null);
+	          show();
 	    }
-		Long s = create(oznaka, naziv, postanskiBroj, drzava);
-		String mode = "add";
-		show(mode, s);
+		Long s = createBasic(oznaka, naziv, postanskiBroj, drzava);
+		session.put("mode", "add");
+		session.put("s", s);
+		show();
 	}
 	
 	
@@ -82,31 +104,39 @@ public class NaseljenaMesta extends Controller {
 		validation.maxSize(postanskiBroj, 5);
 		if(validation.hasErrors()) {
 	          validation.keep();
-	          shownext("locked add",null, drzava);
+	          session.put("mode", "locked add");
+	  		  session.put("s", null);
+	  		  session.put("id", drzava);
+	          shownext();
 	    }
-		Long s = create(oznaka, naziv, postanskiBroj, drzava);
-		String mode = "locked add";
-		shownext(mode, s, drzava);
+		Long s = createBasic(oznaka, naziv, postanskiBroj, drzava);
+		session.put("mode", "locked add");
+		session.put("s", s);
+		session.put("id", drzava);
+		shownext();
 	}
 	
 	
-	public static Long create(String oznaka, String naziv, Integer postanskiBroj, Long drzava) {
+	public static Long createBasic(String oznaka, String naziv, Integer postanskiBroj, Long drzava) {
 		Drzava d = Drzava.findById(drzava);
 		NaseljenoMesto nm = new NaseljenoMesto(oznaka, naziv, postanskiBroj, d);
 		nm.save();
 		return nm.id;
 	}
 	
-	public static void editNormal(Long id, @Required String oznaka, @Required String naziv, @Required Integer postanskiBroj, Long drzava) {
+	public static void edit(Long id, @Required String oznaka, @Required String naziv, @Required Integer postanskiBroj, Long drzava) {
 		validation.maxSize(oznaka, 2);
 		validation.maxSize(postanskiBroj, 5);
 		if(validation.hasErrors()) {
 	          validation.keep();
-	          show("edit",null);
+	          session.put("mode", "edit");
+	  		  session.put("s", null);
+	          show();
 	    }
-		Long s = edit(id, oznaka, naziv, postanskiBroj, drzava);
-		String mode = "edit";
-		show(mode, s);
+		Long s = editBasic(id, oznaka, naziv, postanskiBroj, drzava);
+		session.put("mode", "edit");
+		session.put("s", s);
+		show();
 	}
 	
 	public static void editNext(Long id, @Required String oznaka, @Required String naziv, @Required Integer postanskiBroj, Long drzava) {
@@ -114,14 +144,19 @@ public class NaseljenaMesta extends Controller {
 		validation.maxSize(postanskiBroj, 5);
 		if(validation.hasErrors()) {
 	          validation.keep();
-	          shownext("locked edit",null, drzava);
+	          session.put("mode", "locked edit");
+	  		  session.put("s", null);
+	  		  session.put("id", drzava);
+	          shownext();
 	    }
-		Long s = edit(id, oznaka, naziv, postanskiBroj, drzava);
-		String mode = "locked edit";
-		shownext(mode, s, drzava);
+		Long s = editBasic(id, oznaka, naziv, postanskiBroj, drzava);
+		session.put("mode", "locked edit");
+		session.put("s", s);
+		session.put("id", drzava);
+		shownext();
 	}
 	
-	public static Long edit(Long id, String oznaka, String naziv, Integer postanskiBroj, Long drzava) {
+	public static Long editBasic(Long id, String oznaka, String naziv, Integer postanskiBroj, Long drzava) {
 		Long s = null;
 		if(id != null) {
 			NaseljenoMesto nm = NaseljenoMesto.findById(id);
@@ -161,8 +196,18 @@ public class NaseljenaMesta extends Controller {
 		}
 		NaseljenoMesto nm = NaseljenoMesto.findById(id);
 		nm.delete();
-		String mode = "edit";
-		show(mode, s);
+		String mode = session.get("mode");
+		if(mode.equals("locked add")|| mode.equals("locked edit")||mode.equals("locked search")) {
+			session.put("mode", "locked edit");
+			session.put("s", s);
+			session.put("id", nm.getDrzava().getId());
+			shownext();
+		} else {
+			session.put("mode", "edit");
+			session.put("s", s);
+			show();
+		}
 	}
+
 
 }

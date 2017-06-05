@@ -1,12 +1,12 @@
-#{extends 'standardForm.html' /}
+#{extends 'drzaveAjax.html' /}
 #{set title:'Države' /}
 
 
 #{set 'action'}
-	#{if mode == 'add'}
+	#{if session.mode == 'add'}
 		@{Drzave.create()}
 	#{/if}
-	#{elseif mode == 'edit'}
+	#{elseif session.mode == 'edit'}
 		@{Drzave.edit()}
 	#{/elseif}
 	#{else}
@@ -15,6 +15,8 @@
 #{/set}
 
 <script>
+
+
 
 function sync(item){
 	oznaka = item.find(".oznaka").html()
@@ -25,47 +27,72 @@ function sync(item){
     $("#id").val(id);
 }
 
+
 function remove(id) {
-	$(location).attr('href', '/Drzave/delete?id='+id);
-	
+	var showRoute = #{jsRoute @Drzave.delete(':id') /}
+	$.ajax({
+	url: showRoute.url({id: id}),
+	type: showRoute.method,
+	success: function(){
+		window.location.reload();
+	}
+	});
 }
 
 function next(id) {
-	console.log(id)
-	$(location).attr('href', '/NaseljenaMesta/nextshow?id='+id)
+	console.log(id);
+	var id_id = id.toString();
+	var showRoute = #{jsRoute @NaseljenaMesta.shownext() /}
+	$.ajax({
+	method:"GET",
+	url: showRoute.url(),
+	type: showRoute.method,
+	data: {'mode': 'locked edit', 's': '0', 'id': id_id},
+	dataType: "html",
+	success: function(){
+		window.location.replace("@{NaseljenaMesta.shownext()}"); 
+	}
+	});
 	
 }
+
+
 
 
 </script>
 
 <p>
 <ul class="tb-ulist">
-  <li class="tb-listitem"><a href="@{Drzave.show("search")}" id = "search"><img src="@{'/public/images/search.gif'}"/></a></li>
-  <li class="tb-listitem"><a href="@{Drzave.show()}" id = "refresh"><img src="@{'/public/images/refresh.gif'}"/></a></li>
+  <li class="tb-listitem"><a id = "search"><img src="@{'/public/images/search.gif'}"/></a></li>
+  <li class="tb-listitem"><a id = "refresh"><img src="@{'/public/images/refresh.gif'}"/></a></li>
   <li class="tb-listitem"><a href="#" id = "pickup"><img src="@{'/public/images/zoom-pickup.gif'}"/></a></li>
   <li class="tb-listitem"><a href="#" id = "help"><img src="@{'/public/images/help.gif'}"/></a></li>
   <li class="tb-listitem"><a id = "first"><img src="@{'/public/images/first.gif'}"/></a></li>
   <li class="tb-listitem"><a id = "prev"><img src="@{'/public/images/prev.gif'}"/></a></li>
   <li class="tb-listitem"><a id = "next"><img src="@{'/public/images/next.gif'}"/></a></li>
   <li class="tb-listitem"><a id = "last"><img src="@{'/public/images/last.gif'}"/></a></li>
-  <li class="tb-listitem"><a href="@{Drzave.show("add")}" id = "add"><img src="@{'/public/images/add.gif'}"/></a></li>
-  <li class="tb-listitem"><a href="#" id = "remove"><img src="@{'/public/images/remove.gif'}"/></a></li>
+  <li class="tb-listitem"><a id = "add"><img src="@{'/public/images/add.gif'}"/></a></li>
+  <li class="tb-listitem"><a id = "remove"><img src="@{'/public/images/remove.gif'}"/></a></li>
   <li class="tb-listitem"><a href="#" id = "nextform"><img src="@{'/public/images/nextform.gif'}"/></a></li>
 </ul>
 </p>
 
-<p> Trenutno ste u ${mode} rezimu rada. </p>
+<p> Trenutno ste u  ${session.mode} rezimu rada.</p>
 
 <h1>Države</h1>
-
 <table id = "table">
 	<tr class = "header">
 	   <th>Oznaka</th> 
 	   <th>Naziv</th>
 	</tr>
+
+
 #{list items:drzave, as:'drzava'}
-	<tr  #{if drzava.id == s} class = "highlighted" #{/if}>
+%{
+  num=drzava.id;
+  drzavaId=num.toString();
+}%
+	<tr  #{if session.s == drzavaId} class = "highlighted" #{/if}>
 		<td class = "oznaka">${drzava.oznaka}</td>
 		<td class = "naziv">${drzava.naziv}</td>
 		<td style = "visibility: hidden; max-width: 0px" class = "id">${drzava.id}</td>
@@ -100,12 +127,11 @@ function next(id) {
 				</p>
 				<div id = "formActions">
 					<input type = "submit" value = "Potvrda" style="margin-left:6em"/>
-					<a href = "@{Drzave.show()}" style="margin-left:1em">Rollback</a>
+					<a href = "" id="rollback" style="margin-left:1em">Rollback</a>
 				</div>			
 				
 		<!-- #{/form} -->
 	</form>
-		
 	</p>
 </div>
 

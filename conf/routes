@@ -16,7 +16,21 @@ GET     /favicon.ico                            404
 GET     /public/                                staticDir:public
 
 # Catch all
-*       	/{controller}/{action}                  {controller}.{action}
+#*       	/{controller}/{action}                  {controller}.{action}
+GET      /{controller}/show						 {controller}.show
+DELETE   /{controller}/show						 {controller}.show
+POST 	 /{controller}/show						 {controller}.show
+POST 	 /{controller}/edit						 {controller}.edit
+POST 	 /{controller}/create					 {controller}.create
+POST	 /{controller}/filter					 {controller}.filter
+DELETE   /{controller}/delete/{id}				 {controller}.delete
+GET      /{controller}/shownext				     {controller}.shownext
+DELETE   /{controller}/shownext					 {controller}.shownext
+POST 	 /{controller}/editNext					 {controller}.editNext
+POST 	 /{controller}/createNext				 {controller}.createNext
+POST	 /{controller}/filterNext				 {controller}.filterNext
+POST 	 /{controller}/editPassword				 {controller}.editPassword
+GET 	 /{controller}/promenaLozinke			 {controller}.promenaLozinke
 
 
 

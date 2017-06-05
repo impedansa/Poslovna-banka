@@ -1,0 +1,72 @@
+<script>
+function nm() {
+	var showRoute = #{jsRoute @NaseljenaMesta.show() /}
+	$.ajax({
+		method:"GET",
+		url: showRoute.url(),
+		type: showRoute.method,
+		data: {'mode': 'edit', 's': '0'},
+		dataType: "html",
+		success: function(){
+			window.location.replace("@{NaseljenaMesta.show()}"); 
+		}
+	});
+}
+
+function d() {
+	var showRoute = #{jsRoute @Drzave.show() /}
+	$.ajax({
+		method:"GET",
+		url: showRoute.url(),
+		type: showRoute.method,
+		data: {'mode': 'edit', 's': '0'},
+		dataType: "html",
+		success: function(){
+			window.location.replace("@{Drzave.show()}"); 
+		}
+	});
+}
+
+function z() {
+	var showRoute = #{jsRoute @Zaposlenii.show() /}
+	$.ajax({
+		method:"GET",
+		url: showRoute.url(),
+		type: showRoute.method,
+		data: {'mode': 'show', 's': '0'},
+		dataType: "html",
+		success: function(){
+			window.location.replace("@{Zaposlenii.show()}"); 
+		}
+	});
+}
+function pl() {
+	var showRoute = #{jsRoute @Zaposlenii.promenaLozinke() /}
+	$.ajax({
+		method:"GET",
+		url: showRoute.url(),
+		type: showRoute.method,
+		success: function(){
+			window.location.replace("@{Zaposlenii.promenaLozinke()}"); 
+		}
+	});
+}
+
+</script>
+
+ <nav class="navbar navbar-light bg-faded">  
+ 	 	<a class="navbar-brand" href="@{Application.index()}">
+ 	 		Poslovna Banka
+ 	 	</a>
+ 	 	
+ 	 	
+        <a class="navbar-brand" href="javascript:d()">Drzave</a>
+        <a class="navbar-brand" href="javascript:nm()">Naseljena Mesta</a>
+        #{deadbolt.restrict roles:[['zaposleni.view']]}
+        <a class="navbar-brand" href="javascript:z()">Zaposleni</a>
+   		#{/deadbolt.restrict}
+        <a href="javascript:pl()">Promena lozinke</a>
+        <a href="/logout">Odjava</a>
+</nav>
+
+

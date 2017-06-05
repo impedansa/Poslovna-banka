@@ -22,11 +22,23 @@ public class Zaposlenii extends Controller{
 	}
 
 	@Restrict("zaposleni.view")
-	public static void show(String mode, Long s){
+	public static void show(){
 		List<Zaposleni> zaposleni = Zaposleni.findAll();
-		if (mode == null || mode.equals(""))
-			mode="show";
-		render(zaposleni, mode, s);
+		String mode = "";
+		String s = "";
+		if(params.get("mode") != null) {
+			mode = params.get("mode");
+			s = params.get("s");
+		} else {
+			mode = session.get("mode");
+			s = session.get("s");
+			if(mode == null || mode =="") {
+				mode = "show";
+			}
+		}
+		session.put("mode", mode);
+		session.put("s", s);
+		render(zaposleni);
 	}
 	
 	@Restrict("zaposleni.create")
@@ -38,12 +50,16 @@ public class Zaposlenii extends Controller{
 		String hashedPassword = BCrypt.hashpw(lozinka, BCrypt.gensalt(12));
 		Zaposleni z = new Zaposleni(korisnickoIme, hashedPassword);
 		z.save();
-		show("add", z.id);
+		session.put("mode", "add");
+ 		session.put("s", z.id);
+		show();
 	}
 	
 	public static void filter(String korisnickoIme, String lozinka) {
 		List<Zaposleni> zaposleni = Zaposleni.find("byKorisnickoImeLike", "%"+korisnickoIme+"%").fetch();
-		String mode = "show";
+		session.put("mode", "show");
+ 		session.put("s", null);
+		renderTemplate("Zaposlenii/show.html", zaposleni);
 	}
 	
 	@Restrict("zaposleni.remove")
@@ -57,7 +73,9 @@ public class Zaposlenii extends Controller{
 		}
 		Zaposleni z = Zaposleni.findById(id);
 		z.delete();
-		show("show",s);
+		session.put("mode", "show");
+		session.put("s", s);
+		show();
 	} 
 	
 	public static void editPassword(@Required String lozinka,@Required String ponovljenaLozinka,@Required String novaLozinka){

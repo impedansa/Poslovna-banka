@@ -8,29 +8,48 @@ import play.data.validation.Required;
 import play.mvc.Controller;
 
 public class Drzave extends Controller{
-	public static void show(String mode, Long s){
+	public static void show(){
 		List<Drzava> drzave = Drzava.findAll();
-		if (mode == null || mode.equals(""))
-			mode="edit";
-		render(drzave, mode, s);
+		String mode = "";
+		String s = "";
+		if(params.get("mode") != null) {
+			mode = params.get("mode");
+			s = params.get("s");
+		} else {
+			mode = session.get("mode");
+			s = session.get("s");
+			if(mode == null || mode =="") {
+				mode = "edit";
+			}
+		}
+		session.put("mode", mode);
+		session.put("s", s);
+		render(drzave);
 	}
 	
 	public static void create(@Required String oznaka, @Required String naziv) {
 		validation.maxSize(oznaka, 3);
 		if(validation.hasErrors()) {
 	          validation.keep(); 
-	          show("add",null);
+	          session.put("mode", "add");
+	  		  session.put("s", null);
+	          show();
 	    }
 		Drzava d = new Drzava(oznaka, naziv);
 		d.save();
-		show("add", d.id);
+		
+		session.put("mode", "add");
+ 		session.put("s", d.id);
+		show();
 	}
 	
 	public static void edit(Long id,@Required String oznaka,@Required String naziv) {
 		validation.maxSize(oznaka, 3);
 		if(validation.hasErrors()) {
 	          validation.keep(); 
-	          show("",null);
+	          session.put("mode", "");
+	  		  session.put("s", null);
+	          show();
 	    }
 		Long s = null;
 		if(id!=null){
@@ -51,14 +70,17 @@ public class Drzave extends Controller{
 			}
 
 		}
-		String mode = "edit";
-		show(mode, s);
+		
+		session.put("mode", "edit");
+ 		session.put("s", s);
+		show();
 	}
 	
 	public static void filter(String oznaka, String naziv) {
 		List<Drzava> drzave = Drzava.find("byOznakaLikeAndNazivLike", "%"+oznaka+"%", "%"+naziv+"%" ).fetch();
-		String mode = "edit";
-		renderTemplate("Drzave/show.html", mode, drzave);
+		session.put("mode", "edit");
+ 		session.put("s", null);
+		renderTemplate("Drzave/show.html", drzave);
 	}
 	
 	public static void delete(Long id) {
@@ -70,7 +92,10 @@ public class Drzave extends Controller{
 			}
 		}
 		Drzava d = Drzava.findById(id);
-		d.delete();
-		show("edit",s);
-	} 
+		d.delete(); 
+		
+		session.put("mode", "edit");
+		session.put("s", s);
+		show();
+	}
 }

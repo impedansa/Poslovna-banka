@@ -1,11 +1,11 @@
-#{extends 'standardForm.html' /}
+#{extends 'zaposleniAjax.html' /}
 #{set title:'Zaposleni' /}
 
 #{set 'action'}
-	#{if mode == 'add'}
+	#{if session.mode == 'add'}
 		@{Zaposlenii.create()}
 	#{/if}
-	#{elseif mode == 'show'}
+	#{elseif session.mode == 'show'}
 		@{Zaposlenii.show()}
 	#{/elseif}
 	#{else}
@@ -25,7 +25,14 @@ function sync(item){
 }
 
 function remove(id) {
-	$(location).attr('href', '/Zaposlenii/delete?id='+id);
+	var showRoute = #{jsRoute @Zaposlenii.delete(':id') /}
+	$.ajax({
+	url: showRoute.url({id: id}),
+	type: showRoute.method,
+	success: function(){
+		window.location.reload();
+	}
+	});
 	
 }
 
@@ -33,21 +40,21 @@ function remove(id) {
 
 <p>
 <ul class="tb-ulist">
-  <li class="tb-listitem"><a href="@{Zaposlenii.show("search")}" id = "search"><img src="@{'/public/images/search.gif'}"/></a></li>
-  <li class="tb-listitem"><a href="@{Zaposlenii.show()}" id = "refresh"><img src="@{'/public/images/refresh.gif'}"/></a></li>
+  <li class="tb-listitem"><a id = "search"><img src="@{'/public/images/search.gif'}"/></a></li>
+  <li class="tb-listitem"><a id = "refresh"><img src="@{'/public/images/refresh.gif'}"/></a></li>
   <li class="tb-listitem"><a href="#" id = "pickup"><img src="@{'/public/images/zoom-pickup.gif'}"/></a></li>
   <li class="tb-listitem"><a href="#" id = "help"><img src="@{'/public/images/help.gif'}"/></a></li>
   <li class="tb-listitem"><a id = "first"><img src="@{'/public/images/first.gif'}"/></a></li>
   <li class="tb-listitem"><a id = "prev"><img src="@{'/public/images/prev.gif'}"/></a></li>
   <li class="tb-listitem"><a id = "next"><img src="@{'/public/images/next.gif'}"/></a></li>
   <li class="tb-listitem"><a id = "last"><img src="@{'/public/images/last.gif'}"/></a></li>
-  <li class="tb-listitem"><a href="@{Zaposlenii.show("add")}" id = "add"><img src="@{'/public/images/add.gif'}"/></a></li>
-  <li class="tb-listitem"><a href="#" id = "remove"><img src="@{'/public/images/remove.gif'}"/></a></li>
+  <li class="tb-listitem"><a id = "add"><img src="@{'/public/images/add.gif'}"/></a></li>
+  <li class="tb-listitem"><a id = "remove"><img src="@{'/public/images/remove.gif'}"/></a></li>
   <li class="tb-listitem"><a href="#" id = "nextform"><img src="@{'/public/images/nextform.gif'}"/></a></li>
 </ul>
 </p>
 
-<p> Trenutno ste u ${mode} rezimu rada. </p>
+<p> Trenutno ste u ${session.mode} rezimu rada. </p>
 
 <h1>Zaposleni</h1>
 
@@ -57,7 +64,11 @@ function remove(id) {
 	   <th>Lozinka</th>
 	</tr>
 #{list items:zaposleni, as:'zaposlen'}
-	<tr  #{if zaposlen.id == s} class = "highlighted" #{/if}>
+%{
+  num=zaposlen.id;
+  zaposlenId=num.toString();
+}%
+	<tr  #{if zaposlenId == session.s} class = "highlighted" #{/if}>
 		<td class = "korisnickoIme">${zaposlen.korisnickoIme}</td>
 		<td class = "lozinka">${zaposlen.lozinka}</td>
 		<td style = "visibility: hidden; max-width: 0px" class = "id">${zaposlen.id}</td>
@@ -92,7 +103,7 @@ function remove(id) {
 				</p>
 				<div id = "formActions">
 					<input type = "submit" value = "Potvrda" style="margin-left:6em"/>
-					<a href = "@{Zaposlenii.show()}" style="margin-left:1em">Rollback</a>
+					<a href = "" id="rollback" style="margin-left:1em">Rollback</a>
 				</div>			
 				
 		<!-- #{/form} -->

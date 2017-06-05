@@ -1,5 +1,8 @@
-#{extends 'standardForm.html' /}
+
+#{extends 'naseljenaMestaAjax.html' /}
 #{set title:'Naseljena mesta' /}
+
+
 
 <script>
 $(document).ready(function(){
@@ -23,7 +26,14 @@ function sync(item){
 }
 
 function remove(id) {
-	$(location).attr('href', '/NaseljenaMesta/delete?id='+id);
+	var showRoute = #{jsRoute @NaseljenaMesta.delete(':id') /}
+	$.ajax({
+	url: showRoute.url({id: id}),
+	type: showRoute.method,
+	success: function(){
+		window.location.reload();
+	}
+	});
 }
 
 function next() {
@@ -31,20 +41,26 @@ function next() {
 	console.log(dr_id)
 }
 
+
+
+
+
+
 </script>
 
 <div class="container">
 <p>
+
 <ul class="tb-ulist">
-  <li class="tb-listitem"><a #{if mode == 'locked edit'} href="@{NaseljenaMesta.shownext("locked search",s,id)}" #{/if} #{elseif mode == 'locked add'} href="@{NaseljenaMesta.shownext("locked search",s,id)}" #{/elseif} #{else} href="@{NaseljenaMesta.show("search")}" #{/else} id = "search"><img src="@{'/public/images/search.gif'}"/></a></li>
-  <li class="tb-listitem"><a #{if mode == 'locked edit'} href="@{NaseljenaMesta.shownext("",s,id)}" #{/if} #{elseif mode == 'locked add'} href="@{NaseljenaMesta.shownext("",s,id)}" #{/elseif} #{elseif mode == 'locked search'} href="@{NaseljenaMesta.shownext("",s,id)}" #{/elseif} #{else} href="@{NaseljenaMesta.show()}" #{/else} id = "refresh"><img src="@{'/public/images/refresh.gif'}"/></a></li>
+  <li class="tb-listitem"><a #{if session.mode == 'locked edit' || session.mode == 'locked add'} href="javascript:searchlocked(${session.get('id')})" #{/if} #{else} href="javascript:search()" #{/else}  id = "search"><img src="@{'/public/images/search.gif'}"/></a></li>
+  <li class="tb-listitem"><a #{if session.mode == 'locked edit' || session.mode == 'locked add' || session.mode == 'locked search'} href="javascript:refreshlocked(${session.get('id')})" #{/if} #{else} href="javascript:refresh()" #{/else}  id = "refresh"><img src="@{'/public/images/refresh.gif'}"/></a></li>
   <li class="tb-listitem"><a href="#" id = "pickup"><img src="@{'/public/images/zoom-pickup.gif'}"/></a></li>
-  <li class="tb-listitem"><a href="#" id = "help"><img src="@{'/public/images/help.gif'}"/></a></li>
+  <li class="tb-listitem"><a href="javascript:b()" id = "help"><img src="@{'/public/images/help.gif'}"/></a></li>
   <li class="tb-listitem"><a  id = "first"><img src="@{'/public/images/first.gif'}"/></a></li>
   <li class="tb-listitem"><a  id = "prev"><img src="@{'/public/images/prev.gif'}"/></a></li>
   <li class="tb-listitem"><a  id = "next"><img src="@{'/public/images/next.gif'}"/></a></li>
   <li class="tb-listitem"><a  id = "last"><img src="@{'/public/images/last.gif'}"/></a></li>
-  <li class="tb-listitem"><a #{if mode == 'locked edit'} href="@{NaseljenaMesta.shownext("locked add",s,id)}" #{/if} #{elseif mode == 'locked search'} href="@{NaseljenaMesta.shownext("locked add",s,id)}" #{/elseif} #{else} href="@{NaseljenaMesta.show("add")}" #{/else} id = "add"><img src="@{'/public/images/add.gif'}"/></a></li>
+  <li class="tb-listitem"><a #{if session.mode == 'locked edit' || session.mode == 'locked search'} href="javascript:addlocked(${session.get('id')})" #{/if} #{else} href="javascript:add()" #{/else} id = "add"><img src="@{'/public/images/add.gif'}"/></a></li>
   <li class="tb-listitem"><a href="#" id = "remove"><img src="@{'/public/images/remove.gif'}"/></a></li>
   <li class="tb-listitem"><a href="#" id = "nextform"><img src="@{'/public/images/nextform.gif'}"/></a></li>
 </ul>
@@ -52,7 +68,7 @@ function next() {
 
 <div class = "container-fluid">
 
-<p> Trenutno ste u ${mode} rezimu rada.</p>
+<p> Trenutno ste u ${session.mode} rezimu rada.</p>
 
 <h1>Naseljena mesta</h1>
 
@@ -64,7 +80,11 @@ function next() {
 	   <th>Država</th>
 	</tr>
 #{list items:naseljenaMesta, as:'naseljenoMesto'}
-	<tr #{if naseljenoMesto.id == s} class = "highlighted" #{/if}>
+%{
+  num=naseljenoMesto.id;
+  naseljenoMestoId=num.toString();
+}%
+	<tr #{if naseljenoMestoId == session.s} class = "highlighted" #{/if}>
 		<td class = "oznaka">${naseljenoMesto.oznaka}</td>
 		<td class = "naziv">${naseljenoMesto.naziv}</td>
 		<td class = "postanskiBroj">${naseljenoMesto.postanskiBroj}</td>
@@ -76,23 +96,23 @@ function next() {
 </table>
 
 #{set 'action'}
-    #{if mode == 'add'}
-        @{NaseljenaMesta.createNormal()}
+    #{if session.mode == 'add'}
+        @{NaseljenaMesta.create()}
     #{/if}
-    #{elseif mode == 'locked add'} 
+    #{elseif session.mode == 'locked add'} 
         @{NaseljenaMesta.createNext()}
     #{/elseif}
-    #{elseif mode == 'edit'}
-        @{NaseljenaMesta.editNormal()}
+    #{elseif session.mode == 'edit'}
+        @{NaseljenaMesta.edit()}
     #{/elseif}
-    #{elseif mode== 'locked edit'} 
+    #{elseif session.mode== 'locked edit'} 
         @{NaseljenaMesta.editNext()}
     #{/elseif}
-    #{elseif mode== 'locked search'} 
+    #{elseif session.mode== 'locked search'} 
         @{NaseljenaMesta.filterNext()}
     #{/elseif}
     #{else}
-       @{NaseljenaMesta.filterNormal()}
+       @{NaseljenaMesta.filter()}
     #{/else}
   #{/set}
   
@@ -140,7 +160,7 @@ function next() {
 				</p>
 				<div id = "formActions">
 					<input type = "submit" value = "Potvrda" style="margin-left:6em"/>
-					<a #{if mode == 'locked edit'} href="@{NaseljenaMesta.shownext("",s,id)}" #{/if} #{elseif mode == 'locked add'} href="@{NaseljenaMesta.shownext("",s,id)}" #{/elseif} #{elseif mode == 'locked search'} href="@{NaseljenaMesta.shownext("",s,id)}" #{/elseif} #{else} href="@{NaseljenaMesta.show()}" #{/else}  style="margin-left:1em">Rollback</a>
+					<a #{if session.mode == 'locked edit' || session.mode == 'locked add' || session.mode == 'locked search'} href="javascript:refreshlocked(${session.get('id')})" #{/if} #{else} href="javascript:refresh()" #{/else}  id="rollback" style="margin-left:1em">Rollback</a>
 				</div>			
 				
 		</form>
