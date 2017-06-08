@@ -1,10 +1,8 @@
-#{extends 'standardForm.html' /}
+#{extends 'analitikeIzvodaAjax.html' /}
 #{set title:'Analitike izvoda' /}
 
 #{set 'action'}
-	#{if mode == 'add'}
-		@{AnalitikeIzvoda.filter()}
-	#{/if}
+	@{AnalitikeIzvoda.filter()}
 #{/set}
 
 <script>
@@ -114,10 +112,10 @@ function sync(item){
 #{/list}
 </table>
 
-<!--div class = "panel">
+<div class = "panel">
 	<p>
 	<form action=${action} method = "post">
-		<!-- #{form @AnalitikeIzvoda.show()} ->
+		<!-- #{form @AnalitikeIzvoda.show()} -->
 		
 				#{field 'id'}
 					<input type = "hidden" name = "${field.name}" id = "${field.id}"/>
@@ -224,7 +222,7 @@ function sync(item){
 					<a href = "#" style="margin-left:1em"></a>
 				</div>			
 				
-		<!-- #{/form} ->
+		<!-- #{/form} -->
 	</form>
 	</p>
 </div-->

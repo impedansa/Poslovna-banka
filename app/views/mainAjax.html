@@ -52,21 +52,35 @@ function pl() {
 	});
 }
 
+function a() {
+	var showRoute = #{jsRoute @AnalitikeIzvoda.show() /}
+	$.ajax({
+		method:"GET",
+		url: showRoute.url(),
+		type: showRoute.method,
+		data: {'mode': 'edit', 's': '0'},
+		dataType: "html",
+		success: function(){
+			window.location.replace("@{AnalitikeIzvoda.show()}"); 
+		}
+	});
+}
+
 </script>
 
- <nav class="navbar navbar-light bg-faded">  
- 	 	<a class="navbar-brand" href="@{Application.index()}">
- 	 		Poslovna Banka
- 	 	</a>
- 	 	
- 	 	
-        <a class="navbar-brand" href="javascript:d()">Drzave</a>
-        <a class="navbar-brand" href="javascript:nm()">Naseljena Mesta</a>
-        #{deadbolt.restrict roles:[['zaposleni.view']]}
-        <a class="navbar-brand" href="javascript:z()">Zaposleni</a>
-   		#{/deadbolt.restrict}
-        <a href="javascript:pl()">Promena lozinke</a>
-        <a href="/logout">Odjava</a>
-</nav>
-
-
+<ul class="nav nav-pills">
+	<li class="nav-item dropdown">
+		<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="@{Application.index()}" role="button" aria-haspopup="true" aria-expanded="false">Poslovna Banka</a>
+    <div class="dropdown-menu">
+      <a class="dropdown-item" href="javascript:d()">Drzave</a>
+      <a class="dropdown-item" href="javascript:nm()">Naseljena Mesta</a>
+      <a class="dropdown-item" href="javascript:a()">Analitika izvoda</a>
+      #{deadbolt.restrict roles:[['zaposleni.view']]}
+      <a class="dropdown-item" href="javascript:z()">Zaposleni</a>
+      #{/deadbolt.restrict}
+      <div class="dropdown-divider"></div>
+      <a class="dropdown-item" href="javascript:pl()">Promena lozinke</a>
+      <a class="dropdown-item" href="/logout">Odjava</a>
+    </div>
+  </li>
+</ul>
