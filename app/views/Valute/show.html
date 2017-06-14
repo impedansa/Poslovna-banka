@@ -1,0 +1,137 @@
+#{extends 'valuteAjax.html' /}
+#{set title:'Valute' /}
+
+
+#{set 'action'}
+	#{if session.mode == 'add'}
+		@{Valute.create()}
+	#{/if}
+	#{elseif session.mode == 'edit'}
+		@{Valute.edit()}
+	#{/elseif}
+	#{else}
+		@{Valute.filter()}
+	#{/else}
+#{/set}
+
+<script>
+
+
+
+function sync(item){
+	sifraValute = item.find(".sifraValute").html()
+    nazivValute = item.find(".nazivValute").html()
+    id = item.find(".id").html()
+    $("#sifraValute").val(sifraValute);
+    $("#nazivValute").val(nazivValute);
+    $("#id").val(id);
+}
+
+
+function remove(id) {
+	var showRoute = #{jsRoute @Valute.delete(':id') /}
+	$.ajax({
+	url: showRoute.url({id: id}),
+	type: showRoute.method,
+	success: function(){
+		window.location.reload();
+	}
+	});
+}
+
+function next(id) {
+	console.log(id);
+	var id_id = id.toString();
+	var showRoute = #{jsRoute @Racuni.shownext() /}
+	$.ajax({
+	method:"GET",
+	url: showRoute.url(),
+	type: showRoute.method,
+	data: {'mode': 'locked edit', 's': '0', 'id': id_id},
+	dataType: "html",
+	success: function(){
+		window.location.replace("@{Racuni.shownext()}"); 
+	}
+	});
+	
+}
+
+
+
+
+</script>
+
+<p>
+<ul class="tb-ulist">
+  <li class="tb-listitem"><a id = "search"><img src="@{'/public/images/search.gif'}"/></a></li>
+  <li class="tb-listitem"><a id = "refresh"><img src="@{'/public/images/refresh.gif'}"/></a></li>
+  <li class="tb-listitem"><a href="#" id = "pickup"><img src="@{'/public/images/zoom-pickup.gif'}"/></a></li>
+  <li class="tb-listitem"><a href="#" id = "help"><img src="@{'/public/images/help.gif'}"/></a></li>
+  <li class="tb-listitem"><a id = "first"><img src="@{'/public/images/first.gif'}"/></a></li>
+  <li class="tb-listitem"><a id = "prev"><img src="@{'/public/images/prev.gif'}"/></a></li>
+  <li class="tb-listitem"><a id = "next"><img src="@{'/public/images/next.gif'}"/></a></li>
+  <li class="tb-listitem"><a id = "last"><img src="@{'/public/images/last.gif'}"/></a></li>
+  <li class="tb-listitem"><a id = "add"><img src="@{'/public/images/add.gif'}"/></a></li>
+  <li class="tb-listitem"><a id = "remove"><img src="@{'/public/images/remove.gif'}"/></a></li>
+  <li class="tb-listitem"><a href="#" id = "nextform"><img src="@{'/public/images/nextform.gif'}"/></a></li>
+</ul>
+</p>
+
+<p> Trenutno ste u  ${session.mode} rezimu rada.</p>
+
+<h1>Valute</h1>
+<table id = "table">
+	<tr class = "header">
+	   <th>Sifra valute</th> 
+	   <th>Naziv valute</th>
+	</tr>
+
+
+#{list items:valute, as:'valuta'}
+%{
+  num=valuta.id;
+  valutaId=num.toString();
+}%
+	<tr  #{if session.s == valutaId} class = "highlighted" #{/if}>
+		<td class = "sifraValute">${valuta.sifraValute}</td>
+		<td class = "nazivValute">${valuta.nazivValute}</td>
+		<td style = "visibility: hidden; max-width: 0px" class = "id">${valuta.id}</td>
+	</tr>
+#{/list}
+</table>
+
+<div class = "panel">
+	<p>
+		<form action=${action} method = "post">
+		<!-- #{form @Valute.show()} -->
+		
+				#{field 'id'}
+					<input type = "hidden" name = "${field.name}" id = "${field.id}"/>
+				#{/}
+				
+				<p>
+				#{field 'sifraValute'}
+					<label for = "${field.id}">Sifra valute</label>
+					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+					<span>#{error field.name /}</span>
+					
+				#{/}
+				</p>
+				<p>
+				#{field 'nazivValute'}
+					<label for = "${field.id}">Naziv valute</label>
+					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+					<span>#{error field.name /}</span>
+					
+				#{/}
+				</p>
+				<div id = "formActions">
+					<input type = "submit" value = "Potvrda" style="margin-left:6em"/>
+					<a href = "" id="rollback" style="margin-left:1em">Rollback</a>
+				</div>			
+				
+		<!-- #{/form} -->
+	</form>
+	</p>
+</div>
+
