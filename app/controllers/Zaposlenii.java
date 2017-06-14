@@ -33,7 +33,7 @@ public class Zaposlenii extends Controller{
 			mode = session.get("mode");
 			s = session.get("s");
 			if(mode == null || mode =="") {
-				mode = "show";
+				mode = "search";
 			}
 		}
 		session.put("mode", mode);
@@ -57,7 +57,7 @@ public class Zaposlenii extends Controller{
 	
 	public static void filter(String korisnickoIme, String lozinka) {
 		List<Zaposleni> zaposleni = Zaposleni.find("byKorisnickoImeLike", "%"+korisnickoIme+"%").fetch();
-		session.put("mode", "show");
+		session.put("mode", "search");
  		session.put("s", null);
 		renderTemplate("Zaposlenii/show.html", zaposleni);
 	}
@@ -73,7 +73,7 @@ public class Zaposlenii extends Controller{
 		}
 		Zaposleni z = Zaposleni.findById(id);
 		z.delete();
-		session.put("mode", "show");
+		session.put("mode", "search");
 		session.put("s", s);
 		show();
 	} 

@@ -1,0 +1,251 @@
+
+#{extends 'medjubankarskiPrenosiAjax.html' /}
+#{set title:'Medjubankarski prenos' /}
+
+
+
+<script>
+$(document).ready(function(){
+	$("#posiljalacPickup").click(function(){
+		bpo_id = $(".highlighted").find(".bpo_id").html();
+		$("select.posiljalac").val(bpo_id);
+		$('#bankaPosiljalacModal').modal('toggle');
+	});
+});
+$(document).ready(function(){
+	$("#primalacPickup").click(function(){
+		bpr_id = $(".highlighted").find(".bpr_id").html();
+		$("select.primalac").val(bpr_id);
+		$('#bankaPrimalacModal').modal('toggle');
+	});
+});
+function sync(item){
+	vrstaPoruke = item.find(".vrstaPoruke").html()
+    datum = item.find(".datum").html()
+    ukupanIznos = item.find(".ukupanIznos").html()
+    id = item.find(".id").html()
+    bpo_id = item.find(".bpo_id").html()
+    bpr_id = item.find(".bpr_id").html()
+    $("#vrstaPoruke").val(vrstaPoruke);
+    $("#datum").val(datum);
+    $("#ukupanIznos").val(ukupanIznos);
+    $("#id").val(id);
+    $("select").val(bpo_id);
+    $("select").val(bpr_id);
+}
+
+function next() {
+	dr_id = $(".highlighted").find(".dr_id").html()
+	console.log(dr_id)
+}
+
+
+
+
+
+
+</script>
+
+<div class="container">
+<p>
+
+<ul class="tb-ulist">
+  <li class="tb-listitem"><a #{if session.mode == 'locked edit' || session.mode == 'locked add'} href="javascript:searchlocked(${session.get('id')})" #{/if} #{else} href="javascript:search()" #{/else}  id = "search"><img src="@{'/public/images/search.gif'}"/></a></li>
+  <li class="tb-listitem"><a #{if session.mode == 'locked edit' || session.mode == 'locked add' || session.mode == 'locked search'} href="javascript:refreshlocked(${session.get('id')})" #{/if} #{else} href="javascript:refresh()" #{/else}  id = "refresh"><img src="@{'/public/images/refresh.gif'}"/></a></li>
+  <li class="tb-listitem"><a href="#" id = "pickup"><img src="@{'/public/images/zoom-pickup.gif'}"/></a></li>
+  <li class="tb-listitem"><a href="#" id = "help"><img src="@{'/public/images/help.gif'}"/></a></li>
+  <li class="tb-listitem"><a  id = "first"><img src="@{'/public/images/first.gif'}"/></a></li>
+  <li class="tb-listitem"><a  id = "prev"><img src="@{'/public/images/prev.gif'}"/></a></li>
+  <li class="tb-listitem"><a  id = "next"><img src="@{'/public/images/next.gif'}"/></a></li>
+  <li class="tb-listitem"><a  id = "last"><img src="@{'/public/images/last.gif'}"/></a></li>
+  <li class="tb-listitem"><a  id = "add"><img src="@{'/public/images/add.gif'}"/></a></li>
+  <li class="tb-listitem"><a href="#" id = "remove"><img src="@{'/public/images/remove.gif'}"/></a></li>
+  <li class="tb-listitem"><a href="#" id = "nextform"><img src="@{'/public/images/nextform.gif'}"/></a></li>
+</ul>
+</p>
+
+<div class = "container-fluid">
+
+<p> Trenutno ste u ${session.mode} rezimu rada.</p>
+
+<h1>Medjubankarski prenos</h1>
+
+<table id = "table">
+	<tr class = "header">
+	   <th>Vrsta poruke</th> 
+	   <th>Datum</th>
+	   <th width="20%">Ukupan iznos</th>
+	   <th>Banka posiljalac</th>
+	   <th>Banka primalac</th>
+	</tr>
+#{list items:medjubankarskiPrenosi, as:'medjubankarskiPrenos'}
+%{
+  num=medjubankarskiPrenos.id;
+  medjubankarskiPrenosId=num.toString();
+}%
+	<tr #{if medjubankarskiPrenosId == session.s} class = "highlighted" #{/if}>
+		<td class = "vrstaPoruke">${medjubankarskiPrenos.vrstaPoruke}</td>
+		<td class = "datum">${medjubankarskiPrenos.datum}</td>
+		<td class = "ukupanIznos">${medjubankarskiPrenos.ukupanIznos}</td>
+		<td class = "bankaPosiljalac">${medjubankarskiPrenos.bankaPosiljalac.nazivBanke}</td>
+		<td class = "bankaPrimalac">${medjubankarskiPrenos.bankaPrimalac.nazivBanke}</td>
+		<td style = "visibility: hidden; max-width: 0px" class = "bpo_id">${medjubankarskiPrenos.bankaPosiljalac.id}</td>
+		<td style = "visibility: hidden; max-width: 0px" class = "bpr_id">${medjubankarskiPrenos.bankaPrimalac.id}</td>
+		<td style = "visibility: hidden; max-width: 0px" class = "id">${medjubankarskiPrenos.id}</td>
+	</tr>
+#{/list}
+</table>
+
+#{set 'action'}
+    #{if session.mode== 'locked search'} 
+        @{MedjubankarskiPrenosi.filterNext()}
+    #{/if}
+    #{else}
+       @{MedjubankarskiPrenosi.filter()}
+    #{/else}
+  #{/set}
+  
+<div class = "panel">
+	<p>
+	
+		<form action = "${action}" method="post">
+		
+				#{field 'id'}
+					<input type = "hidden" name = "${field.name}" id = "${field.id}"/>
+				#{/}
+				
+				<p>
+				#{field 'vrstaPoruke'}
+					<label for = "${field.id}">Vrsta poruke</label>
+					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+					<span>#{error field.name /}</span>
+				#{/}
+				</p>
+				<p>
+				#{field 'datum'}
+					<label for = "${field.id}">Datum</label>
+					<input type = "text" name = "${field.name}" id = "${field.name}"/>
+					<span>#{error field.name /}</span>
+				#{/}
+				</p>
+				<p>
+				#{field 'ukupanIznos'}
+					<label for = "${field.id}">Ukupan iznos</label>
+					<input type = "text" name = "${field.name}" id = "${field.name}"/>
+					<span>#{error field.name /}</span>
+				#{/}
+				</p>
+				<p>
+				#{field 'bankePosiljaoci'}
+					<label for = "${field.id}">Banka posiljalac</label>
+					<select class="posiljalac" name = "${field.name}" id = "${field.id}"/>
+					#{list items:bankePosiljaoci, as:'posiljalac'}
+					<option value = "${posiljalac.id}">${posiljalac.nazivBanke}</option>
+					#{/list}
+					</select>
+					
+					 <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#bankaPosiljalacModal">... </button>
+				#{/}
+				</p>
+				<p>
+				#{field 'bankePrimaoci'}
+					<label for = "${field.id}">Banka primalac</label>
+					<select class="primalac" name = "${field.name}" id = "${field.id}"/>
+					#{list items:bankePrimaoci, as:'primalac'}
+					<option value = "${primalac.id}">${primalac.nazivBanke}</option>
+					#{/list}
+					</select>
+					
+					<button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#bankaPrimalacModal">... </button>
+				#{/}
+				</p>
+				
+				<div id = "formActions">
+					<input type = "submit" value = "Potvrda" style="margin-left:6em"/>
+					<a #{if session.mode == 'locked edit' || session.mode == 'locked add' || session.mode == 'locked search'} href="javascript:refreshlocked(${session.get('id')})" #{/if} #{else} href="javascript:refresh()" #{/else}  id="rollback" style="margin-left:1em">Rollback</a>
+				</div>			
+				
+		</form>
+	</p>
+</div>
+
+ <!-- Modal -->
+ 	<div class="modal fade" id="bankaPosiljalacModal" role="dialog">
+  	<div class="modal-dialog">
+    	<div class="modal-content">
+    		 <div class="modal-header">
+      	Banka posiljalac
+      </div>
+      <div class="modal-body">
+      	<div>
+      	<p>
+      	<input oninput="w3.filterHTML('#tableD', '.item', this.value)">
+      	</p>
+      	</div>
+	    <table style = "padding:2em" id="tableD">
+		<tr class = "header">
+		   <th>Sifra</th> 
+		   <th>Naziv</th>
+		   <th>Swift kod</th>
+		   <th>Obracunski racun</th>
+		</tr>
+		#{list items:bankePosiljaoci, as:'posiljalac'}
+		<tr class = "item">
+			<td class = "bpo_sifraBanke">${posiljalac.sifraBanke}</td>
+			<td class = "bpo_nazivBanke">${posiljalac.nazivBanke}</td>
+			<td class = "bpo_swiftKod">${posiljalac.swiftKod}</td>
+			<td class = "bpo_obracunskiRacun">${posiljalac.obracunskiRacun}</td>
+			<td style = "visibility: hidden; max-width: 0px" class = "bpo_id">${posiljalac.id}</td>
+		</tr>
+		#{/list}
+		</table>
+	
+		<div class="modal-footer">
+			<input id = "posiljalacPickup" type = "button" value = "izbor"/>
+		</div>
+		</div>
+    	</div>
+  	</div>
+	</div>
+</div>
+</div>
+<!-- Modal -->
+ 	<div class="modal fade" id="bankaPrimalacModal" role="dialog">
+  	<div class="modal-dialog">
+    	<div class="modal-content">
+    		 <div class="modal-header">
+      	Banka primalac
+      </div>
+      <div class="modal-body">
+      	<div>
+      	<p>
+      	<input oninput="w3.filterHTML('#tableD', '.item', this.value)">
+      	</p>
+      	</div>
+	    <table style = "padding:2em" id="tableD">
+		<tr class = "header">
+		   <th>Sifra</th> 
+		   <th>Naziv</th>
+		   <th>Swift kod</th>
+		   <th>Obracunski racun</th>
+		</tr>
+		#{list items:bankePrimaoci, as:'primalac'}
+		<tr class = "item">
+			<td class = "bpr_sifraBanke">${primalac.sifraBanke}</td>
+			<td class = "bpr_nazivBanke">${primalac.nazivBanke}</td>
+			<td class = "bpr_swiftKod">${primalac.swiftKod}</td>
+			<td class = "bpr_obracunskiRacun">${primalac.obracunskiRacun}</td>
+			<td style = "visibility: hidden; max-width: 0px" class = "bpr_id">${primalac.id}</td>
+		</tr>
+		#{/list}
+		</table>
+	
+		<div class="modal-footer">
+			<input id = "primalacPickup" type = "button" value = "izbor"/>
+		</div>
+		</div>
+    	</div>
+  	</div>
+	</div>
+</div>
+</div>

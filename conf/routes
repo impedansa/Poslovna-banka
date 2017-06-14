@@ -19,7 +19,6 @@ GET     /public/                                staticDir:public
 #*       	/{controller}/{action}                  {controller}.{action}
 GET      /{controller}/show						 {controller}.show
 DELETE   /{controller}/show						 {controller}.show
-POST 	 /{controller}/show						 {controller}.show
 POST 	 /{controller}/edit						 {controller}.edit
 POST 	 /{controller}/create					 {controller}.create
 POST	 /{controller}/filter					 {controller}.filter

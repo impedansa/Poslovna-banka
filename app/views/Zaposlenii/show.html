@@ -5,9 +5,6 @@
 	#{if session.mode == 'add'}
 		@{Zaposlenii.create()}
 	#{/if}
-	#{elseif session.mode == 'show'}
-		@{Zaposlenii.show()}
-	#{/elseif}
 	#{else}
 		@{Zaposlenii.filter()}
 	#{/else}

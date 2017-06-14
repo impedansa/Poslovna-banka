@@ -1,0 +1,37 @@
+#{extends 'standardForm.html' /}
+<script>
+
+
+function search() {
+	var showRoute = #{jsRoute @ZatvaranjaRacuna.show() /}
+	$.ajax({
+	method:"GET",
+	url: showRoute.url(),
+	type: showRoute.method,
+	data: {'mode': 'search', 's': '0'},
+	dataType: "html",
+	success: function(){
+		window.location.href = 'http://localhost:8080/zatvaranjaRacuna/show';
+	}
+	});
+}
+
+
+function refresh() {
+	var showRoute = #{jsRoute @ZatvaranjaRacuna.show() /}
+	$.ajax({
+	method:"GET",
+	url: showRoute.url(),
+	type: showRoute.method,
+	data: {'mode': 'search', 's': '0'},
+	dataType: "html",
+	success: function(){
+		window.location.href = 'http://localhost:8080/zatvaranjaRacuna/show';
+	}
+	});
+}
+
+</script>
+
+
+#{doLayout/}

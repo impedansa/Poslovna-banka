@@ -96,6 +96,6 @@ public class Drzave extends Controller{
 		
 		session.put("mode", "edit");
 		session.put("s", s);
-		show();
+		//show();
 	}
 }

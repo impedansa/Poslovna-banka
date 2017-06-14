@@ -1,0 +1,248 @@
+
+#{extends 'stavkePrenosaAjax.html' /}
+#{set title:'Stavke prenosa' /}
+
+
+
+<script>
+$(document).ready(function(){
+	$("#medjubankarskiPickup").click(function(){
+		mp_id = $(".highlighted").find(".mp_id").html();
+		$("select").val(mp_id);
+		$('#medjubankarskiModal').modal('toggle');
+	});
+});
+$(document).ready(function(){
+	$("#analitikaPickup").click(function(){
+		ai_id = $(".highlighted").find(".ai_id").html();
+		$("select").val(ai_id);
+		$('#analitikaModal').modal('toggle');
+	});
+});
+function sync(item){
+    id = item.find(".id").html()
+    bpo_id = item.find(".mp_id").html()
+    bpr_id = item.find(".ai_id").html()
+    $("#id").val(id);
+    $("select").val(mp_id);
+    $("select").val(ai_id);
+}
+
+function next() {
+	dr_id = $(".highlighted").find(".dr_id").html()
+	console.log(dr_id)
+}
+
+
+
+
+
+
+</script>
+
+<div class="container">
+<p>
+
+<ul class="tb-ulist">
+  <li class="tb-listitem"><a #{if session.mode == 'locked edit' || session.mode == 'locked add'} href="javascript:searchlocked(${session.get('id')})" #{/if} #{else} href="javascript:search()" #{/else}  id = "search"><img src="@{'/public/images/search.gif'}"/></a></li>
+  <li class="tb-listitem"><a #{if session.mode == 'locked edit' || session.mode == 'locked add' || session.mode == 'locked search'} href="javascript:refreshlocked(${session.get('id')})" #{/if} #{else} href="javascript:refresh()" #{/else}  id = "refresh"><img src="@{'/public/images/refresh.gif'}"/></a></li>
+  <li class="tb-listitem"><a href="#" id = "pickup"><img src="@{'/public/images/zoom-pickup.gif'}"/></a></li>
+  <li class="tb-listitem"><a href="#" id = "help"><img src="@{'/public/images/help.gif'}"/></a></li>
+  <li class="tb-listitem"><a  id = "first"><img src="@{'/public/images/first.gif'}"/></a></li>
+  <li class="tb-listitem"><a  id = "prev"><img src="@{'/public/images/prev.gif'}"/></a></li>
+  <li class="tb-listitem"><a  id = "next"><img src="@{'/public/images/next.gif'}"/></a></li>
+  <li class="tb-listitem"><a  id = "last"><img src="@{'/public/images/last.gif'}"/></a></li>
+  <li class="tb-listitem"><a  id = "add"><img src="@{'/public/images/add.gif'}"/></a></li>
+  <li class="tb-listitem"><a href="#" id = "remove"><img src="@{'/public/images/remove.gif'}"/></a></li>
+  <li class="tb-listitem"><a href="#" id = "nextform"><img src="@{'/public/images/nextform.gif'}"/></a></li>
+</ul>
+</p>
+
+<div class = "container-fluid">
+
+<p> Trenutno ste u ${session.mode} rezimu rada.</p>
+
+<h1>Stavke prenosa</h1>
+
+<table id = "table">
+	<tr class = "header">
+	   <th>Medjubankarski prenos</th>
+	   <th>Analitika izvoda</th>
+	</tr>
+#{list items:stavkePrenosa, as:'stavkaPrenosa'}
+%{
+  num=stavkaPrenosa.id;
+  stavkaPrenosaId=num.toString();
+}%
+	<tr #{if stavkaPrenosaId == session.s} class = "highlighted" #{/if}>
+		<td class = "medjubankarskiPrenos">${stavkaPrenosa.medjubankarskiPrenos.vrstaPoruke}</td>
+		<td class = "analitikaIzvoda">${stavkaPrenosa.analitikaIzvoda.datumAnalitike}</td>
+		<td style = "visibility: hidden; max-width: 0px" class = "mp_id">${stavkaPrenosa.medjubankarskiPrenos.id}</td>
+		<td style = "visibility: hidden; max-width: 0px" class = "ai_id">${stavkaPrenosa.analitikaIzvoda.id}</td>
+		<td style = "visibility: hidden; max-width: 0px" class = "id">${stavkaPrenosa.id}</td>
+	</tr>
+#{/list}
+</table>
+
+#{set 'action'}
+    #{if session.mode== 'locked search'} 
+        @{StavkePrenosa.filterNext()}
+    #{/if}
+    #{else}
+       @{StavkePrenosa.filter()}
+    #{/else}
+  #{/set}
+  
+<div class = "panel">
+	<p>
+	
+		<form action = "${action}" method="post">
+		
+				#{field 'id'}
+					<input type = "hidden" name = "${field.name}" id = "${field.id}"/>
+				#{/}
+				
+				<p>
+				#{field 'medjubankarskiPrenos'}
+					<label for = "${field.id}">Medjubankarski prenos</label>
+					<select name = "${field.name}" id = "${field.id}"/>
+					#{list items:medjubankarskiPrenos, as:'medjubankarski'}
+					<option value = "${medjubankarski.id}">${medjubankarski.vrstaPoruke}</option>
+					#{/list}
+					</select>
+					
+					 <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#medjubankarskiModal">... </button>
+				#{/}
+				</p>
+				<p>
+				#{field 'analitikaIzvoda'}
+					<label for = "${field.id}">Analitika izvoda</label>
+					<select name = "${field.name}" id = "${field.id}"/>
+					#{list items:analitikaIzvoda, as:'analitika'}
+					<option value = "${analitika.id}">${analitika.datumAnalitike}</option>
+					#{/list}
+					</select>
+					
+					 <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#analitikaModal">... </button>
+				#{/}
+				</p>
+				
+				<div id = "formActions">
+					<input type = "submit" value = "Potvrda" style="margin-left:6em"/>
+					<a #{if session.mode == 'locked edit' || session.mode == 'locked add' || session.mode == 'locked search'} href="javascript:refreshlocked(${session.get('id')})" #{/if} #{else} href="javascript:refresh()" #{/else}  id="rollback" style="margin-left:1em">Rollback</a>
+				</div>			
+				
+		</form>
+	</p>
+</div>
+
+ <!-- Modal -->
+ 	<div class="modal fade" id="analitikaModal" role="dialog">
+  	<div class="modal-dialog">
+    	<div class="modal-content">
+    		 <div class="modal-header">
+      	Analitika izvoda
+      </div>
+      <div class="modal-body">
+      	<div>
+      	<p>
+      	<input oninput="w3.filterHTML('#tableD', '.item', this.value)">
+      	</p>
+      	</div>
+	    <table style = "padding:2em" id="tableD">
+		<tr class = "header">
+		   <th>Datum analitike</th> 
+		   <th>Smer</th>
+		   <th>Duznik</th>
+		   <th>Svrha placanja</th>
+		   <th>Poverilac</th>
+		   <th>Datum prijema</th>
+		   <th>Datum valute</th>
+		   <th>Racun duznika</th>
+		   <th>Model zaduzenja</th>
+		   <th>P.n.b. zaduzenja</th>
+		   <th>Racun poverioca</th>
+		   <th>Model odobrenja</th>
+		   <th>P.n.b. odobrenja</th>
+		   <th>Hitno</th>
+		   <th>Iznos</th>
+		   <th>Tip greske</th>
+		   <th>Status</th>
+		   <th>Dn. stanje racuna</th>
+		</tr>
+		#{list items:analitikaIzvoda, as:'analitika'}
+		<tr class = "item">
+			<td class = "ai_datumAnalitike">${analitika.datumAnalitike}</td>
+			<td class = "ai_smer">${analitika.smer}</td>
+			<td class = "ai_duznikNalogodavac">${analitika.duznikNalogodavac}</td>
+			<td class = "ai_svhrhaPlacanja">${analitika.svrhaPlacanja}</td>
+			<td class = "ai_poverilacPrimalac">${analitika.poverilacPrimalac}</td>
+			<td class = "ai_datumPrijema">${analitika.datumPrijema}</td>
+			<td class = "ai_datumValute">${analitika.datumValute}</td>
+			<td class = "ai_racunDuznika">${analitika.racunDuznika}</td>
+			<td class = "ai_modelZaduzenja">${analitika.modelZaduzenja}</td>
+			<td class = "ai_pozivNaBrojZaduzenja">${analitika.pozivNaBrojZaduzenja}</td>
+			<td class = "ai_racunPoverioca">${analitika.racunPoverioca}</td>
+			<td class = "ai_modelOdobrenja">${analitika.modelOdobrenja}</td>
+			<td class = "ai_pozivNaBrojOdobrenja">${analitika.pozivNaBrojOdobrenja}</td>
+			<td class = "ai_hitno">${analitika.hitno}</td>
+			<td class = "ai_iznos">${analitika.iznos}</td>
+			<td class = "ai_tipGreske">${analitika.tipGreske}</td>
+			<td class = "ai_status">${analitika.status}</td>
+			<td class = "ai_dnevnoStanjeRacuna">${analitika.dnevnoStanjeRacuna.datum}</td>
+			<td style = "visibility: hidden; max-width: 0px" class = "bpo_id">${analitika.id}</td>
+		</tr>
+		#{/list}
+		</table>
+	
+		<div class="modal-footer">
+			<input id = "analitikaPickup" type = "button" value = "izbor"/>
+		</div>
+		</div>
+    	</div>
+  	</div>
+	</div>
+</div>
+</div>
+<!-- Modal -->
+ 	<div class="modal fade" id="medjubankarskiModal" role="dialog">
+  	<div class="modal-dialog">
+    	<div class="modal-content">
+    		 <div class="modal-header">
+      	Medjubankarski prenos
+      </div>
+      <div class="modal-body">
+      	<div>
+      	<p>
+      	<input oninput="w3.filterHTML('#tableD', '.item', this.value)">
+      	</p>
+      	</div>
+	    <table style = "padding:2em" id="tableD">
+		<tr class = "header">
+		   <th>Vrsta poruke</th> 
+		   <th>Datum</th>
+		   <th>Ukupan iznos</th>
+		   <th>Banka posiljalac</th>
+		   <th>Banka primalac </th>
+		</tr>
+		#{list items:medjubankarskiPrenos, as:'medjubankarski'}
+		<tr class = "item">
+			<td class = "mp_vrstaPoruke">${medjubankarski.vrstaPoruke}</td>
+			<td class = "mp_datum">${medjubankarski.datum}</td>
+			<td class = "mp_ukupanIznos">${medjubankarski.ukupanIznos}</td>
+			<td class = "mp_bankaPosiljalac">${medjubankarski.bankaPosiljalac.nazivBanke}</td>
+			<td class = "mp_bankaPrimalac">${medjubankarski.bankaPrimalac.nazivBanke}</td>
+			<td style = "visibility: hidden; max-width: 0px" class = "mp_id">${medjubankarski.id}</td>
+		</tr>
+		#{/list}
+		</table>
+	
+		<div class="modal-footer">
+			<input id = "medjubankarskiPickup" type = "button" value = "izbor"/>
+		</div>
+		</div>
+    	</div>
+  	</div>
+	</div>
+</div>
+</div>
