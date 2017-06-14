@@ -66,17 +66,47 @@ function a() {
 	});
 }
 
+function r() {
+	var showRoute = #{jsRoute @Racuni.show() /}
+	$.ajax({
+		method:"GET",
+		url: showRoute.url(),
+		type: showRoute.method,
+		data: {'mode': 'edit', 's': '0'},
+		dataType: "html",
+		success: function(){
+			window.location.replace("@{Racuni.show()}"); 
+		}
+	});
+}
+
+function v() {
+	var showRoute = #{jsRoute @Valute.show() /}
+	$.ajax({
+		method:"GET",
+		url: showRoute.url(),
+		type: showRoute.method,
+		data: {'mode': 'edit', 's': '0'},
+		dataType: "html",
+		success: function(){
+			window.location.replace("@{Valute.show()}"); 
+		}
+	});
+}
+
 </script>
 
 <ul class="nav nav-pills">
 	<li class="nav-item dropdown">
 		<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="@{Application.index()}" role="button" aria-haspopup="true" aria-expanded="false">Poslovna Banka</a>
     <div class="dropdown-menu">
+      <a class="dropdown-item" href="javascript:r()">Racuni</a>
       <a class="dropdown-item" href="javascript:d()">Drzave</a>
       <a class="dropdown-item" href="javascript:nm()">Naseljena Mesta</a>
       <a class="dropdown-item" href="javascript:a()">Analitika izvoda</a>
       #{deadbolt.restrict roles:[['zaposleni.view']]}
       <a class="dropdown-item" href="javascript:z()">Zaposleni</a>
+      <a class="dropdown-item" href="javascript:v()">Valute</a>
       #{/deadbolt.restrict}
       <div class="dropdown-divider"></div>
       <a class="dropdown-item" href="javascript:pl()">Promena lozinke</a>
