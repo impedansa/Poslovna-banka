@@ -118,21 +118,6 @@ function r() {
 	});
 }
 
-<<<<<<< HEAD
-function v() {
-	var showRoute = #{jsRoute @Valute.show() /}
-	$.ajax({
-		method:"GET",
-		url: showRoute.url(),
-		type: showRoute.method,
-		data: {'mode': 'edit', 's': '0'},
-		dataType: "html",
-		success: function(){
-			window.location.replace("@{Valute.show()}"); 
-		}
-	});
-}
-=======
 function r() {
 	var showRoute = #{jsRoute @Racuni.show() /}
 	$.ajax({
@@ -161,28 +146,54 @@ function v() {
 	});
 }
 
->>>>>>> refs/remotes/origin/master
+function sd() {
+	var showRoute = #{jsRoute @SifrarniciDelatnosti.show() /}
+	$.ajax({
+		method:"GET",
+		url: showRoute.url(),
+		type: showRoute.method,
+		data: {'mode': 'edit', 's': '0'},
+		dataType: "html",
+		success: function(){
+			window.location.replace("@{SifrarniciDelatnosti.show()}"); 
+		}
+	});
+}
+
+function k() {
+	var showRoute = #{jsRoute @Klijenti.show() /}
+	$.ajax({
+		method:"GET",
+		url: showRoute.url(),
+		type: showRoute.method,
+		data: {'mode': 'edit', 's': '0'},
+		dataType: "html",
+		success: function(){
+			window.location.replace("@{Klijenti.show()}"); 
+		}
+	});
+}
+
+
 </script>
 
 <ul class="nav nav-pills">
 	<li class="nav-item dropdown">
 		<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="@{Application.index()}" role="button" aria-haspopup="true" aria-expanded="false">Poslovna Banka</a>
     <div class="dropdown-menu">
-<<<<<<< HEAD
+
        <a class="dropdown-item" href="javascript:r()">Racuni</a>
-=======
-      <a class="dropdown-item" href="javascript:r()">Racuni</a>
->>>>>>> refs/remotes/origin/master
       <a class="dropdown-item" href="javascript:d()">Drzave</a>
       <a class="dropdown-item" href="javascript:nm()">Naseljena Mesta</a>
       <a class="dropdown-item" href="javascript:a()">Analitika izvoda</a>
       <a class="dropdown-item" href="javascript:mp()">Medjubankarski prenos</a>
       <a class="dropdown-item" href="javascript:sp()">Stvake prenosa</a>
       <a class="dropdown-item" href="javascript:zr()">Zatvaranje racuna</a>
-       <a class="dropdown-item" href="javascript:v()">Valute</a>
       #{deadbolt.restrict roles:[['zaposleni.view']]}
       <a class="dropdown-item" href="javascript:z()">Zaposleni</a>
       <a class="dropdown-item" href="javascript:v()">Valute</a>
+      <a class="dropdown-item" href="javascript:sd()">Sifrarnik delatnosti</a>
+      <a class="dropdown-item" href="javascript:k()">Klijenti</a>
       #{/deadbolt.restrict}
       <div class="dropdown-divider"></div>
       <a class="dropdown-item" href="javascript:pl()">Promena lozinke</a>

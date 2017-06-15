@@ -1,0 +1,137 @@
+#{extends 'sifrarniciDelatnostiAjax.html' /}
+#{set title:'Sifre delatnosti' /}
+
+
+#{set 'action'}
+	#{if session.mode == 'add'}
+		@{SifrarniciDelatnosti.create()}
+	#{/if}
+	#{elseif session.mode == 'edit'}
+		@{SifrarniciDelatnosti.edit()}
+	#{/elseif}
+	#{else}
+		@{SifrarniciDelatnosti.filter()}
+	#{/else}
+#{/set}
+
+<script>
+
+
+
+function sync(item){
+	sifraDelatnosti = item.find(".sifraDelatnosti").html()
+    nazivDelatnosti = item.find(".nazivDelatnosti").html()
+    id = item.find(".id").html()
+    $("#sifraDelatnosti").val(sifraDelatnosti);
+    $("#nazivDelatnosti").val(nazivDelatnosti);
+    $("#id").val(id);
+}
+
+
+function remove(id) {
+	var showRoute = #{jsRoute @SifrarniciDelatnosti.delete(':id') /}
+	$.ajax({
+	url: showRoute.url({id: id}),
+	type: showRoute.method,
+	success: function(){
+		window.location.reload();
+	}
+	});
+}
+
+function next(id) {
+	console.log(id);
+	var id_id = id.toString();
+	var showRoute = #{jsRoute @Klijenti.shownext() /}
+	$.ajax({
+	method:"GET",
+	url: showRoute.url(),
+	type: showRoute.method,
+	data: {'mode': 'locked edit', 's': '0', 'id': id_id},
+	dataType: "html",
+	success: function(){
+		window.location.replace("@{Klijenti.shownext()}"); 
+	}
+	});
+	
+}
+
+
+
+
+</script>
+
+<p>
+<ul class="tb-ulist">
+  <li class="tb-listitem"><a id = "search"><img src="@{'/public/images/search.gif'}"/></a></li>
+  <li class="tb-listitem"><a id = "refresh"><img src="@{'/public/images/refresh.gif'}"/></a></li>
+  <li class="tb-listitem"><a href="#" id = "pickup"><img src="@{'/public/images/zoom-pickup.gif'}"/></a></li>
+  <li class="tb-listitem"><a href="#" id = "help"><img src="@{'/public/images/help.gif'}"/></a></li>
+  <li class="tb-listitem"><a id = "first"><img src="@{'/public/images/first.gif'}"/></a></li>
+  <li class="tb-listitem"><a id = "prev"><img src="@{'/public/images/prev.gif'}"/></a></li>
+  <li class="tb-listitem"><a id = "next"><img src="@{'/public/images/next.gif'}"/></a></li>
+  <li class="tb-listitem"><a id = "last"><img src="@{'/public/images/last.gif'}"/></a></li>
+  <li class="tb-listitem"><a id = "add"><img src="@{'/public/images/add.gif'}"/></a></li>
+  <li class="tb-listitem"><a id = "remove"><img src="@{'/public/images/remove.gif'}"/></a></li>
+  <li class="tb-listitem"><a href="#" id = "nextform"><img src="@{'/public/images/nextform.gif'}"/></a></li>
+</ul>
+</p>
+
+<p> Trenutno ste u  ${session.mode} rezimu rada.</p>
+
+<h1>Sifre delatnosti</h1>
+<table id = "table">
+	<tr class = "header">
+	   <th>Sifra delatnosti</th> 
+	   <th>Naziv delatnosti</th>
+	</tr>
+
+
+#{list items:sifrarniciDelatnosti, as:'sifrarnikDelatnosti'}
+%{
+  num=sifrarnikDelatnosti.id;
+  sifrarnikDelatnostiId=num.toString();
+}%
+	<tr  #{if session.s == sifrarnikDelatnostiId} class = "highlighted" #{/if}>
+		<td class = "sifraDelatnosti">${sifrarnikDelatnosti.sifraDelatnosti}</td>
+		<td class = "nazivDelatnosti">${sifrarnikDelatnosti.nazivDelatnosti}</td>
+		<td style = "visibility: hidden; max-width: 0px" class = "id">${sifrarnikDelatnosti.id}</td>
+	</tr>
+#{/list}
+</table>
+
+<div class = "panel">
+	<p>
+		<form action=${action} method = "post">
+		<!-- #{form @SifrarniciDelatnosti.show()} -->
+		
+				#{field 'id'}
+					<input type = "hidden" name = "${field.name}" id = "${field.id}"/>
+				#{/}
+				
+				<p>
+				#{field 'sifraDelatnosti'}
+					<label for = "${field.id}">Sifra delatnosti</label>
+					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+					<span>#{error field.name /}</span>
+					
+				#{/}
+				</p>
+				<p>
+				#{field 'nazivDelatnosti'}
+					<label for = "${field.id}">Naziv delatnosti</label>
+					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+					<span>#{error field.name /}</span>
+					
+				#{/}
+				</p>
+				<div id = "formActions">
+					<input type = "submit" value = "Potvrda" style="margin-left:6em"/>
+					<a href = "" id="rollback" style="margin-left:1em">Rollback</a>
+				</div>			
+				
+		<!-- #{/form} -->
+	</form>
+	</p>
+</div>
+

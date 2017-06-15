@@ -1,0 +1,68 @@
+#{extends 'standardForm.html' /}
+<script>
+$(document).ready(function(){
+	$("#add").click(function() {
+	var showRoute = #{jsRoute @SifrarniciDelatnosti.show() /}
+	$.ajax({
+	method:"GET",
+	url: showRoute.url(),
+	type: showRoute.method,
+	data: {'mode': 'add', 's': '0'},
+	dataType: "html",
+	success: function(){
+		window.location.href = 'http://localhost:8080/sifrarniciDelatnosti/show';
+	}
+	});
+});
+
+});
+
+$(document).ready(function(){
+$("#search").click(function() {
+	var showRoute = #{jsRoute @SifrarniciDelatnosti.show() /}
+	$.ajax({
+	method:"GET",
+	url: showRoute.url(),
+	type: showRoute.method,
+	data: {'mode': 'search', 's': '0'},
+	dataType: "html",
+	success: function(){
+		window.location.href = 'http://localhost:8080/sifrarniciDelatnosti/show';
+	}
+	});
+});
+});
+
+$(document).ready(function(){
+$("#refresh").click(function() {
+	var showRoute = #{jsRoute @SifrarniciDelatnosti.show() /}
+	$.ajax({
+	method:"GET",
+	url: showRoute.url(),
+	type: showRoute.method,
+	data: {'mode': 'edit', 's': '0'},
+	dataType: "html",
+	success: function(){
+		window.location.href = 'http://localhost:8080/sifrarniciDelatnosti/show';
+	}
+	});
+});
+});
+
+$(document).ready(function(){
+$("#rollback").click(function() {
+	var showRoute = #{jsRoute @SifrarniciDelatnosti.show() /}
+	$.ajax({
+	method:"GET",
+	url: showRoute.url(),
+	type: showRoute.method,
+	data: {'mode': 'edit', 's': '0'},
+	dataType: "html",
+	success: function(){
+		window.location.href = 'http://localhost:8080/sifrarniciDelatnosti/show';
+	}
+	});
+});
+});
+</script>
+#{doLayout/}

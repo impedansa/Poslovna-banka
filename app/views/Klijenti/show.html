@@ -1,0 +1,259 @@
+#{extends 'klijentiAjax.html' /}
+#{set title:'Klijenti' /}
+
+
+
+<script>
+$(document).ready(function(){
+	$("#sifrarnikDelatnostiPickup").click(function(){
+		sd_id = $(".highlighted").find(".sd_id").html();
+		$("select").val(sd_id);
+		$('#sifrarniciDelatnostiModal').modal('toggle');
+	});
+});
+function sync(item){
+	jmbg = item.find(".jmbg").html()
+    pib = item.find(".pib").html()
+    naziv = item.find(".naziv").html()
+    adresa = item.find(".adresa").html()
+    telefon = item.find(".telefon").html()
+    eMail = item.find(".eMail").html()
+    fax = item.find(".fax").html()
+    tipLica = item.find(".tipLica").html()
+    id = item.find(".id").html()
+    sd_id = item.find(".sd_id").html()
+    $("#jmbg").val(jmbg);
+    $("#pib").val(pib);
+    $("#naziv").val(naziv);
+    $("#adresa").val(adresa);
+    $("#telefon").val(telefon);
+    $("#eMail").val(eMail);
+    $("#fax").val(fax);
+    $("#tipLica").val(tipLica);
+    $("#id").val(id);
+    $("select").val(sd_id);
+}
+
+function remove(id) {
+	var showRoute = #{jsRoute @Klijenti.delete(':id') /}
+	$.ajax({
+	url: showRoute.url({id: id}),
+	type: showRoute.method,
+	success: function(){
+		window.location.reload();
+	}
+	});
+}
+
+function next() {
+	sd_id = $(".highlighted").find(".sd_id").html()
+	console.log(sd_id)
+}
+
+
+
+
+
+
+</script>
+
+<div class="container">
+<p>
+
+<ul class="tb-ulist">
+  <li class="tb-listitem"><a #{if session.mode == 'locked edit' || session.mode == 'locked add'} href="javascript:searchlocked(${session.get('id')})" #{/if} #{else} href="javascript:search()" #{/else}  id = "search"><img src="@{'/public/images/search.gif'}"/></a></li>
+  <li class="tb-listitem"><a #{if session.mode == 'locked edit' || session.mode == 'locked add' || session.mode == 'locked search'} href="javascript:refreshlocked(${session.get('id')})" #{/if} #{else} href="javascript:refresh()" #{/else}  id = "refresh"><img src="@{'/public/images/refresh.gif'}"/></a></li>
+  <li class="tb-listitem"><a href="#" id = "pickup"><img src="@{'/public/images/zoom-pickup.gif'}"/></a></li>
+  <li class="tb-listitem"><a href="javascript:b()" id = "help"><img src="@{'/public/images/help.gif'}"/></a></li>
+  <li class="tb-listitem"><a  id = "first"><img src="@{'/public/images/first.gif'}"/></a></li>
+  <li class="tb-listitem"><a  id = "prev"><img src="@{'/public/images/prev.gif'}"/></a></li>
+  <li class="tb-listitem"><a  id = "next"><img src="@{'/public/images/next.gif'}"/></a></li>
+  <li class="tb-listitem"><a  id = "last"><img src="@{'/public/images/last.gif'}"/></a></li>
+  <li class="tb-listitem"><a #{if session.mode == 'locked edit' || session.mode == 'locked search'} href="javascript:addlocked(${session.get('id')})" #{/if} #{else} href="javascript:add()" #{/else} id = "add"><img src="@{'/public/images/add.gif'}"/></a></li>
+  <li class="tb-listitem"><a href="#" id = "remove"><img src="@{'/public/images/remove.gif'}"/></a></li>
+  <li class="tb-listitem"><a href="#" id = "nextform"><img src="@{'/public/images/nextform.gif'}"/></a></li>
+</ul>
+</p>
+
+<div class = "container-fluid">
+
+<p> Trenutno ste u ${session.mode} rezimu rada.</p>
+
+<h1>Klijenti</h1>
+
+<table id = "table">
+	<tr class = "header">
+	   <th>JMBG</th>
+	   <th>PIB</th> 
+	   <th>Naziv</th>
+	   <th>Adresa</th>
+	   <th>Telefon</th>
+	   <th>E-Mail</th>
+	   <th>Fax</th>
+	   <th>Tip lica</th>
+	   <th>Sifra delatnosti</th>
+	</tr>
+#{list items:klijenti, as:'klijent'}
+%{
+  num=klijent.id;
+  klijentId=num.toString();
+}%
+	<tr #{if klijentId == session.s} class = "highlighted" #{/if}>
+		<td class = "jmbg">${klijent.jmbg}</td>
+		<td class = "pib">${klijent.pib}</td>
+		<td class = "naziv">${klijent.naziv}</td>
+		<td class = "adresa">${klijent.adresa}</td>
+		<td class = "telefon">${klijent.telefon}</td>
+		<td class = "eMail">${klijent.eMail}</td>
+		<td class = "fax">${klijent.fax}</td>
+		<td class = "tipLica">${klijent.tipLica}</td>
+		<td class = "sifrarnikDelatnosti">${klijent.sifrarnikDelatnosti.nazivDelatnosti}</td>
+		<td style = "visibility: hidden; max-width: 0px" class = "dr_id">${klijent.sifrarnikDelatnosti.id}</td>
+		<td style = "visibility: hidden; max-width: 0px" class = "id">${klijent.id}</td>
+	</tr>
+#{/list}
+</table>
+
+#{set 'action'}
+    #{if session.mode == 'add'}
+        @{Klijenti.create()}
+    #{/if}
+    #{elseif session.mode == 'locked add'} 
+        @{Klijenti.createNext()}
+    #{/elseif}
+    #{elseif session.mode == 'edit'}
+        @{Klijenti.edit()}
+    #{/elseif}
+    #{elseif session.mode== 'locked edit'} 
+        @{Klijenti.editNext()}
+    #{/elseif}
+    #{elseif session.mode== 'locked search'} 
+        @{Klijenti.filterNext()}
+    #{/elseif}
+    #{else}
+       @{Klijenti.filter()}
+    #{/else}
+  #{/set}
+  
+<div class = "panel">
+	<p>
+	
+		<form action = "${action}" method="post">
+		
+				#{field 'id'}
+					<input type = "hidden" name = "${field.name}" id = "${field.id}"/>
+				#{/}
+				
+				<p>
+				#{field 'jmbg'}
+					<label for = "${field.id}">JMBG</label>
+					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+					<span>#{error field.name /}</span>
+				#{/}
+				</p>
+				<p>
+				#{field 'pib'}
+					<label for = "${field.id}">PIB</label>
+					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+					<span>#{error field.name /}</span>
+				#{/}
+				</p>
+				<p>
+				#{field 'naziv'}
+					<label for = "${field.id}">Naziv</label>
+					<input type = "text" name = "${field.name}" id = "${field.name}"/>
+					<span>#{error field.name /}</span>
+				#{/}
+				</p>
+				<p>
+				#{field 'adresa'}
+					<label for = "${field.id}">Adresa</label>
+					<input type = "text" name = "${field.name}" id = "${field.name}"/>
+					<span>#{error field.name /}</span>
+				#{/}
+				</p>
+				<p>
+				#{field 'telefon'}
+					<label for = "${field.id}">Telefon</label>
+					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+					<span>#{error field.name /}</span>
+				#{/}
+				</p>
+				<p>
+				#{field 'eMail'}
+					<label for = "${field.id}">E-Mail</label>
+					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+					<span>#{error field.name /}</span>
+				#{/}
+				</p>
+				<p>
+				#{field 'fax'}
+					<label for = "${field.id}">FAX</label>
+					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+					<span>#{error field.name /}</span>
+				#{/}
+				</p>
+				<p>
+				#{field 'tipLica'}
+					<label for = "${field.id}">Tip lica</label>
+					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+					<span>#{error field.name /}</span>
+				#{/}
+				</p>
+				<p>
+				#{field 'sifrarnikDelatnosti'}
+					<label for = "${field.id}">Sifra delatnosti</label>
+					<select name = "${field.name}" id = "${field.id}"/>
+					#{list items:sifrarniciDelatnosti, as:'sifrarnikDelatnosti'}
+					<option value = "${sifrarnikDelatnosti.id}">${sifrarnikDelatnosti.nazivDelatnosti}</option>
+					#{/list}
+					</select>
+					
+					 <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#sifrarniciDelatnostiModal">... </button>
+				#{/}
+				</p>
+				<div id = "formActions">
+					<input type = "submit" value = "Potvrda" style="margin-left:6em"/>
+					<a #{if session.mode == 'locked edit' || session.mode == 'locked add' || session.mode == 'locked search'} href="javascript:refreshlocked(${session.get('id')})" #{/if} #{else} href="javascript:refresh()" #{/else}  id="rollback" style="margin-left:1em">Rollback</a>
+				</div>			
+				
+		</form>
+	</p>
+</div>
+
+ <!-- Modal -->
+ 	<div class="modal fade" id="sifrarniciDelatnostiModal" role="dialog">
+  	<div class="modal-dialog">
+    	<div class="modal-content">
+    		 <div class="modal-header">
+      	Sifre delatnosti
+      </div>
+      <div class="modal-body">
+      	<div>
+      	<p>
+      	<input oninput="w3.filterHTML('#tableD', '.item', this.value)">
+      	</p>
+      	</div>
+	    <table style = "padding:2em" id="tableD">
+		<tr class = "header">
+		   <th>Sifra delatnosti</th>
+		   <th>Naziv delatnosti</th> 
+		</tr>
+		#{list items:sifrarniciDelatnosti, as:'sifrarnikDelatnosti'}
+		<tr class = "item">
+			<td class = "sd_sifraDelatnosti">${sifrarnikDelatnosti.sifraDelatnosti}</td>
+			<td class = "sd_nazivDelatnosti">${sifrarnikDelatnosti.nazivDelatnosti}</td>
+			<td style = "visibility: hidden; max-width: 0px" class = "sd_id">${sifrarnikDelatnosti.id}</td>
+		</tr>
+		#{/list}
+		</table>
+	
+		<div class="modal-footer">
+			<input id = "sifrarnikDelatnostiPickup" type = "button" value = "izbor"/>
+		</div>
+		</div>
+    	</div>
+  	</div>
+	</div>
+</div>
+</div>
