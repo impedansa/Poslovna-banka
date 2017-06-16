@@ -52,7 +52,7 @@ public class Klijenti extends Controller {
 		List<SifrarnikDelatnosti> sifrarniciDelatnosti = new ArrayList<SifrarnikDelatnosti>();
 		sifrarniciDelatnosti.add(SifrarnikDelatnosti.findById(Long.parseLong(id)));
 		List<Klijent> klijenti = Klijent.find("bySifrarnikDelatnosti", sifrarniciDelatnosti.get(0)).fetch();
-		renderTemplate("NaseljenaMesta/show.html", klijenti, sifrarniciDelatnosti, id);
+		renderTemplate("Klijenti/show.html", klijenti, sifrarniciDelatnosti, id);
 	}
 	
 	public static void filter(String jmbg, Integer pib, String naziv, String adresa, String telefon, String eMail, String fax, String tipLica, Long sifrarnikDelatnosti) {
@@ -64,7 +64,7 @@ public class Klijenti extends Controller {
 			klijenti = Klijent.find("byJmbgLikeAndPibAndNazivLikeAndAdresaLikeAndTelefonLikeAndEMailLikeAndFaxLikeAndTipLicaLikeAndSifrarnikDelatnosti", "%"+jmbg+"%", pib, "%"+naziv+"%", "%"+adresa+"%", "%"+telefon+"%", "%"+eMail+"%", "%"+fax+"%", "%"+tipLica+"%", sd).fetch();
 		session.put("mode", "edit");
 		session.put("s", null);
-		renderTemplate("NaseljenaMesta/show.html",klijenti);
+		renderTemplate("Klijenti/show.html",klijenti);
 	}
 	
 	public static void filterNext(String jmbg, Integer pib, String naziv, String adresa, String telefon, String eMail, String fax, String tipLica, Long sifrarnikDelatnosti) {
@@ -78,7 +78,7 @@ public class Klijenti extends Controller {
 		session.put("mode", "locked edit");
 		session.put("s", null);
 		session.put("id", sifrarnikDelatnosti);
-		renderTemplate("NaseljenaMesta/show.html",klijenti, sifrarnikDelatnosti);
+		renderTemplate("Klijenti/show.html",klijenti, sifrarnikDelatnosti);
 	}
 	
 	public static void create(String jmbg, Integer pib, @Required String naziv, @Required String adresa, String telefon, String eMail, String fax, @Required String tipLica, Long sifrarnikDelatnosti) {

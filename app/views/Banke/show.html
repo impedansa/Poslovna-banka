@@ -1,0 +1,161 @@
+#{extends 'bankeAjax.html' /}
+#{set title:'Banke' /}
+
+
+#{set 'action'}
+	#{if session.mode == 'add'}
+		@{Banke.create()}
+	#{/if}
+	#{elseif session.mode == 'edit'}
+		@{Banke.edit()}
+	#{/elseif}
+	#{else}
+		@{Banke.filter()}
+	#{/else}
+#{/set}
+
+<script>
+
+
+
+function sync(item){
+	nazivBanke = item.find(".nazivBanke").html()
+    sifraBanke = item.find(".sifraBanke").html()
+    swiftKod = item.find(".swiftKod").html()
+    obracunskiRacun = item.find(".obracunskiRacun").html()
+    id = item.find(".id").html()
+    $("#nazivBanke").val(nazivBanke);
+    $("#sifraBanke").val(sifraBanke);
+    $("#swiftKod").val(swiftKod);
+    $("#obracunskiRacun").val(obracunskiRacun);
+    $("#id").val(id);
+}
+
+
+function remove(id) {
+	var showRoute = #{jsRoute @Banke.delete(':id') /}
+	$.ajax({
+	url: showRoute.url({id: id}),
+	type: showRoute.method,
+	success: function(){
+		window.location.reload();
+	}
+	});
+}
+
+function next(id) {
+	console.log(id);
+	var id_id = id.toString();
+	var showRoute = #{jsRoute @Racuni.shownext() /}
+	$.ajax({
+	method:"GET",
+	url: showRoute.url(),
+	type: showRoute.method,
+	data: {'mode': 'locked edit', 's': '0', 'id': id_id},
+	dataType: "html",
+	success: function(){
+		window.location.replace("@{Racuni.shownext()}"); 
+	}
+	});
+	
+}
+
+
+
+
+</script>
+
+<p>
+<ul class="tb-ulist">
+  <li class="tb-listitem"><a id = "search"><img src="@{'/public/images/search.gif'}"/></a></li>
+  <li class="tb-listitem"><a id = "refresh"><img src="@{'/public/images/refresh.gif'}"/></a></li>
+  <li class="tb-listitem"><a href="#" id = "pickup"><img src="@{'/public/images/zoom-pickup.gif'}"/></a></li>
+  <li class="tb-listitem"><a href="#" id = "help"><img src="@{'/public/images/help.gif'}"/></a></li>
+  <li class="tb-listitem"><a id = "first"><img src="@{'/public/images/first.gif'}"/></a></li>
+  <li class="tb-listitem"><a id = "prev"><img src="@{'/public/images/prev.gif'}"/></a></li>
+  <li class="tb-listitem"><a id = "next"><img src="@{'/public/images/next.gif'}"/></a></li>
+  <li class="tb-listitem"><a id = "last"><img src="@{'/public/images/last.gif'}"/></a></li>
+  <li class="tb-listitem"><a id = "add"><img src="@{'/public/images/add.gif'}"/></a></li>
+  <li class="tb-listitem"><a id = "remove"><img src="@{'/public/images/remove.gif'}"/></a></li>
+  <li class="tb-listitem"><a href="#" id = "nextform"><img src="@{'/public/images/nextform.gif'}"/></a></li>
+</ul>
+</p>
+
+<p> Trenutno ste u  ${session.mode} rezimu rada.</p>
+
+<h1>Banke</h1>
+<table id = "table">
+	<tr class = "header">
+	   <th>Naziv banke</th> 
+	   <th>Sifra banke</th>
+	   <th>Swift kod</th>
+	   <th>Obračunski račun</th>
+	</tr>
+
+
+#{list items:banke, as:'banka'}
+%{
+  num=banka.id;
+  bankaId=num.toString();
+}%
+	<tr  #{if session.s == bankaId} class = "highlighted" #{/if}>
+		<td class = "nazivBanke">${banka.nazivBanke}</td>
+		<td class = "sifraBanke">${banka.sifraBanke}</td>
+		<td class = "swiftKod">${banka.swiftKod}</td>
+		<td class = "obracunskiRacun">${banka.obracunskiRacun}</td>
+		<td style = "visibility: hidden; max-width: 0px" class = "id">${banka.id}</td>
+	</tr>
+#{/list}
+</table>
+
+<div class = "panel">
+	<p>
+		<form action=${action} method = "post">
+		<!-- #{form @Banke.show()} -->
+		
+				#{field 'id'}
+					<input type = "hidden" name = "${field.name}" id = "${field.id}"/>
+				#{/}
+				
+				<p>
+				#{field 'nazivBanke'}
+					<label for = "${field.id}">Naziv banke</label>
+					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+					<span>#{error field.name /}</span>
+					
+				#{/}
+				</p>
+				<p>
+				#{field 'sifraBanke'}
+					<label for = "${field.id}">Šifra banke</label>
+					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+					<span>#{error field.name /}</span>
+					
+				#{/}
+				</p>
+				<p>
+				#{field 'swiftKod'}
+					<label for = "${field.id}">Swift kod</label>
+					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+					<span>#{error field.name /}</span>
+					
+				#{/}
+				</p>
+				<p>
+				#{field 'obracunskiRacun'}
+					<label for = "${field.id}">Obračunski račun</label>
+					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+					<span>#{error field.name /}</span>
+					
+				#{/}
+				</p>
+				<div id = "formActions">
+					<input type = "submit" value = "Potvrda" style="margin-left:6em"/>
+					<a href = "" id="rollback" style="margin-left:1em">Rollback</a>
+				</div>			
+				
+		<!-- #{/form} -->
+	</form>
+	</p>
+</div>
+
