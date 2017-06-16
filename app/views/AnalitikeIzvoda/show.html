@@ -6,6 +6,19 @@
 #{/set}
 
 <script>
+$(document).ready(function(){
+
+	$("#dnevnoStanjeRacunaPickup").click(function(){
+		dsr_id = $(".highlighted").find(".dsr_id").html();
+		$("select").val(dsr_id);
+		$('#dnevnaStanjaRacunaModal').modal('toggle');
+	});
+
+	$('#datumAnalitike').datepicker({dateFormat: "dd-mm-yy"}).val();
+	$('#datumPrijema').datepicker({dateFormat: "dd-mm-yy"}).val();
+	$('#datumValute').datepicker({dateFormat: "dd-mm-yy"}).val();
+});
+
 
 function sync(item){
 	datumAnalitike = item.find(".datumAnalitike").html()
@@ -21,10 +34,11 @@ function sync(item){
     racunPoverioca = item.find(".racunPoverioca").html()
     modelOdobrenja = item.find(".modelOdobrenja").html()
     pozivNaBrojOdobrenja = item.find(".pozivNaBrojOdobrenja").html()
-    hitno = item.find(".hitno").html()
+    hitno = item.find(".hitno?").html()
     iznos = item.find(".iznos").html()
     tipGreske = item.find(".tipGreske").html()
     status = item.find(".status").html()
+    dnevnoStanjeRacuna = item.find(".dnevnoStanjeRacuna").html();
     id = item.find(".id").html()
     $("#datumAnalitike").val(datumAnalitike);
     $("#smer").val(smer);
@@ -39,11 +53,16 @@ function sync(item){
     $("#racunPoverioca").val(racunPoverioca);
     $("#modelOdobrenja").val(modelOdobrenja);
     $("#pozivNaBrojOdobrenja").val(pozivNaBrojOdobrenja);
-    $("#hitno").val(hitno);
+    if (hitno == "true") {
+    	$("#hitno").attr("checked", true);	
+    } else {
+    	$("#hitno").attr("checked", false);
+    }
     $("#iznos").val(iznos);
     $("#tipGreske").val(tipGreske);
     $("#status").val(status);
     $("#id").val(id);
+    $("select").val(dsr_id);
 }
 
 </script>
@@ -52,16 +71,16 @@ function sync(item){
 
 <p>
 <ul class="tb-ulist">
-  <li class="tb-listitem"><a href="@{AnalitikeIzvoda.show("search")}" id = "search"><img src="@{'/public/images/search.gif'}"/></a></li>
-  <li class="tb-listitem"><a href="#" id = "refresh"><img src="@{'/public/images/refresh.gif'}"/></a></li>
+  <li class="tb-listitem"><a id = "search"><img src="@{'/public/images/search.gif'}"/></a></li>
+  <li class="tb-listitem"><a id = "refresh"><img src="@{'/public/images/refresh.gif'}"/></a></li>
   <li class="tb-listitem"><a href="#" id = "pickup"><img src="@{'/public/images/zoom-pickup.gif'}"/></a></li>
   <li class="tb-listitem"><a href="#" id = "help"><img src="@{'/public/images/help.gif'}"/></a></li>
   <li class="tb-listitem"><a id = "first"><img src="@{'/public/images/first.gif'}"/></a></li>
   <li class="tb-listitem"><a id = "prev"><img src="@{'/public/images/prev.gif'}"/></a></li>
   <li class="tb-listitem"><a id = "next"><img src="@{'/public/images/next.gif'}"/></a></li>
   <li class="tb-listitem"><a id = "last"><img src="@{'/public/images/last.gif'}"/></a></li>
-  <li class="tb-listitem"><a href="@{AnalitikeIzvoda.show("add")}" id = "add"><img src="@{'/public/images/add.gif'}"/></a></li>
-  <li class="tb-listitem"><a href="#" id = "remove"><img src="@{'/public/images/remove.gif'}"/></a></li>
+  <li class="tb-listitem"><a id = "add"><img src="@{'/public/images/add.gif'}"/></a></li>
+  <li class="tb-listitem"><a id = "remove"><img src="@{'/public/images/remove.gif'}"/></a></li>
   <li class="tb-listitem"><a href="#" id = "nextform"><img src="@{'/public/images/nextform.gif'}"/></a></li>
 </ul>
 </p>
@@ -87,27 +106,35 @@ function sync(item){
 	   <th>Iznos</th>
 	   <th>Tip greske</th>
 	   <th>Status</th>
+	   <th>Dnevno stanje racuna</th>
 	</tr>
 #{list items:analitikeIzvoda, as:'analitikaIzvoda'}
-	<tr class="main_tr">
-		<td class = "datumAnalitike">${analitikaIzvoda.datumAnalitike}</td>
+%{
+  num=analitikaIzvoda.id;
+  analitikaIzvodaId=num.toString();
+}%
+	<tr  #{if session.s == analitikaIzvodaId} class = "highlighted" #{/if}>
+		<td class = "datumAnalitike">#{if analitikaIzvoda.datumAnalitike} ${analitikaIzvoda.datumAnalitike.format()} #{/if}</td>
 		<td class = "smer">${analitikaIzvoda.smer}</td>
 		<td class = "duznikNalogodavac">${analitikaIzvoda.duznikNalogodavac}</td>
 		<td class = "svrhaPlacanja">${analitikaIzvoda.svrhaPlacanja}</td>
 		<td class = "poverilacPrimalac">${analitikaIzvoda.poverilacPrimalac}</td>
-		<td class = "datumPrijema">${analitikaIzvoda.datumPrijema}</td>
-		<td class = "datumValute">${analitikaIzvoda.datumValute}</td>
+		<td class = "datumPrijema">#{if analitikaIzvoda.datumPrijema} ${analitikaIzvoda.datumPrijema.format()} #{/if}</td>
+		<td class = "datumValute">#{if analitikaIzvoda.datumValute} ${analitikaIzvoda.datumValute.format()} #{/if}</td>
 		<td class = "racunDuznika">${analitikaIzvoda.racunDuznika}</td>
 		<td class = "modelZaduzenja">${analitikaIzvoda.modelZaduzenja}</td>
 		<td class = "pozivNaBrojZaduzenja">${analitikaIzvoda.pozivNaBrojZaduzenja}</td>
 		<td class = "racunPoverioca">${analitikaIzvoda.racunPoverioca}</td>
 		<td class = "modelOdobrenja">${analitikaIzvoda.modelOdobrenja}</td>
 		<td class = "pozivNaBrojOdobrenja">${analitikaIzvoda.pozivNaBrojOdobrenja}</td>
-		<td class = "hitno">${analitikaIzvoda.hitno}</td>
+		<td class = "hitno">#{if analitikaIzvoda.hitno} Da #{/if}#{else} Ne #{/else}</td>
 		<td class = "iznos">${analitikaIzvoda.iznos}</td>
 		<td class = "tipGreske">${analitikaIzvoda.tipGreske}</td>
 		<td class = "status">${analitikaIzvoda.status}</td>
+		<td class = "dnevnoStanjeRacuna">${analitikaIzvoda.dnevnoStanjeRacuna.datum.format()}</td>
 		<td style = "visibility: hidden; max-width: 0px" class = "id">${analitikaIzvoda.id}</td>
+		<td style = "visibility: hidden; max-width: 0px" class = "dsr_id">${analitikaIzvoda.dnevnoStanjeRacuna.id}</td>
+		<td style = "visibility: hidden; max-width: 0px" class = "hitno?">${analitikaIzvoda.hitno}</td>
 	</tr>
 #{/list}
 </table>
@@ -115,7 +142,6 @@ function sync(item){
 <div class = "panel">
 	<p>
 	<form action=${action} method = "post">
-		<!-- #{form @AnalitikeIzvoda.show()} -->
 		
 				#{field 'id'}
 					<input type = "hidden" name = "${field.name}" id = "${field.id}"/>
@@ -125,106 +151,173 @@ function sync(item){
 				#{field 'datumAnalitike'}
 					<label for = "${field.id}">Datum analitike</label>
 					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+					<span>#{error field.name /}</span>
 				#{/}
 				</p>
 				<p>
 				#{field 'smer'}
 					<label for = "${field.id}">Smer</label>
 					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+					<span>#{error field.name /}</span>
 				#{/}
 				</p>
 				<p>
 				#{field 'duznikNalogodavac'}
 					<label for = "${field.id}">Duznik/nalogodavac</label>
 					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+					<span>#{error field.name /}</span>
 				#{/}
 				</p>
 				<p>
 				#{field 'svrhaPlacanja'}
 					<label for = "${field.id}">Poverilac/primalac</label>
 					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+					<span>#{error field.name /}</span>
 				#{/}
 				</p>
 				<p>
 				#{field 'datumPrijema'}
 					<label for = "${field.id}">Datum prijema</label>
 					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+					<span>#{error field.name /}</span>
 				#{/}
 				</p>
 				<p>
 				#{field 'datumValute'}
 					<label for = "${field.id}">Datum valute</label>
 					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+					<span>#{error field.name /}</span>
 				#{/}
 				</p>
 				<p>
 				#{field 'racunDuznika'}
 					<label for = "${field.id}">Racun duznika</label>
 					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+					<span>#{error field.name /}</span>
 				#{/}
 				</p>
 				<p>
 				#{field 'modelZaduzenja'}
 					<label for = "${field.id}">Model zaduzenja</label>
 					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+					<span>#{error field.name /}</span>
 				#{/}
 				</p>
 				<p>
 				#{field 'pozivNaBrojZaduzenja'}
 					<label for = "${field.id}">Poziv na broj zaduzenja</label>
 					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+					<span>#{error field.name /}</span>
 				#{/}
 				</p>
 				<p>
 				#{field 'racunPoverioca'}
 					<label for = "${field.id}">Racun poverioca</label>
 					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+					<span>#{error field.name /}</span>
 				#{/}
 				</p>
 				<p>
 				#{field 'modelOdobrenja'}
 					<label for = "${field.id}">Model odobrenja</label>
 					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+					<span>#{error field.name /}</span>
 				#{/}
 				</p>
 				<p>
 				#{field 'pozivNaBrojOdobrenja'}
 					<label for = "${field.id}">Poziv na broj odobrenja</label>
 					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+					<span>#{error field.name /}</span>
 				#{/}
 				</p>
 				<p>
 				#{field 'hitno'}
 					<label for = "${field.id}">Hitno?</label>
-					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+					<input type = "checkbox" name = "${field.name}" id = "${field.id}"/>
+					<span>#{error field.name /}</span>
 				#{/}
 				</p>
 				<p>
 				#{field 'iznos'}
 					<label for = "${field.id}">Iznos</label>
 					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+					<span>#{error field.name /}</span>
 				#{/}
 				</p>
 				<p>
 				#{field 'tipGreske'}
 					<label for = "${field.id}">Tip greske</label>
 					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+					<span>#{error field.name /}</span>
 				#{/}
 				</p>
 				<p>
 				#{field 'status'}
 					<label for = "${field.id}">Status</label>
 					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+					<span>#{error field.name /}</span>
+				#{/}
+				</p>
+				<p>
+				#{field 'dnevnoStanjeRacuna'}
+					<label for = "${field.id}">Dnevno stanje racuna</label>
+					<select name = "${field.name}" id = "${field.id}"/>
+					#{list items:dnevnaStanjaRacuna, as:'dnevnoStanjeRacuna'}
+					<option value = "${dnevnoStanjeRacuna.id}">${dnevnoStanjeRacuna.datum.format()}</option>
+					#{/list}
+					</select>
+					
+					 <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#dnevnaStanjaRacunaModal">... </button>
 				#{/}
 				</p>
 				<div id = "formActions">
 					<input type = "submit" value = "Potvrda" style="margin-left:6em"/>
 					<a href = "#" style="margin-left:1em"></a>
 				</div>			
-				
-		<!-- #{/form} -->
-	</form>
+		</form>
 	</p>
-</div-->
 </div>
 
+ <!-- Modal -->
+ 	<div class="modal fade" id="dnevnaStanjaRacunaModal" role="dialog">
+  	<div class="modal-dialog">
+    	<div class="modal-content">
+    		 <div class="modal-header">
+      	Dnevno stanje racuna
+      </div>
+      <div class="modal-body">
+      	<div>
+      	<p>
+      	<input oninput="w3.filterHTML('#tableD', '.item', this.value)">
+      	</p>
+      	</div>
+	    <table style = "padding:2em" id="tableD">
+		<tr class = "header">
+		   <th>Datum</th> 
+		   <th>Prethodno stanje</th>
+		   <th>Promet na teret</th>
+		   <th>Promet u korist</th>
+		   <th>Novo stanje</th>
+		</tr>
+		#{list items:dnevnaStanjaRacuna, as:'dnevnoStanjeRacuna'}
+		<tr class = "item">
+			<td class = "dsr_datum">#{if dnevnoStanjeRacuna.datum} ${dnevnoStanjeRacuna.datum.format()} #{/if}</td>
+			<td class = "dsr_prethodnoStanje">${dnevnoStanjeRacuna.prethodnoStanje}</td>
+			<td class = "dsr_prometNaTeret">${dnevnoStanjeRacuna.prometNaTeret}</td>
+			<td class = "dsr_prometUKorist">${dnevnoStanjeRacuna.prometUKorist}</td>
+			<td class = "dsr_novoStanje">${dnevnoStanjeRacuna.novoStanje}</td>
+			<td style = "visibility: hidden; max-width: 0px" class = "dsr_id">${dnevnoStanjeRacuna.id}</td>
+		</tr>
+		#{/list}
+		</table>
+	
+		<div class="modal-footer">
+			<input id = "dnevnoStanjeRacunaPickup" type = "button" value = "izbor"/>
+		</div>
+		</div>
+    	</div>
+  	</div>
+	</div>
+</div>
+</div>

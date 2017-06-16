@@ -1,10 +1,13 @@
 package models;
 
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 
 import play.db.jpa.Model;
 
@@ -12,60 +15,63 @@ import play.db.jpa.Model;
 public class AnalitikaIzvoda extends Model {
 	
 	@Column(name="DATUM_ANALITIKE")
-	public String datumAnalitike;
+	public Date datumAnalitike;
 	
 	@Column(name="SMER", length=1)
 	public String smer;
 	
-	@Column(name="DUZNIK_NALOGODAVAC")
+	@Column(name="DUZNIK_NALOGODAVAC", nullable = false, length = 256)
 	public String duznikNalogodavac;
 	
-	@Column(name="SVRHA_PLACANJA")
+	@Column(name="SVRHA_PLACANJA", nullable = false, length = 256)
 	public String svrhaPlacanja;
 	
-	@Column(name="POVERILAC_PRIMALAC")
+	@Column(name="POVERILAC_PRIMALAC", nullable = false, length = 256)
 	public String poverilacPrimalac;
 	
 	@Column(name="DATUM_PRIJEMA")
-	public String datumPrijema;
+	public Date datumPrijema;
 	
 	@Column(name="DATUM_VALUTE")
-	public String datumValute;
+	public Date datumValute;
 	
-	@Column(name="RACUN_DUZNIKA")
+	@Column(name="RACUN_DUZNIKA", nullable = true, length = 18)
 	public String racunDuznika;
 	
-	@Column(name="MODEL_ZADUZENJA")
+	@Column(name="MODEL_ZADUZENJA", nullable = true)
 	public int modelZaduzenja;
 	
-	@Column(name="POZIV_NA_BROJ_ZADUZENJA")
+	@Column(name="POZIV_NA_BROJ_ZADUZENJA", nullable = true, length = 20)
 	public String pozivNaBrojZaduzenja;
 	
-	@Column(name="RACUN_POVERIOCA")
+	@Column(name="RACUN_POVERIOCA", nullable = true, length = 18)
 	public String racunPoverioca;
 	
-	@Column(name="MODEL_ODOBRENJA")
+	@Column(name="MODEL_ODOBRENJA", nullable = true)
 	public int modelOdobrenja;
 	
-	@Column(name="POZIV_NA_BROJ_ODOBRENJA")
+	@Column(name="POZIV_NA_BROJ_ODOBRENJA", nullable = true, length = 20)
 	public String pozivNaBrojOdobrenja;
 	
-	@Column(name="HITNO")
+	@Column(name="HITNO", nullable = true)
 	public boolean hitno;
 	
-	@Column(name="IZNOS")
-	public float iznos;
+	@Column(name="IZNOS", nullable = false)
+	public long iznos;
 	
-	@Column(name="TIP_GRESKE")
+	@Column(name="TIP_GRESKE", nullable = false)
 	public int tipGreske;
 	
-	@Column(name="STATUS", length=1)
+	@Column(name="STATUS", nullable = true, length=1)
 	public String status;
 
 	@ManyToOne
 	public DnevnoStanjeRacuna dnevnoStanjeRacuna;
 	
-	public AnalitikaIzvoda(String datumAnalitike, String smer, String duznikNalogodavac, String svrhaPlacanja, String poverilacPrimalac, String datumPrijema, String datumValute, String racunDuznika, int modelZaduzenja, String pozivNaBrojZaduzenja, String racunPoverioca, int modelOdobrenja, String pozivNaBrojOdobrenja, boolean hitno, float iznos, int tipGreske, String status, DnevnoStanjeRacuna dnevnoStanjeRacuna) {
+	@OneToMany(mappedBy = "analitikaIzvoda", cascade=CascadeType.ALL)
+	public List<StavkaPrenosa> stavkaPrenosa;
+	
+	public AnalitikaIzvoda(Date datumAnalitike, String smer, String duznikNalogodavac, String svrhaPlacanja, String poverilacPrimalac, Date datumPrijema, Date datumValute, String racunDuznika, int modelZaduzenja, String pozivNaBrojZaduzenja, String racunPoverioca, int modelOdobrenja, String pozivNaBrojOdobrenja, boolean hitno, long iznos, int tipGreske, String status, DnevnoStanjeRacuna dnevnoStanjeRacuna) {
 		
 		super();
 		this.datumAnalitike = datumAnalitike;

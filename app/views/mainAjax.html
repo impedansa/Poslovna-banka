@@ -188,6 +188,20 @@ function b() {
 	});
 }
 
+function dsr() {
+	var showRoute = #{jsRoute @DnevnaStanjaRacuna.show() /}
+	$.ajax({
+		method:"GET",
+		url: showRoute.url(),
+		type: showRoute.method,
+		data: {'mode': 'edit', 's': '0'},
+		dataType: "html",
+		success: function(){
+			window.location.replace("@{DnevnaStanjaRacuna.show()}"); 
+		}
+	});
+}
+
 
 </script>
 
@@ -206,10 +220,11 @@ function b() {
       <a class="dropdown-item" href="javascript:zr()">Zatvaranje racuna</a>
       #{deadbolt.restrict roles:[['zaposleni.view']]}
       <a class="dropdown-item" href="javascript:z()">Zaposleni</a>
+      #{/deadbolt.restrict}
       <a class="dropdown-item" href="javascript:v()">Valute</a>
       <a class="dropdown-item" href="javascript:sd()">Sifrarnik delatnosti</a>
       <a class="dropdown-item" href="javascript:k()">Klijenti</a>
-      #{/deadbolt.restrict}
+      <a class="dropdown-item" href="javascript:dsr()">Dnevna stanja racuna</a>
       <div class="dropdown-divider"></div>
       <a class="dropdown-item" href="javascript:pl()">Promena lozinke</a>
       <a class="dropdown-item" href="/logout">Odjava</a>

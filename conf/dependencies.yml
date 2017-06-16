@@ -5,3 +5,4 @@ require:
     - org.mindrot -> jbcrypt 0.3m
     - play -> secure
     - play -> deadbolt 1.5.4
+    - net.sourceforge.jtds -> jtds 1.3.1
