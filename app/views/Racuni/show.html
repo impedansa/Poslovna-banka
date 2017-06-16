@@ -1,0 +1,317 @@
+#{extends 'racuniAjax.html' /}
+#{set title:'Racuni' /}
+
+
+
+<script>
+$(document).ready(function(){
+	$("#klijentPickup").click(function(){
+		kl_id = $(".highlighted").find(".kl_id").html();
+		$("select").val(kl_id);
+		$('#klijentiModal').modal('toggle');
+	});
+});
+$(document).ready(function(){
+	$("#bankaPickup").click(function(){
+		ba_id = $(".highlighted").find(".ba_id").html();
+		$("select").val(ba_id);
+		$('#bankeModal').modal('toggle');
+	});
+});
+$(document).ready(function(){
+	$("#valutaPickup").click(function(){
+		va_id = $(".highlighted").find(".va_id").html();
+		$("select").val(va_id);
+		$('#valutaModal').modal('toggle');
+	});
+});
+function sync(item){
+	brojRacuna = item.find(".brojRacuna").html()
+    statusRacuna = item.find(".statusRacuna").html()
+    id = item.find(".id").html()
+    kl_id = item.find(".kl_id").html()
+    ba_id = item.find(".ba_id").html()
+    va_id = item.find(".va_id").html()
+    $("#brojRacuna").val(brojRacuna);
+    $("#statusRacuna").val(statusRacuna);
+    $("#id").val(id);
+    $("select_kl").val(kl_id);
+    $("select_ba").val(ba_id);
+    $("select_va").val(va_id);
+}
+
+function remove(id) {
+	var showRoute = #{jsRoute @Racuni.delete(':id') /}
+	$.ajax({
+	url: showRoute.url({id: id}),
+	type: showRoute.method,
+	success: function(){
+		window.location.reload();
+	}
+	});
+}
+
+function next() {
+	kl_id = $(".highlighted").find(".kl_id").html()
+	ba_id = $(".highlighted").find(".ba_id").html()
+	va_id = $(".highlighted").find(".va_id").html()
+	console.log(kl_id)
+	console.log(ba_id)
+	console.log(va_id)
+}
+
+
+
+
+
+
+</script>
+
+<div class="container">
+<p>
+
+<ul class="tb-ulist">
+  <li class="tb-listitem"><a #{if session.mode == 'locked edit' || session.mode == 'locked add'} href="javascript:searchlocked(${session.get('id')})" #{/if} #{else} href="javascript:search()" #{/else}  id = "search"><img src="@{'/public/images/search.gif'}"/></a></li>
+  <li class="tb-listitem"><a #{if session.mode == 'locked edit' || session.mode == 'locked add' || session.mode == 'locked search'} href="javascript:refreshlocked(${session.get('id')})" #{/if} #{else} href="javascript:refresh()" #{/else}  id = "refresh"><img src="@{'/public/images/refresh.gif'}"/></a></li>
+  <li class="tb-listitem"><a href="#" id = "pickup"><img src="@{'/public/images/zoom-pickup.gif'}"/></a></li>
+  <li class="tb-listitem"><a href="javascript:b()" id = "help"><img src="@{'/public/images/help.gif'}"/></a></li>
+  <li class="tb-listitem"><a  id = "first"><img src="@{'/public/images/first.gif'}"/></a></li>
+  <li class="tb-listitem"><a  id = "prev"><img src="@{'/public/images/prev.gif'}"/></a></li>
+  <li class="tb-listitem"><a  id = "next"><img src="@{'/public/images/next.gif'}"/></a></li>
+  <li class="tb-listitem"><a  id = "last"><img src="@{'/public/images/last.gif'}"/></a></li>
+  <li class="tb-listitem"><a #{if session.mode == 'locked edit' || session.mode == 'locked search'} href="javascript:addlocked(${session.get('id')})" #{/if} #{else} href="javascript:add()" #{/else} id = "add"><img src="@{'/public/images/add.gif'}"/></a></li>
+  <li class="tb-listitem"><a href="#" id = "remove"><img src="@{'/public/images/remove.gif'}"/></a></li>
+  <li class="tb-listitem"><a href="#" id = "nextform"><img src="@{'/public/images/nextform.gif'}"/></a></li>
+</ul>
+</p>
+
+<div class = "container-fluid">
+
+<p> Trenutno ste u ${session.mode} rezimu rada.</p>
+
+<h1>Racuni</h1>
+
+<table id = "table">
+	<tr class = "header">
+	   <th>Broj racuna</th>
+	   <th>Status racuna</th> 
+	   <th>Klijent</th>
+	   <th>Banka</th>
+	   <th>Valuta</th>
+	</tr>
+#{list items:racuni, as:'racun'}
+%{
+  num=racun.id;
+  racunId=num.toString();
+}%
+	<tr #{if racunId == session.s} class = "highlighted" #{/if}>
+		<td class = "brojRacuna">${racun.brojRacuna}</td>
+		<td class = "statusRacuna">${racun.statusRacuna}</td>
+		<td class = "klijent">${racun.klijent.naziv}</td>
+		<td class = "banka">${racun.banka.nazivBanke}</td>
+		<td class = "valuta">${racun.valuta.nazivValute}</td>
+		<td style = "visibility: hidden; max-width: 0px" class = "kl_id">${racun.klijent.id}</td>
+		<td style = "visibility: hidden; max-width: 0px" class = "va_id">${racun.valuta.id}</td>
+		<td style = "visibility: hidden; max-width: 0px" class = "id">${racun.id}</td>
+	</tr>
+#{/list}
+</table>
+
+#{set 'action'}
+    #{if session.mode == 'add'}
+        @{Racuni.create()}
+    #{/if}
+    #{elseif session.mode == 'locked add'} 
+        @{Racuni.createNext()}
+    #{/elseif}
+    #{elseif session.mode == 'edit'}
+        @{Racuni.edit()}
+    #{/elseif}
+    #{elseif session.mode== 'locked edit'} 
+        @{Racuni.editNext()}
+    #{/elseif}
+    #{elseif session.mode== 'locked search'} 
+        @{Racuni.filterNext()}
+    #{/elseif}
+    #{else}
+       @{Racuni.filter()}
+    #{/else}
+  #{/set}
+  
+<div class = "panel">
+	<p>
+	
+		<form action = "${action}" method="post">
+		
+				#{field 'id'}
+					<input type = "hidden" name = "${field.name}" id = "${field.id}"/>
+				#{/}
+				
+				<p>
+				#{field 'brojRacuna'}
+					<label for = "${field.id}">Broj racuna</label>
+					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+					<span>#{error field.name /}</span>
+				#{/}
+				</p>
+				<p>
+				#{field 'statusRacuna'}
+					<label for = "${field.id}">Status racuna</label>
+					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+					<span>#{error field.name /}</span>
+				#{/}
+				</p>
+				<p>
+				#{field 'klijent'}
+					<label for = "${field.id}">Klijent</label>
+					<select name = "${field.name}" id = "${field.id}"/>
+					#{list items:klijenti, as:'klijent'}
+					<option value = "${klijent.id}">${klijent.naziv}</option>
+					#{/list}
+					</select>
+					
+					 <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#klijentiModal">... </button>
+				#{/}
+				</p>
+				<p>
+				#{field 'banka'}
+					<label for = "${field.id}">Banka</label>
+					<select name = "${field.name}" id = "${field.id}"/>
+					#{list items:banke, as:'banka'}
+					<option value = "${banka.id}">${banka.nazivBanke}</option>
+					#{/list}
+					</select>
+					
+					 <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#bankeModal">... </button>
+				#{/}
+				</p>
+				<p>
+				#{field 'valuta'}
+					<label for = "${field.id}">Valuta</label>
+					<select name = "${field.name}" id = "${field.id}"/>
+					#{list items:valute, as:'valuta'}
+					<option value = "${valuta.id}">${valuta.nazivValute}</option>
+					#{/list}
+					</select>
+					
+					 <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#valuteModal">... </button>
+				#{/}
+				</p>
+				<div id = "formActions">
+					<input type = "submit" value = "Potvrda" style="margin-left:6em"/>
+					<a #{if session.mode == 'locked edit' || session.mode == 'locked add' || session.mode == 'locked search'} href="javascript:refreshlocked(${session.get('id')})" #{/if} #{else} href="javascript:refresh()" #{/else}  id="rollback" style="margin-left:1em">Rollback</a>
+				</div>			
+				
+		</form>
+	</p>
+</div>
+
+ <!-- Modal -->
+ 	<div class="modal fade" id="klijentiModal" role="dialog">
+  	<div class="modal-dialog">
+    	<div class="modal-content">
+    		 <div class="modal-header">
+      	Klijenti
+      </div>
+      <div class="modal-body">
+      	<div>
+      	<p>
+      	<input oninput="w3.filterHTML('#tableD', '.item', this.value)">
+      	</p>
+      	</div>
+	    <table style = "padding:2em" id="tableD">
+		<tr class = "header">
+		   <th>Naziv klijenta</th>
+		   <th>Tip klijenta</th> 
+		</tr>
+		#{list items:klijenti, as:'klijent'}
+		<tr class = "item">
+			<td class = "kl_naziv">${klijent.naziv}</td>
+			<td class = "kl_tipKlijenta">${klijent.naziv}</td>
+			<td style = "visibility: hidden; max-width: 0px" class = "kl_id">${klijent.id}</td>
+		</tr>
+		#{/list}
+		</table>
+	
+		<div class="modal-footer">
+			<input id = "klijentPickup" type = "button" value = "izbor"/>
+		</div>
+		</div>
+    	</div>
+  	</div>
+	</div>
+	
+	<div class="modal fade" id="bankeModal" role="dialog">
+  	<div class="modal-dialog">
+    	<div class="modal-content">
+    		 <div class="modal-header">
+      	Banke
+      </div>
+      <div class="modal-body">
+      	<div>
+      	<p>
+      	<input oninput="w3.filterHTML('#tableD', '.item', this.value)">
+      	</p>
+      	</div>
+	    <table style = "padding:2em" id="tableD">
+		<tr class = "header">
+		   <th>Naziv Banke</th>
+		   <th>Sifra Banke</th>
+		   <th>Swift kod</th>
+		   <th>Obracunski racun</th> 
+		</tr>
+		#{list items:banke, as:'banka'}
+		<tr class = "item">
+			<td class = "ba_nazivBanke">${banka.nazivBanke}</td>
+			<td class = "ba_sifraBanke">${banka.sifraBanke}</td>
+			<td class = "ba_swiftKod">${banka.swiftKod}</td>
+			<td class = "ba_obracunskiRacun">${banka.obracunskiRacun}</td>
+			<td style = "visibility: hidden; max-width: 0px" class = "ba_id">${banka.id}</td>
+		</tr>
+		#{/list}
+		</table>
+	
+		<div class="modal-footer">
+			<input id = "bankaPickup" type = "button" value = "izbor"/>
+		</div>
+		</div>
+    	</div>
+  	</div>
+	</div>
+	
+	 	<div class="modal fade" id="valuteModal" role="dialog">
+  	<div class="modal-dialog">
+    	<div class="modal-content">
+    		 <div class="modal-header">
+      	Valute
+      </div>
+      <div class="modal-body">
+      	<div>
+      	<p>
+      	<input oninput="w3.filterHTML('#tableD', '.item', this.value)">
+      	</p>
+      	</div>
+	    <table style = "padding:2em" id="tableD">
+		<tr class = "header">
+		   <th>Naziv valute</th>
+		   <th>Sifra valute</th> 
+		</tr>
+		#{list items:valute, as:'valuta'}
+		<tr class = "item">
+			<td class = "va_nazivValute">${valuta.nazivValute}</td>
+			<td class = "va_sifraValute">${valuta.sifraValute}</td>
+			<td style = "visibility: hidden; max-width: 0px" class = "va_id">${valuta.id}</td>
+		</tr>
+		#{/list}
+		</table>
+	
+		<div class="modal-footer">
+			<input id = "valutaPickup" type = "button" value = "izbor"/>
+		</div>
+		</div>
+    	</div>
+  	</div>
+	</div>
+	
+</div>
+</div>

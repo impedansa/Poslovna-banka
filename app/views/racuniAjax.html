@@ -1,0 +1,90 @@
+#{extends 'standardForm.html' /}
+<script>
+function addlocked(id) {
+	var showRoute = #{jsRoute @Racuni.shownext() /}
+	$.ajax({
+	method:"GET",
+	url: showRoute.url(),
+	type: showRoute.method,
+	data: {'mode': 'locked add', 's': '0', 'id':id},
+	dataType: "html",
+	success: function(){
+		window.location.href = 'http://localhost:8080/racuni/shownext';
+	}
+	});
+}
+
+function add() {
+	var showRoute = #{jsRoute @Racuni.show() /}
+	$.ajax({
+	method:"GET",
+	url: showRoute.url(),
+	type: showRoute.method,
+	data: {'mode': 'add', 's': '0'},
+	dataType: "html",
+	success: function(){
+		window.location.href = 'http://localhost:8080/racuni/show';
+	}
+	});
+}
+
+function searchlocked(id) {
+	var showRoute = #{jsRoute @Racuni.shownext() /}
+	$.ajax({
+	method:"GET",
+	url: showRoute.url(),
+	type: showRoute.method,
+	data: {'mode': 'locked search', 's': '0', 'id':id},
+	dataType: "html",
+	success: function(){
+		window.location.href = 'http://localhost:8080/racuni/shownext';
+	}
+	});
+}
+
+function search() {
+	var showRoute = #{jsRoute @Racuni.show() /}
+	$.ajax({
+	method:"GET",
+	url: showRoute.url(),
+	type: showRoute.method,
+	data: {'mode': 'search', 's': '0'},
+	dataType: "html",
+	success: function(){
+		window.location.href = 'http://localhost:8080/racuni/show';
+	}
+	});
+}
+
+function refreshlocked(id) {
+	var showRoute = #{jsRoute @Racuni.shownext() /}
+	$.ajax({
+	method:"GET",
+	url: showRoute.url(),
+	type: showRoute.method,
+	data: {'mode': 'locked edit', 's': '0', 'id':id},
+	dataType: "html",
+	success: function(){
+		window.location.href = 'http://localhost:8080/racuni/shownext';
+	}
+	});
+}
+
+function refresh() {
+	var showRoute = #{jsRoute @Racuni.show() /}
+	$.ajax({
+	method:"GET",
+	url: showRoute.url(),
+	type: showRoute.method,
+	data: {'mode': 'edit', 's': '0'},
+	dataType: "html",
+	success: function(){
+		window.location.href = 'http://localhost:8080/racuni/show';
+	}
+	});
+}
+
+</script>
+
+
+#{doLayout/}
