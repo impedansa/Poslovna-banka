@@ -2,6 +2,7 @@ package controllers;
 
 import models.Zaposleni;
 import models.deadbolt.RoleHolder;
+import play.Logger;
 import play.mvc.Controller;
 import play.mvc.Scope.Session;
 import controllers.deadbolt.DeadboltHandler;
@@ -33,6 +34,7 @@ public class MyDeadboltHandler extends Controller implements DeadboltHandler {
 	@Override
 	public void onAccessFailure(String controllerClassName) {
 		// TODO Auto-generated method stub
+		Logger.info("Zaposleni sa ID-jem: "+ session.get("user") + " pokusao neovlascenu operaciju nad: " + controllerClassName + " sa IP adrese: " + Secure.getClientIp());
 		redirect("http://localhost:8080");
 		
 	}
