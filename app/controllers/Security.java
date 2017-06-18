@@ -10,7 +10,7 @@ public class Security extends Secure.Security{
 	
 	static boolean authenticate(String username, String password) {
 		
-		Logger.info("Pokusaj logovanja sa IP adrese: "+ Secure.getClientIp());
+		Logger.info("Pokusaj logovanja sa IP adrese: "+ Logovi.getClientIp());
 		
         Zaposleni zaposlen = Zaposleni.find("byKorisnickoIme", username).first();
         String lozinka = null;
@@ -29,10 +29,11 @@ public class Security extends Secure.Security{
 		
 		if(zaposlen != null && password_verified) {
 			session.put("user", (zaposlen.id).toString());
-			Logger.info("Ulogovan zaposleni sa ID-jem: "+zaposlen.getId()+" sa IP adrese: "+ Secure.getClientIp());
+			Logger.info("Ulogovan zaposleni sa ID-jem: "+zaposlen.getId()+" sa IP adrese: "+ Logovi.getClientIp());
 		}
         
 		return zaposlen != null && password_verified;
     }
+	
 
 }
