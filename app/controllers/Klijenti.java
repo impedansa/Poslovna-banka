@@ -82,6 +82,7 @@ public class Klijenti extends Controller {
 	}
 	
 	public static void create(String jmbg, Integer pib, @Required String naziv, @Required String adresa, String telefon, String eMail, String fax, @Required String tipLica, Long sifrarnikDelatnosti) {
+		checkAuthenticity();
 		validation.maxSize(tipLica, 1);
 		if(validation.hasErrors()) {
 	          validation.keep();
@@ -99,6 +100,7 @@ public class Klijenti extends Controller {
 	
 	
 	public static void createNext(String jmbg, Integer pib, @Required String naziv, @Required String adresa, String telefon, String eMail, String fax, @Required String tipLica, Long sifrarnikDelatnosti) {
+		checkAuthenticity();
 		validation.maxSize(tipLica, 1);
 		if(validation.hasErrors()) {
 	          validation.keep();
@@ -116,6 +118,7 @@ public class Klijenti extends Controller {
 	}
 	
 	public static void edit(Long id, String jmbg, Integer pib, @Required String naziv, @Required String adresa, String telefon, String eMail, String fax, @Required String tipLica, Long sifrarnikDelatnosti) {
+		checkAuthenticity();
 		validation.maxSize(tipLica, 1);
 		if(validation.hasErrors()) {
 	          validation.keep();
@@ -182,6 +185,7 @@ public class Klijenti extends Controller {
 	}
 	
 	public static void editNext(Long id, String jmbg, Integer pib, @Required String naziv, @Required String adresa, String telefon, String eMail, String fax, @Required String tipLica, Long sifrarnikDelatnosti) {
+		checkAuthenticity();
 		validation.maxSize(tipLica, 1);
 		if(validation.hasErrors()) {
 	          validation.keep();
@@ -249,6 +253,7 @@ public class Klijenti extends Controller {
 	}
 	
 	public static void delete(Long id) {
+		checkAuthenticity();
 		Long s = null;
 		List<Klijent> klijenti = Klijent.findAll();
 		for(int i=0; i< klijenti.size(); i++) {

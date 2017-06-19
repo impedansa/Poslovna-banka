@@ -27,6 +27,7 @@ public class Banke extends Controller{
 	}
 	
 	public static void create(@Required String nazivBanke, @Required int sifraBanke, @Required String swiftKod, @Required String obracunskiRacun) {
+		checkAuthenticity();
 		validation.maxSize(swiftKod, 8);
 		validation.maxSize(obracunskiRacun, 18);
 		if(validation.hasErrors()) {
@@ -44,6 +45,7 @@ public class Banke extends Controller{
 	}
 	
 	public static void edit(Long id, String nazivBanke, int sifraBanke, String swiftKod, String obracunskiRacun) {
+		checkAuthenticity();
 		validation.maxSize(swiftKod, 8);
 		validation.maxSize(obracunskiRacun, 18);
 		if(validation.hasErrors()) {
@@ -93,6 +95,7 @@ public class Banke extends Controller{
 	}
 	
 	public static void delete(Long id) {
+		checkAuthenticity();
 		Long s = null;
 		List<Banka> banke = Banka.findAll();
 		for(int i=0; i< banke.size(); i++) {

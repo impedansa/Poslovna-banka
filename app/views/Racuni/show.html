@@ -41,10 +41,12 @@ function sync(item){
 }
 
 function remove(id) {
+	var token = $('input[name=authenticityToken]').val();
 	var showRoute = #{jsRoute @Racuni.delete(':id') /}
 	$.ajax({
 	url: showRoute.url({id: id}),
 	type: showRoute.method,
+	data: { 'authenticityToken' : token },
 	success: function(){
 		window.location.reload();
 	}
@@ -198,6 +200,7 @@ function next() {
 				#{/}
 				</p>
 				<div id = "formActions">
+					#{authenticityToken /}
 					<input type = "submit" value = "Potvrda" style="margin-left:6em"/>
 					<a #{if session.mode == 'locked edit' || session.mode == 'locked add' || session.mode == 'locked search'} href="javascript:refreshlocked(${session.get('id')})" #{/if} #{else} href="javascript:refresh()" #{/else}  id="rollback" style="margin-left:1em">Rollback</a>
 				</div>			

@@ -29,10 +29,12 @@ function sync(item){
 
 
 function remove(id) {
+	var token = $('input[name=authenticityToken]').val();
 	var showRoute = #{jsRoute @Valute.delete(':id') /}
 	$.ajax({
 	url: showRoute.url({id: id}),
 	type: showRoute.method,
+	data: { 'authenticityToken' : token },
 	success: function(){
 		window.location.reload();
 	}
@@ -126,6 +128,7 @@ function next(id) {
 				#{/}
 				</p>
 				<div id = "formActions">
+					#{authenticityToken /}
 					<input type = "submit" value = "Potvrda" style="margin-left:6em"/>
 					<a href = "" id="rollback" style="margin-left:1em">Rollback</a>
 				</div>			

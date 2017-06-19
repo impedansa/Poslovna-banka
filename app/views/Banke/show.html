@@ -33,10 +33,12 @@ function sync(item){
 
 
 function remove(id) {
+	var token = $('input[name=authenticityToken]').val();
 	var showRoute = #{jsRoute @Banke.delete(':id') /}
 	$.ajax({
 	url: showRoute.url({id: id}),
 	type: showRoute.method,
+	data: { 'authenticityToken' : token },
 	success: function(){
 		window.location.reload();
 	}
@@ -89,7 +91,7 @@ function next(id) {
 	   <th>Naziv banke</th> 
 	   <th>Sifra banke</th>
 	   <th>Swift kod</th>
-	   <th>Obračunski račun</th>
+	   <th>ObraÄ�unski raÄ�un</th>
 	</tr>
 
 
@@ -127,7 +129,7 @@ function next(id) {
 				</p>
 				<p>
 				#{field 'sifraBanke'}
-					<label for = "${field.id}">Šifra banke</label>
+					<label for = "${field.id}">Å ifra banke</label>
 					<input type = "text" name = "${field.name}" id = "${field.id}"/>
 					<span>#{error field.name /}</span>
 					
@@ -143,13 +145,14 @@ function next(id) {
 				</p>
 				<p>
 				#{field 'obracunskiRacun'}
-					<label for = "${field.id}">Obračunski račun</label>
+					<label for = "${field.id}">ObraÄ�unski raÄ�un</label>
 					<input type = "text" name = "${field.name}" id = "${field.id}"/>
 					<span>#{error field.name /}</span>
 					
 				#{/}
 				</p>
 				<div id = "formActions">
+					#{authenticityToken /}
 					<input type = "submit" value = "Potvrda" style="margin-left:6em"/>
 					<a href = "" id="rollback" style="margin-left:1em">Rollback</a>
 				</div>			

@@ -85,6 +85,7 @@ public class Racuni extends Controller {
 	}
 	
 	public static void create(@Required String brojRacuna,@Required String statusRacuna, Long klijent, Long banka, Long valuta) {
+		checkAuthenticity();
 		validation.minSize(brojRacuna, 18);
 		validation.maxSize(brojRacuna, 18);
 		validation.maxSize(statusRacuna, 1);
@@ -106,6 +107,7 @@ public class Racuni extends Controller {
 	
 	
 	public static void createNext(@Required String brojRacuna,@Required String statusRacuna, Long klijent, Long banka, Long valuta) {
+		checkAuthenticity();
 		validation.minSize(brojRacuna, 18);
 		validation.maxSize(brojRacuna, 18);
 		validation.maxSize(statusRacuna, 1);
@@ -127,6 +129,7 @@ public class Racuni extends Controller {
 	}
 	
 	public static void edit(Long id,String brojRacuna,String statusRacuna, Long klijent, Long banka, Long valuta) {
+		checkAuthenticity();
 		validation.minSize(brojRacuna, 18);
 		validation.maxSize(brojRacuna, 18);
 		validation.maxSize(statusRacuna, 1);
@@ -173,6 +176,7 @@ public class Racuni extends Controller {
 	}
 	
 	public static void editNext(Long id,String brojRacuna,String statusRacuna, Long klijent, Long banka, Long valuta) {
+		checkAuthenticity();
 		validation.minSize(brojRacuna, 18);
 		validation.maxSize(brojRacuna, 18);
 		validation.maxSize(statusRacuna, 1);
@@ -220,26 +224,7 @@ public class Racuni extends Controller {
 	}
 	
 	public static void delete(Long id) {
-		Long s = null;
-		List<Racun> racuni = Racun.findAll();
-		for(int i=0; i< racuni.size(); i++) {
-			if(racuni.get(i).getId().equals(id)){
-				s = racuni.get(i-1).getId();
-			}
-		}
-		Racun r = Racun.findById(id);
-		r.delete();
-		String mode = session.get("mode");
-		if(mode.equals("locked add")|| mode.equals("locked edit")||mode.equals("locked search")) {
-			session.put("mode", "locked edit");
-			session.put("s", s);
-			session.put("id", r.klijent.id);
-			shownext();
-		} else {
-			session.put("mode", "edit");
-			session.put("s", s);
-			show();
-		}
+		checkAuthenticity();
 	}
 
 

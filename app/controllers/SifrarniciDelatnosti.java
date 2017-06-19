@@ -27,6 +27,7 @@ public class SifrarniciDelatnosti extends Controller{
 	}
 	
 	public static void create(@Required int sifraDelatnosti, @Required String nazivDelatnosti) {
+		checkAuthenticity();
 		validation.maxSize(nazivDelatnosti, 60);
 		if(validation.hasErrors()) {
 	          validation.keep(); 
@@ -43,6 +44,7 @@ public class SifrarniciDelatnosti extends Controller{
 	}
 	
 	public static void edit(Long id,@Required int sifraDelatnosti,@Required String nazivDelatnosti) {
+		checkAuthenticity();
 		validation.maxSize(nazivDelatnosti, 60);
 		if(validation.hasErrors()) {
 	          validation.keep(); 
@@ -87,6 +89,7 @@ public class SifrarniciDelatnosti extends Controller{
 	}
 	
 	public static void delete(Long id) {
+		checkAuthenticity();
 		Long s = null;
 		List<SifrarnikDelatnosti> sifrarniciDelatnosti = SifrarnikDelatnosti.findAll();
 		for(int i=0; i< sifrarniciDelatnosti.size(); i++) {

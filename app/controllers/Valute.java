@@ -27,6 +27,7 @@ public class Valute extends Controller{
 	}
 	
 	public static void create(@Required String sifraValute, @Required String nazivValute) {
+		checkAuthenticity();
 		validation.maxSize(sifraValute, 3);
 		validation.minSize(sifraValute, 3);
 		validation.maxSize(nazivValute, 30);
@@ -45,6 +46,7 @@ public class Valute extends Controller{
 	}
 	
 	public static void edit(Long id,@Required String sifraValute,@Required String nazivValute) {
+		checkAuthenticity();
 		validation.maxSize(sifraValute, 3);
 		validation.minSize(sifraValute, 3);
 		validation.maxSize(nazivValute, 30);
@@ -87,6 +89,7 @@ public class Valute extends Controller{
 	}
 	
 	public static void delete(Long id) {
+		checkAuthenticity();
 		Long s = null;
 		List<Valuta> valute = Valuta.findAll();
 		for(int i=0; i< valute.size(); i++) {
