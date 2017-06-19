@@ -8,7 +8,7 @@ function nm() {
 		data: {'mode': 'edit', 's': '0'},
 		dataType: "html",
 		success: function(){
-			window.location.replace("@{NaseljenaMesta.show()}"); 
+			window.location.replace("@{NaseljenaMesta.show().secure()}"); 
 		}
 	});
 }
@@ -22,7 +22,7 @@ function d() {
 		data: {'mode': 'edit', 's': '0'},
 		dataType: "html",
 		success: function(){
-			window.location.replace("@{Drzave.show()}"); 
+			window.location.replace("@{Drzave.show().secure()}"); 
 		}
 	});
 }
@@ -36,7 +36,7 @@ function z() {
 		data: {'mode': 'search', 's': '0'},
 		dataType: "html",
 		success: function(){
-			window.location.replace("@{Zaposlenii.show()}"); 
+			window.location.replace("@{Zaposlenii.show().secure()}"); 
 		}
 	});
 }
@@ -47,7 +47,7 @@ function pl() {
 		url: showRoute.url(),
 		type: showRoute.method,
 		success: function(){
-			window.location.replace("@{Zaposlenii.promenaLozinke()}"); 
+			window.location.replace("@{Zaposlenii.promenaLozinke().secure()}"); 
 		}
 	});
 }
@@ -61,7 +61,7 @@ function a() {
 		data: {'mode': 'edit', 's': '0'},
 		dataType: "html",
 		success: function(){
-			window.location.replace("@{AnalitikeIzvoda.show()}"); 
+			window.location.replace("@{AnalitikeIzvoda.show().secure()}"); 
 		}
 	});
 }
@@ -74,7 +74,7 @@ function mp() {
 		data: {'mode': 'search', 's': '0'},
 		dataType: "html",
 		success: function(){
-			window.location.replace("@{MedjubankarskiPrenosi.show()}"); 
+			window.location.replace("@{MedjubankarskiPrenosi.show().secure()}"); 
 		}
 	});
 }
@@ -87,7 +87,7 @@ function sp() {
 		data: {'mode': 'search', 's': '0'},
 		dataType: "html",
 		success: function(){
-			window.location.replace("@{StavkePrenosa.show()}"); 
+			window.location.replace("@{StavkePrenosa.show().secure()}"); 
 		}
 	});
 }
@@ -100,7 +100,7 @@ function zr() {
 		data: {'mode': 'search', 's': '0'},
 		dataType: "html",
 		success: function(){
-			window.location.replace("@{ZatvaranjaRacuna.show()}"); 
+			window.location.replace("@{ZatvaranjaRacuna.show().secure()}"); 
 		}
 	});
 }
@@ -113,7 +113,7 @@ function r() {
 		data: {'mode': 'edit', 's': '0'},
 		dataType: "html",
 		success: function(){
-			window.location.replace("@{Racuni.show()}"); 
+			window.location.replace("@{Racuni.show().secure()}"); 
 		}
 	});
 }
@@ -127,7 +127,7 @@ function r() {
 		data: {'mode': 'edit', 's': '0'},
 		dataType: "html",
 		success: function(){
-			window.location.replace("@{Racuni.show()}"); 
+			window.location.replace("@{Racuni.show().secure()}"); 
 		}
 	});
 }
@@ -141,7 +141,7 @@ function v() {
 		data: {'mode': 'edit', 's': '0'},
 		dataType: "html",
 		success: function(){
-			window.location.replace("@{Valute.show()}"); 
+			window.location.replace("@{Valute.show().secure()}"); 
 		}
 	});
 }
@@ -155,7 +155,7 @@ function sd() {
 		data: {'mode': 'edit', 's': '0'},
 		dataType: "html",
 		success: function(){
-			window.location.replace("@{SifrarniciDelatnosti.show()}"); 
+			window.location.replace("@{SifrarniciDelatnosti.show().secure()}"); 
 		}
 	});
 }
@@ -169,7 +169,7 @@ function k() {
 		data: {'mode': 'edit', 's': '0'},
 		dataType: "html",
 		success: function(){
-			window.location.replace("@{Klijenti.show()}"); 
+			window.location.replace("@{Klijenti.show().secure()}"); 
 		}
 	});
 }
@@ -183,7 +183,7 @@ function b() {
 		data: {'mode': 'edit', 's': '0'},
 		dataType: "html",
 		success: function(){
-			window.location.replace("@{Banke.show()}"); 
+			window.location.replace("@{Banke.show().secure()}"); 
 		}
 	});
 }
@@ -197,7 +197,7 @@ function dsr() {
 		data: {'mode': 'edit', 's': '0'},
 		dataType: "html",
 		success: function(){
-			window.location.replace("@{DnevnaStanjaRacuna.show()}"); 
+			window.location.replace("@{DnevnaStanjaRacuna.show().secure()}"); 
 		}
 	});
 }
@@ -207,7 +207,7 @@ function dsr() {
 
 <ul class="nav nav-pills">
 	<li class="nav-item dropdown">
-		<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="@{Application.index()}" role="button" aria-haspopup="true" aria-expanded="false">Poslovna Banka</a>
+		<a class="nav-link dropdown-toggle" data-toggle="dropdown" href="@{Application.index().secure()}" role="button" aria-haspopup="true" aria-expanded="false">Poslovna Banka</a>
     <div class="dropdown-menu">
 
 	<a class="dropdown-item" href="javascript:b()">Banke</a>

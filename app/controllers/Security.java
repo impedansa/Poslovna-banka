@@ -35,5 +35,10 @@ public class Security extends Secure.Security{
 		return zaposlen != null && password_verified;
     }
 	
+	static void onDisconnect() {
+		String user = session.get("user");
+		Logger.info("Izlogovan zaposleni sa ID-jem: "+user+" sa IP adrese: "+ Logovi.getClientIp());
+		
+    }
 
 }
