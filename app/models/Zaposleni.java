@@ -13,10 +13,10 @@ import play.db.jpa.Model;
 @Entity
 public class Zaposleni extends Model implements RoleHolder {
 	
-	@Column(name="KORISNICKO_IME")
+	@Column(name="KORISNICKO_IME", unique = true) 
 	public String korisnickoIme;
 	
-	@Column(name="LOZINKA")
+	@Column(name="LOZINKA", unique = true)
 	public String lozinka;
 	
 	

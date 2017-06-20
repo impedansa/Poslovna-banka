@@ -1,13 +1,22 @@
 package controllers;
 
+import java.io.File;
+import java.io.IOException;
+import java.security.NoSuchProviderException;
 import java.util.Date;
 import java.util.List;
 
+import javax.crypto.SecretKey;
+
 import models.AnalitikaIzvoda;
 import models.Banka;
+import models.Klijent;
+import models.KlijentD;
 import models.MedjubankarskiPrenos;
 import models.Racun;
+import models.SifrarnikDelatnosti;
 import models.ZatvaranjeRacuna;
+import models.ZatvaranjeRacunaD;
 import play.mvc.Controller;
 
 public class ZatvaranjaRacuna extends Controller{
@@ -56,5 +65,56 @@ public class ZatvaranjaRacuna extends Controller{
 		List<ZatvaranjeRacuna> zatvaranje = ZatvaranjeRacuna.find("byDatumZatvaranjaAndPrebacenoNaRacunAndRacunAndAnalitikaIzvoda", datumZatvaranja, prebacenoNaRacun, racun, analitikaIzvoda).fetch();
 		return zatvaranje;
 	}
-
+	
+	public static ZatvaranjeRacuna encryptKlijent (Date datumZatvaranja, String prebacenoNaRacun, Long racun, Long analitikaIzvoda) throws NoSuchProviderException {
+		
+		String alias = "admin";
+		String passKeyS = "admin";
+		String pass = "admin";
+		SecretKey sk = null;
+	
+		KeyStoreWriter keyStoreWriter = new KeyStoreWriter();
+		KeyStoreReader ksReader = new KeyStoreReader();
+		File f = new File("C:/Users/Valentina/" + alias + ".jks");
+		if(f.exists() && !f.isDirectory()) { 
+			sk = ksReader.readSecretKey("C:/Users/Valentina/" + alias + ".jks", passKeyS, alias, pass);
+			System.out.println("jel moguce");
+			
+		}
+		else {
+			keyStoreWriter.loadKeyStore(null, passKeyS.toCharArray());
+			sk = AES.generateKey();
+			keyStoreWriter.write(alias, sk, passKeyS.toCharArray());
+			keyStoreWriter.saveKeyStore("C:/Users/Valentina/" + alias + ".jks", passKeyS.toCharArray());
+			System.out.println("kljuc "+sk);
+		} 
+		byte[] eprebacenoNaRacun = AES.encrypt(prebacenoNaRacun, sk);
+	
+		Racun r = Racun.findById(racun);
+		AnalitikaIzvoda ai = AnalitikaIzvoda.findById(analitikaIzvoda);
+		ZatvaranjeRacuna zr = new ZatvaranjeRacuna(datumZatvaranja, eprebacenoNaRacun, r, ai);
+		return zr;
+		
+	}
+	
+	public static ZatvaranjeRacunaD decryptKlijent (Long id, Date datumZatvaranja, byte[] prebacenoNaRacun, Long racun, Long analitikaIzvoda) throws IOException, NoSuchProviderException {
+		
+		String alias = "admin";
+		String passKeyS = "admin";
+		String pass = "admin";
+		SecretKey sk = null;
+	
+		KeyStoreWriter keyStoreWriter = new KeyStoreWriter();
+		KeyStoreReader ksReader = new KeyStoreReader();
+		File f = new File("C:/Users/Valentina/" + alias + ".jks");
+		sk = ksReader.readSecretKey("C:/Users/Valentina/" + alias + ".jks", passKeyS, alias, pass);	
+		String dprebacenoNaRacun = new String(AES.decrypt(prebacenoNaRacun, sk));
+		 
+		Racun r = Racun.findById(racun);
+		AnalitikaIzvoda ai = AnalitikaIzvoda.findById(analitikaIzvoda);
+		ZatvaranjeRacunaD zr = new ZatvaranjeRacunaD(id, datumZatvaranja, dprebacenoNaRacun, r, ai);
+		return zr;
+		
+		
+	}
 }

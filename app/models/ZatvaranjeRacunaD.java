@@ -3,32 +3,35 @@ package models;
 import java.util.Date;
 
 import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 
-import play.db.jpa.Model;
-
-@Entity
-public class ZatvaranjeRacuna extends Model {
+public class ZatvaranjeRacunaD {
 	
-	@Column(name="DATUM_ZATVARANJA")
+	public Long id;
+	
+	
 	public Date datumZatvaranja;
 	
-	@Column(name="PREBACENO_NA_RACUN", length=18)
-	public byte[] prebacenoNaRacun;
 	
-	@ManyToOne
+	public String prebacenoNaRacun;
+	
+
 	public Racun racun;
 	
-	@ManyToOne
+	
 	public AnalitikaIzvoda analitikaIzvoda;
 
-	public ZatvaranjeRacuna(Date datumZatvaranja, byte[] prebacenoNaRacun, Racun racun, AnalitikaIzvoda analitikaIzvoda) {
+
+	public ZatvaranjeRacunaD(Long id, Date datumZatvaranja, String prebacenoNaRacun, Racun racun,
+			AnalitikaIzvoda analitikaIzvoda) {
 		super();
+		this.id = id;
 		this.datumZatvaranja = datumZatvaranja;
 		this.prebacenoNaRacun = prebacenoNaRacun;
 		this.racun = racun;
 		this.analitikaIzvoda = analitikaIzvoda;
 	}
+	
+	
 
 }

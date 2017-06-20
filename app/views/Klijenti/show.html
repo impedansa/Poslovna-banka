@@ -52,6 +52,14 @@ function next() {
 	console.log(sd_id)
 }
 
+function bin2String(array) {
+	  var result = "";
+	  for (var i = 0; i < array.length; i++) {
+	    result += String.fromCharCode(parseInt(array[i], 2));
+	  }
+	  return result;
+}
+
 
 
 
@@ -98,7 +106,7 @@ function next() {
 #{list items:klijenti, as:'klijent'}
 %{
   num=klijent.id;
-  klijentId=num.toString();
+  klijentId=num.toString(); 
 }%
 	<tr #{if klijentId == session.s} class = "highlighted" #{/if}>
 		<td class = "jmbg">${klijent.jmbg}</td>

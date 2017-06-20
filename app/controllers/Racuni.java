@@ -1,22 +1,34 @@
 package controllers;
 
+import java.io.File;
+import java.io.IOException;
+import java.security.NoSuchProviderException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.crypto.SecretKey;
 
 import models.Banka;
 import models.Klijent;
 import models.Racun;
+import models.RacunD;
+import models.SifrarnikDelatnosti;
 import models.Valuta;
 import play.data.validation.Required;
 import play.mvc.Controller;
 
 public class Racuni extends Controller {
 	
-	public static void show(){
+	public static void show() throws NoSuchProviderException, IOException{
 		List<Klijent> klijenti = Klijent.findAll();
 		List<Banka> banke = Banka.findAll();
 		List<Valuta> valute = Valuta.findAll();
-		List<Racun> racuni = Racun.findAll();
+		List<Racun> racuniD = Racun.findAll();
+		List<RacunD> racuni = new ArrayList<RacunD>();
+		for (Racun r: racuniD){
+			RacunD rd = decryptRacuna(r.getId(), r.getBrojRacuna(), r.getStatusRacuna(), r.getKlijent().getId(), r.getBanka().getId(), r.getValuta().getId());
+			racuni.add(rd);
+		}
 		String mode = "";
 		String s = "";
 		if(params.get("mode") != null) {
@@ -84,7 +96,7 @@ public class Racuni extends Controller {
 		renderTemplate("Racuni/show.html",racuni, klijent);
 	}
 	
-	public static void create(@Required String brojRacuna,@Required String statusRacuna, Long klijent, Long banka, Long valuta) {
+	public static void create(@Required String brojRacuna,@Required String statusRacuna, Long klijent, Long banka, Long valuta) throws NoSuchProviderException, IOException {
 		checkAuthenticity();
 		validation.minSize(brojRacuna, 18);
 		validation.maxSize(brojRacuna, 18);
@@ -95,10 +107,8 @@ public class Racuni extends Controller {
 	  		  session.put("s", null);
 	          show();
 	    }
-		Klijent k = Klijent.findById(klijent);
-		Banka b = Banka.findById(banka);
-		Valuta v = Valuta.findById(valuta);
-		Racun r = new Racun(brojRacuna, statusRacuna, k, b, v);
+		
+		Racun r = encryptRacuna(brojRacuna, statusRacuna, klijent, banka, valuta);
 		r.save();
 		session.put("mode", "add");
 		session.put("s", r.id);
@@ -106,8 +116,8 @@ public class Racuni extends Controller {
 	}
 	
 	
-	public static void createNext(@Required String brojRacuna,@Required String statusRacuna, Long klijent, Long banka, Long valuta) {
-		checkAuthenticity();
+	public static void createNext(@Required String brojRacuna,@Required String statusRacuna, Long klijent, Long banka, Long valuta) throws NoSuchProviderException, IOException {
+		/*checkAuthenticity();
 		validation.minSize(brojRacuna, 18);
 		validation.maxSize(brojRacuna, 18);
 		validation.maxSize(statusRacuna, 1);
@@ -125,10 +135,10 @@ public class Racuni extends Controller {
 		session.put("mode", "locked add");
 		session.put("s", r.id);
 		session.put("id", klijent);
-		shownext();
+		shownext(); */
 	}
 	
-	public static void edit(Long id,String brojRacuna,String statusRacuna, Long klijent, Long banka, Long valuta) {
+	public static void edit(Long id,byte[] brojRacuna,byte[] statusRacuna, Long klijent, Long banka, Long valuta) throws NoSuchProviderException, IOException {
 		checkAuthenticity();
 		validation.minSize(brojRacuna, 18);
 		validation.maxSize(brojRacuna, 18);
@@ -175,8 +185,8 @@ public class Racuni extends Controller {
 		show();
 	}
 	
-	public static void editNext(Long id,String brojRacuna,String statusRacuna, Long klijent, Long banka, Long valuta) {
-		checkAuthenticity();
+	public static void editNext(Long id,String brojRacuna,String statusRacuna, Long klijent, Long banka, Long valuta) throws NoSuchProviderException, IOException {
+		/*checkAuthenticity();
 		validation.minSize(brojRacuna, 18);
 		validation.maxSize(brojRacuna, 18);
 		validation.maxSize(statusRacuna, 1);
@@ -220,12 +230,66 @@ public class Racuni extends Controller {
 		session.put("mode", "locked edit");
 		session.put("s", s);
 		session.put("id", klijent);
-		shownext();
+		shownext(); */
 	}
 	
 	public static void delete(Long id) {
 		checkAuthenticity();
 	}
-
+	
+public static Racun encryptRacuna (String brojRacuna, String statusRacuna, Long klijent, Long banka, Long valuta) throws NoSuchProviderException {
+		
+		String alias = "admin";
+		String passKeyS = "admin";
+		String pass = "admin";
+		SecretKey sk = null;
+	
+		KeyStoreWriter keyStoreWriter = new KeyStoreWriter();
+		KeyStoreReader ksReader = new KeyStoreReader();
+		File f = new File("C:/Users/Valentina/" + alias + ".jks");
+		if(f.exists() && !f.isDirectory()) { 
+			sk = ksReader.readSecretKey("C:/Users/Valentina/" + alias + ".jks", passKeyS, alias, pass);	
+		}
+		else {
+			keyStoreWriter.loadKeyStore(null, passKeyS.toCharArray());
+			sk = AES.generateKey();
+			keyStoreWriter.write(alias, sk, passKeyS.toCharArray());
+			keyStoreWriter.saveKeyStore("C:/Users/Valentina/" + alias + ".jks", passKeyS.toCharArray());
+		}
+		byte[] ebrojRacuna = AES.encrypt(brojRacuna, sk);
+		byte[] estatusRacuna = AES.encrypt(statusRacuna, sk);
+		
+		Klijent k = Klijent.findById(klijent);
+		Banka b = Banka.findById(banka);
+		Valuta v = Valuta.findById(valuta);
+		Racun r = new Racun(ebrojRacuna, estatusRacuna, k, b, v);
+	
+		return r;
+		
+	}
+	
+public static RacunD decryptRacuna (Long id, byte[] brojRacuna, byte[] statusRacuna, Long klijent, Long banka, Long valuta) throws IOException, NoSuchProviderException {
+		
+		String alias = "admin";
+		String passKeyS = "admin";
+		String pass = "admin";
+		SecretKey sk = null;
+	
+		KeyStoreWriter keyStoreWriter = new KeyStoreWriter();
+		KeyStoreReader ksReader = new KeyStoreReader();
+		File f = new File("C:/Users/Valentina/" + alias + ".jks");
+		sk = ksReader.readSecretKey("C:/Users/Valentina/" + alias + ".jks", passKeyS, alias, pass);	
+		String dbrojRacuna = new String(AES.decrypt(brojRacuna, sk));
+		String dstatusRacuna = new String(AES.decrypt(statusRacuna, sk));
+		
+		Klijent k = Klijent.findById(klijent);
+		Banka b = Banka.findById(banka);
+		Valuta v = Valuta.findById(valuta);
+		RacunD r = new RacunD(id, dbrojRacuna, dstatusRacuna, k, b, v);
+		
+		return r;
+		
+		
+	}
 
 }
