@@ -43,83 +43,8 @@ public class AES {
         return key;
 	}
 	
-	public static byte[] encrypt(String plainText, SecretKey key) {
-		//TODO: Sifrovati otvoren tekst uz pomoc tajnog kljuca koristeci konfiguraciju AES algoritma koju diktira najbolja praksa
-		
-		Cipher aesCipher = null;
-		
-		try {
-			aesCipher=Cipher.getInstance("AES/CBC/PKCS5Padding");	//PKCS7 padding, zove se PKCS5 u Javi
-		} catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		byte[] iv = new byte[16];	//uvek 128 bita zbog velicine bloka koja se koristi u AES
-		SecureRandom random = new SecureRandom();
-		random.nextBytes(iv);
-		IvParameterSpec ivParameterSpec = new IvParameterSpec(iv);
-		
-		try {
-			aesCipher.init(Cipher.ENCRYPT_MODE, key, ivParameterSpec);
-		} catch (InvalidKeyException | InvalidAlgorithmParameterException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		byte[] cipherText = null;
-		
-		try {
-			cipherText = aesCipher.doFinal(plainText.getBytes());
-		} catch (IllegalBlockSizeException | BadPaddingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		byte[] concat = new byte[iv.length + cipherText.length];	//prosledjujem iv pre sifrata
-		System.arraycopy(iv, 0, concat, 0, iv.length);
-		System.arraycopy(cipherText, 0, concat, iv.length, cipherText.length);
-		
-		return concat;
-	}
-	
-	public static byte[] decrypt(byte[] cipherText, SecretKey key) {
-		//TODO: Desifrovati sifru uz pomoc tajnog kljuca koristeci konfiguraciju AES algoritma koju diktira najbolja praksa
-		
-		byte[] iv = Arrays.copyOfRange(cipherText, 0, 16);
-		
-		byte[] text = Arrays.copyOfRange(cipherText, 16, cipherText.length);
-		
-		IvParameterSpec ivParameterSpec = new IvParameterSpec(iv);
-		
-		Cipher aesCipher = null;
-		try {
-			aesCipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
-		} catch (NoSuchAlgorithmException | NoSuchPaddingException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		
-		try {
-			aesCipher.init(Cipher.DECRYPT_MODE, key, ivParameterSpec);
-		} catch (InvalidKeyException | InvalidAlgorithmParameterException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		byte[] plainText = null;
-		
-		try {
-			plainText = aesCipher.doFinal(text);
-		} catch (IllegalBlockSizeException | BadPaddingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		return plainText;
-	}
 
-/*	public static byte[] encrypt(String plainText, SecretKey key) {
+	public static byte[] encrypt(String plainText, SecretKey key) {
 		//TODO: Sifrovati otvoren tekst uz pomoc tajnog kljuca koristeci konfiguraciju AES algoritma koju diktira najbolja praksa
 		//AES algoritam podrzava veliki broj rezima rada, u zavisnosti od toga u kojim uslovima se koristi, svaki 
 		// ima svoje prednosti i mane. Na ovom liku (http://stackoverflow.com/questions/1220751/how-to-choose-an-aes-encryption-mode-cbc-ecb-ctr-ocb-cfb)
@@ -208,5 +133,82 @@ public class AES {
 		}
 		return null;
 		
-	} */ 
+	} 
+	
+	/*	public static byte[] encrypt(String plainText, SecretKey key) {
+	//TODO: Sifrovati otvoren tekst uz pomoc tajnog kljuca koristeci konfiguraciju AES algoritma koju diktira najbolja praksa
+	
+	Cipher aesCipher = null;
+	
+	try {
+		aesCipher=Cipher.getInstance("AES/CBC/PKCS5Padding");	//PKCS7 padding, zove se PKCS5 u Javi
+	} catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	
+	byte[] iv = new byte[16];	//uvek 128 bita zbog velicine bloka koja se koristi u AES
+	SecureRandom random = new SecureRandom();
+	random.nextBytes(iv);
+	IvParameterSpec ivParameterSpec = new IvParameterSpec(iv);
+	
+	try {
+		aesCipher.init(Cipher.ENCRYPT_MODE, key, ivParameterSpec);
+	} catch (InvalidKeyException | InvalidAlgorithmParameterException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	
+	byte[] cipherText = null;
+	
+	try {
+		cipherText = aesCipher.doFinal(plainText.getBytes());
+	} catch (IllegalBlockSizeException | BadPaddingException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	
+	byte[] concat = new byte[iv.length + cipherText.length];	//prosledjujem iv pre sifrata
+	System.arraycopy(iv, 0, concat, 0, iv.length);
+	System.arraycopy(cipherText, 0, concat, iv.length, cipherText.length);
+	
+	return concat;
+}
+
+public static byte[] decrypt(byte[] cipherText, SecretKey key) {
+	//TODO: Desifrovati sifru uz pomoc tajnog kljuca koristeci konfiguraciju AES algoritma koju diktira najbolja praksa
+	
+	byte[] iv = Arrays.copyOfRange(cipherText, 0, 16);
+	
+	byte[] text = Arrays.copyOfRange(cipherText, 16, cipherText.length);
+	
+	IvParameterSpec ivParameterSpec = new IvParameterSpec(iv);
+	
+	Cipher aesCipher = null;
+	try {
+		aesCipher = Cipher.getInstance("AES/CBC/PKCS5Padding");
+	} catch (NoSuchAlgorithmException | NoSuchPaddingException e1) {
+		// TODO Auto-generated catch block
+		e1.printStackTrace();
+	}
+	
+	try {
+		aesCipher.init(Cipher.DECRYPT_MODE, key, ivParameterSpec);
+	} catch (InvalidKeyException | InvalidAlgorithmParameterException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	
+	byte[] plainText = null;
+	
+	try {
+		plainText = aesCipher.doFinal(text);
+	} catch (IllegalBlockSizeException | BadPaddingException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	
+	return plainText;
+} */
+
 }
