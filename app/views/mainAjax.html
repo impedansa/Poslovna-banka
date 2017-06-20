@@ -211,7 +211,9 @@ function dsr() {
     <div class="dropdown-menu">
 
 	<a class="dropdown-item" href="javascript:b()">Banke</a>
-       <a class="dropdown-item" href="javascript:r()">Racuni</a>
+	  #{deadbolt.restrict roles:[['racuni.view']]}
+      <a class="dropdown-item" href="javascript:r()">Racuni</a>
+      #{/deadbolt.restrict}
       <a class="dropdown-item" href="javascript:d()">Drzave</a>
       <a class="dropdown-item" href="javascript:nm()">Naseljena Mesta</a>
       <a class="dropdown-item" href="javascript:a()">Analitika izvoda</a>

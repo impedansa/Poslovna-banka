@@ -55,6 +55,7 @@ public class Zaposlenii extends Controller{
 		show();
 	}
 	
+	@Restrict("zaposleni.view")
 	public static void filter(String korisnickoIme, String lozinka) {
 		List<Zaposleni> zaposleni = Zaposleni.find("byKorisnickoImeLike", "%"+korisnickoIme+"%").fetch();
 		session.put("mode", "search");

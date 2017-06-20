@@ -12,13 +12,18 @@ import models.Banka;
 import models.Klijent;
 import models.Racun;
 import models.RacunD;
-import models.SifrarnikDelatnosti;
 import models.Valuta;
+import play.Logger;
 import play.data.validation.Required;
 import play.mvc.Controller;
+import play.mvc.With;
+import controllers.deadbolt.Deadbolt;
+import controllers.deadbolt.Restrict;
 
+@With(Deadbolt.class)
 public class Racuni extends Controller {
 	
+	@Restrict("racuni.view")
 	public static void show() throws NoSuchProviderException, IOException{
 		List<Klijent> klijenti = Klijent.findAll();
 		List<Banka> banke = Banka.findAll();
@@ -46,6 +51,7 @@ public class Racuni extends Controller {
 		render(racuni, klijenti, banke, valute);
 	}
 	
+	@Restrict("racuni.view")
 	public static void shownext() {
 		String modeN = "";
 		String sN = "";
@@ -75,6 +81,7 @@ public class Racuni extends Controller {
 		renderTemplate("Racuni/show.html", racuni, klijenti, banke, valute, id);
 	}
 	
+	@Restrict("racuni.view")
 	public static void filter(String brojRacuna, String statusRacuna, Long klijent, Long banka, Long valuta) {
 		Klijent k = Klijent.findById(klijent);
 		Banka b = Banka.findById(banka);
@@ -85,6 +92,7 @@ public class Racuni extends Controller {
 		renderTemplate("Racuni/show.html",racuni);
 	}
 	
+	@Restrict("racuni.view")
 	public static void filterNext(String brojRacuna, String statusRacuna, Long klijent, Long banka, Long valuta) {
 		Klijent k = Klijent.findById(klijent);
 		Banka b = Banka.findById(banka);
@@ -96,7 +104,9 @@ public class Racuni extends Controller {
 		renderTemplate("Racuni/show.html",racuni, klijent);
 	}
 	
+	@Restrict("racuni.create")
 	public static void create(@Required String brojRacuna,@Required String statusRacuna, Long klijent, Long banka, Long valuta) throws NoSuchProviderException, IOException {
+		Logger.info("Zaposleni sa ID-jem: "+session.get("user")+" pokusao kreiranje racuna sa IP adrese: "+ Logovi.getClientIp());
 		checkAuthenticity();
 		validation.minSize(brojRacuna, 18);
 		validation.maxSize(brojRacuna, 18);
@@ -110,6 +120,7 @@ public class Racuni extends Controller {
 		
 		Racun r = encryptRacuna(brojRacuna, statusRacuna, klijent, banka, valuta);
 		r.save();
+		Logger.info("Zaposleni sa ID-jem: "+session.get("user")+" kreirao racun sa IP adrese: "+ Logovi.getClientIp());
 		session.put("mode", "add");
 		session.put("s", r.id);
 		show();
@@ -138,6 +149,7 @@ public class Racuni extends Controller {
 		shownext(); */
 	}
 	
+	@Restrict("racuni.edit")
 	public static void edit(Long id,byte[] brojRacuna,byte[] statusRacuna, Long klijent, Long banka, Long valuta) throws NoSuchProviderException, IOException {
 		checkAuthenticity();
 		validation.minSize(brojRacuna, 18);
@@ -233,6 +245,7 @@ public class Racuni extends Controller {
 		shownext(); */
 	}
 	
+	@Restrict("racuni.remove")
 	public static void delete(Long id) {
 		checkAuthenticity();
 	}
