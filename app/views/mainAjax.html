@@ -8,7 +8,7 @@ function nm() {
 		data: {'mode': 'edit', 's': '0'},
 		dataType: "html",
 		success: function(){
-			window.location.replace("@{NaseljenaMesta.show().secure()}"); 
+			window.location.replace("@{NaseljenaMesta.show()}"); 
 		}
 	});
 }
@@ -22,7 +22,7 @@ function d() {
 		data: {'mode': 'edit', 's': '0'},
 		dataType: "html",
 		success: function(){
-			window.location.replace("@{Drzave.show().secure()}"); 
+			window.location.replace("@{Drzave.show()}"); 
 		}
 	});
 }
@@ -36,7 +36,7 @@ function z() {
 		data: {'mode': 'search', 's': '0'},
 		dataType: "html",
 		success: function(){
-			window.location.replace("@{Zaposlenii.show().secure()}"); 
+			window.location.replace("@{Zaposlenii.show()}"); 
 		}
 	});
 }
@@ -47,7 +47,7 @@ function pl() {
 		url: showRoute.url(),
 		type: showRoute.method,
 		success: function(){
-			window.location.replace("@{Zaposlenii.promenaLozinke().secure()}"); 
+			window.location.replace("@{Zaposlenii.promenaLozinke()}"); 
 		}
 	});
 }
@@ -61,7 +61,7 @@ function a() {
 		data: {'mode': 'edit', 's': '0'},
 		dataType: "html",
 		success: function(){
-			window.location.replace("@{AnalitikeIzvoda.show().secure()}"); 
+			window.location.replace("@{AnalitikeIzvoda.show()}"); 
 		}
 	});
 }
@@ -74,7 +74,7 @@ function mp() {
 		data: {'mode': 'search', 's': '0'},
 		dataType: "html",
 		success: function(){
-			window.location.replace("@{MedjubankarskiPrenosi.show().secure()}"); 
+			window.location.replace("@{MedjubankarskiPrenosi.show()}"); 
 		}
 	});
 }
@@ -87,7 +87,7 @@ function sp() {
 		data: {'mode': 'search', 's': '0'},
 		dataType: "html",
 		success: function(){
-			window.location.replace("@{StavkePrenosa.show().secure()}"); 
+			window.location.replace("@{StavkePrenosa.show()}"); 
 		}
 	});
 }
@@ -100,7 +100,7 @@ function zr() {
 		data: {'mode': 'search', 's': '0'},
 		dataType: "html",
 		success: function(){
-			window.location.replace("@{ZatvaranjaRacuna.show().secure()}"); 
+			window.location.replace("@{ZatvaranjaRacuna.show()}"); 
 		}
 	});
 }
@@ -113,7 +113,7 @@ function r() {
 		data: {'mode': 'edit', 's': '0'},
 		dataType: "html",
 		success: function(){
-			window.location.replace("@{Racuni.show().secure()}"); 
+			window.location.replace("@{Racuni.show()}"); 
 		}
 	});
 }
@@ -127,7 +127,7 @@ function r() {
 		data: {'mode': 'edit', 's': '0'},
 		dataType: "html",
 		success: function(){
-			window.location.replace("@{Racuni.show().secure()}"); 
+			window.location.replace("@{Racuni.show()}"); 
 		}
 	});
 }
@@ -141,7 +141,7 @@ function v() {
 		data: {'mode': 'edit', 's': '0'},
 		dataType: "html",
 		success: function(){
-			window.location.replace("@{Valute.show().secure()}"); 
+			window.location.replace("@{Valute.show()}"); 
 		}
 	});
 }
@@ -155,7 +155,7 @@ function sd() {
 		data: {'mode': 'edit', 's': '0'},
 		dataType: "html",
 		success: function(){
-			window.location.replace("@{SifrarniciDelatnosti.show().secure()}"); 
+			window.location.replace("@{SifrarniciDelatnosti.show()}"); 
 		}
 	});
 }
@@ -169,7 +169,7 @@ function k() {
 		data: {'mode': 'edit', 's': '0'},
 		dataType: "html",
 		success: function(){
-			window.location.replace("@{Klijenti.show().secure()}"); 
+			window.location.replace("@{Klijenti.show()}"); 
 		}
 	});
 }
@@ -183,7 +183,7 @@ function b() {
 		data: {'mode': 'edit', 's': '0'},
 		dataType: "html",
 		success: function(){
-			window.location.replace("@{Banke.show().secure()}"); 
+			window.location.replace("@{Banke.show()}"); 
 		}
 	});
 }
@@ -197,7 +197,7 @@ function dsr() {
 		data: {'mode': 'edit', 's': '0'},
 		dataType: "html",
 		success: function(){
-			window.location.replace("@{DnevnaStanjaRacuna.show().secure()}"); 
+			window.location.replace("@{DnevnaStanjaRacuna.show()}"); 
 		}
 	});
 }
@@ -211,9 +211,7 @@ function dsr() {
     <div class="dropdown-menu">
 
 	<a class="dropdown-item" href="javascript:b()">Banke</a>
-	  #{deadbolt.restrict roles:[['racuni.view']]}
       <a class="dropdown-item" href="javascript:r()">Racuni</a>
-      #{/deadbolt.restrict}
       <a class="dropdown-item" href="javascript:d()">Drzave</a>
       <a class="dropdown-item" href="javascript:nm()">Naseljena Mesta</a>
       <a class="dropdown-item" href="javascript:a()">Analitika izvoda</a>

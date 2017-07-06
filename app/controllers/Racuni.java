@@ -20,38 +20,34 @@ import play.mvc.With;
 import controllers.deadbolt.Deadbolt;
 import controllers.deadbolt.Restrict;
 
-@With(Deadbolt.class)
+
 public class Racuni extends Controller {
 	
-	@Restrict("racuni.view")
-	public static void show() throws NoSuchProviderException, IOException{
-		List<Klijent> klijenti = Klijent.findAll();
-		List<Banka> banke = Banka.findAll();
-		List<Valuta> valute = Valuta.findAll();
-		List<Racun> racuniD = Racun.findAll();
-		List<RacunD> racuni = new ArrayList<RacunD>();
-		for (Racun r: racuniD){
-			RacunD rd = decryptRacuna(r.getId(), r.getBrojRacuna(), r.getStatusRacuna(), r.getKlijent().getId(), r.getBanka().getId(), r.getValuta().getId());
-			racuni.add(rd);
-		}
-		String mode = "";
-		String s = "";
-		if(params.get("mode") != null) {
-			mode = params.get("mode");
-			s = params.get("s");
-		} else {
-			mode = session.get("mode");
-			s = session.get("s");
-			if(mode == null || mode =="") {
-				mode = "edit";
-			}
-		}
-		session.put("mode", mode);
-		session.put("s", s);
-		render(racuni, klijenti, banke, valute);
-	}
 	
-	@Restrict("racuni.view")
+	public static void show(){
+				List<Klijent> klijenti = Klijent.findAll();
+				List<Banka> banke = Banka.findAll();
+				List<Valuta> valute = Valuta.findAll();
+				List<Racun> racuni = Racun.findAll();
+				String mode = "";
+				String s = "";
+				if(params.get("mode") != null) {
+					mode = params.get("mode");
+					s = params.get("s");
+				} else {
+					mode = session.get("mode");
+					s = session.get("s");
+					if(mode == null || mode =="") {
+						mode = "edit";
+					}
+				}
+				session.put("mode", mode);
+				session.put("s", s);
+				render(racuni, klijenti, banke, valute);
+			}
+			
+	
+
 	public static void shownext() {
 		String modeN = "";
 		String sN = "";
@@ -81,7 +77,7 @@ public class Racuni extends Controller {
 		renderTemplate("Racuni/show.html", racuni, klijenti, banke, valute, id);
 	}
 	
-	@Restrict("racuni.view")
+
 	public static void filter(String brojRacuna, String statusRacuna, Long klijent, Long banka, Long valuta) {
 		Klijent k = Klijent.findById(klijent);
 		Banka b = Banka.findById(banka);
@@ -92,7 +88,7 @@ public class Racuni extends Controller {
 		renderTemplate("Racuni/show.html",racuni);
 	}
 	
-	@Restrict("racuni.view")
+	
 	public static void filterNext(String brojRacuna, String statusRacuna, Long klijent, Long banka, Long valuta) {
 		Klijent k = Klijent.findById(klijent);
 		Banka b = Banka.findById(banka);
@@ -104,7 +100,7 @@ public class Racuni extends Controller {
 		renderTemplate("Racuni/show.html",racuni, klijent);
 	}
 	
-	@Restrict("racuni.create")
+	
 	public static void create(@Required String brojRacuna,@Required String statusRacuna, Long klijent, Long banka, Long valuta) throws NoSuchProviderException, IOException {
 		Logger.info("Zaposleni sa ID-jem: "+session.get("user")+" pokusao kreiranje racuna sa IP adrese: "+ Logovi.getClientIp());
 		checkAuthenticity();
@@ -118,7 +114,10 @@ public class Racuni extends Controller {
 	          show();
 	    }
 		
-		Racun r = encryptRacuna(brojRacuna, statusRacuna, klijent, banka, valuta);
+		Klijent k = Klijent.findById(klijent);
+		Banka b = Banka.findById(banka);
+		Valuta v = Valuta.findById(valuta);
+		Racun r = new Racun(brojRacuna, statusRacuna, k, b, v);
 		r.save();
 		Logger.info("Zaposleni sa ID-jem: "+session.get("user")+" kreirao racun sa IP adrese: "+ Logovi.getClientIp());
 		session.put("mode", "add");
@@ -149,35 +148,21 @@ public class Racuni extends Controller {
 		shownext(); */
 	}
 	
-	@Restrict("racuni.edit")
-	public static void edit(Long id,byte[] brojRacuna,byte[] statusRacuna, Long klijent, Long banka, Long valuta) throws NoSuchProviderException, IOException {
-		checkAuthenticity();
-		validation.minSize(brojRacuna, 18);
-		validation.maxSize(brojRacuna, 18);
-		validation.maxSize(statusRacuna, 1);
-		if(validation.hasErrors()) {
-	          validation.keep();
-	          session.put("mode", "add");
-	  		  session.put("s", null);
-	          show();
-	    }
-		Long s = null;
-		if(id != null) {
-			Racun r = Racun.findById(id);
-			r.brojRacuna = brojRacuna;
-			r.statusRacuna = statusRacuna;
-			Klijent k = Klijent.findById(klijent);
-			r.klijent = k;
-			Banka b = Banka.findById(banka);
-			r.banka = b;
-			Valuta v = Valuta.findById(valuta);
-			r.valuta = v;
-			r.save();
-			s = id;
-		} else if (brojRacuna != null){
-			List<Racun> racuni = Racun.findAll();
-			for(Racun r:racuni){
-				if(brojRacuna.equals(r.brojRacuna)) {
+	
+	
+	public static void edit(Long id,String brojRacuna,String statusRacuna, Long klijent, Long banka, Long valuta) {
+				validation.minSize(brojRacuna, 18);
+				validation.maxSize(brojRacuna, 18);
+				validation.maxSize(statusRacuna, 1);
+				if(validation.hasErrors()) {
+			          validation.keep();
+			          session.put("mode", "add");
+			  		  session.put("s", null);
+			          show();
+			    }
+				Long s = null;
+				if(id != null) {
+					Racun r = Racun.findById(id);
 					r.brojRacuna = brojRacuna;
 					r.statusRacuna = statusRacuna;
 					Klijent k = Klijent.findById(klijent);
@@ -188,14 +173,28 @@ public class Racuni extends Controller {
 					r.valuta = v;
 					r.save();
 					s = id;
-				}
+				} else if (brojRacuna != null){
+					List<Racun> racuni = Racun.findAll();
+					for(Racun r:racuni){
+						if(brojRacuna.equals(r.brojRacuna)) {
+							r.brojRacuna = brojRacuna;
+							r.statusRacuna = statusRacuna;
+							Klijent k = Klijent.findById(klijent);
+							r.klijent = k;
+							Banka b = Banka.findById(banka);
+							r.banka = b;
+							Valuta v = Valuta.findById(valuta);
+							r.valuta = v;
+							r.save();
+							s = id;
+						}
+					}
+					
+				} 
+				session.put("mode", "edit");
+				session.put("s", s);
+				show();
 			}
-			
-		} 
-		session.put("mode", "edit");
-		session.put("s", s);
-		show();
-	}
 	
 	public static void editNext(Long id,String brojRacuna,String statusRacuna, Long klijent, Long banka, Long valuta) throws NoSuchProviderException, IOException {
 		/*checkAuthenticity();
@@ -245,12 +244,12 @@ public class Racuni extends Controller {
 		shownext(); */
 	}
 	
-	@Restrict("racuni.remove")
+	
 	public static void delete(Long id) {
 		checkAuthenticity();
 	}
 	
-public static Racun encryptRacuna (String brojRacuna, String statusRacuna, Long klijent, Long banka, Long valuta) throws NoSuchProviderException {
+/* public static Racun encryptRacuna (String brojRacuna, String statusRacuna, Long klijent, Long banka, Long valuta) throws NoSuchProviderException {
 		
 		String alias = "admin";
 		String passKeyS = "admin";
@@ -303,6 +302,7 @@ public static RacunD decryptRacuna (Long id, byte[] brojRacuna, byte[] statusRac
 		return r;
 		
 		
-	}
+	} 
+*/
 
 }

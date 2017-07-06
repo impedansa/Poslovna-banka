@@ -20,30 +20,25 @@ import play.mvc.Controller;
 
 public class Klijenti extends Controller {
 	
-	public static void show() throws IOException, NoSuchProviderException{
-		List<SifrarnikDelatnosti> sifrarniciDelatnosti = SifrarnikDelatnosti.findAll();
-		List<Klijent> klijentiE = Klijent.findAll();
-		List<KlijentD> klijenti = new ArrayList<KlijentD>();
-		for (Klijent k :klijentiE) {
-			KlijentD kd = decryptKlijent(k.getId(), k.getJmbg(), k.getPib(), k.getNaziv(), k.getAdresa(), k.getTelefon(), k.geteMail(), k.getFax(), k.getTipLica(), k.getSifrarnikDelatnosti().getId());
-			klijenti.add(kd);
-		}
-		String mode = "";
-		String s = "";
-		if(params.get("mode") != null) {
-			mode = params.get("mode");
-			s = params.get("s");
-		} else {
-			mode = session.get("mode");
-			s = session.get("s");
-			if(mode == null || mode =="") {
-				mode = "edit";
+	public static void show(){
+				List<SifrarnikDelatnosti> sifrarniciDelatnosti = SifrarnikDelatnosti.findAll();
+				List<Klijent> klijenti = Klijent.findAll();
+				String mode = "";
+				String s = "";
+				if(params.get("mode") != null) {
+					mode = params.get("mode");
+					s = params.get("s");
+				} else {
+					mode = session.get("mode");
+					s = session.get("s");
+					if(mode == null || mode =="") {
+						mode = "edit";
+					}
+				}
+				session.put("mode", mode);
+				session.put("s", s);
+				render(klijenti, sifrarniciDelatnosti);
 			}
-		}
-		session.put("mode", mode);
-		session.put("s", s);
-		render(klijenti, sifrarniciDelatnosti);
-	}
 	
 	
 	
@@ -61,91 +56,87 @@ public class Klijenti extends Controller {
 	
 	
 	
-	public static void create(String jmbg, String pib, @Required String naziv, @Required String adresa, String telefon, String eMail, String fax, @Required String tipLica, Long sifrarnikDelatnosti) throws IOException, NoSuchProviderException {
-		checkAuthenticity();
-		validation.maxSize(tipLica, 1);
-		if(validation.hasErrors()) {
-	          validation.keep();
-	          session.put("mode", "add");
-	  		  session.put("s", null);
-	          show();
-	    }
-		Klijent k = encryptKlijent(jmbg, pib, naziv, adresa, telefon, eMail, fax, tipLica, sifrarnikDelatnosti);
-		k.save();
-		session.put("mode", "add");
-		session.put("s", k.id);
-		show();
-	}
+	public static void create(String jmbg, Integer pib, @Required String naziv, @Required String adresa, String telefon, String eMail, String fax, @Required String tipLica, Long sifrarnikDelatnosti) {
+				validation.maxSize(tipLica, 1);
+				if(validation.hasErrors()) {
+			          validation.keep();
+			          session.put("mode", "add");
+			  		  session.put("s", null);
+			          show();
+			    }
+				SifrarnikDelatnosti sd = SifrarnikDelatnosti.findById(sifrarnikDelatnosti);
+				Klijent k = new Klijent(jmbg, pib, naziv, adresa, telefon, eMail, fax, tipLica, sd);
+				k.save();
+				session.put("mode", "add");
+				session.put("s", k.id);
+				show();
+			}
 	
-	public static void edit(Long id, String jmbg, String pib, @Required String naziv, @Required String adresa, String telefon, String eMail, String fax, @Required String tipLica, Long sifrarnikDelatnosti) throws IOException, NoSuchProviderException {
-		checkAuthenticity();
-		validation.maxSize(tipLica, 1);
-		if(validation.hasErrors()) {
-	          validation.keep();
-	          session.put("mode", "add");
-	  		  session.put("s", null);
-	          show();
-	    }
-		Long s = null;
-		if(id != null) {
-			Klijent k = Klijent.findById(id);
-			Klijent k2 = encryptKlijent(jmbg, pib, naziv, adresa,telefon, eMail, fax, tipLica, sifrarnikDelatnosti);
-			k.jmbg = k2.getJmbg();
-			k.pib = k2.getPib();
-			k.naziv = k2.getNaziv();
-			k.adresa = k2.getAdresa();
-			k.telefon = k2.getTelefon();
-			k.eMail = k2.geteMail();
-			k.fax = k2.getFax();
-			k.tipLica = k2.getTipLica();
-			SifrarnikDelatnosti sd = SifrarnikDelatnosti.findById(sifrarnikDelatnosti);
-			k.sifrarnikDelatnosti = sd;
-			k.save();
-			s = id;
-		} else if (jmbg != null){
-			List<Klijent> klijenti = Klijent.findAll();
-			for(Klijent k:klijenti){
-				if(jmbg.equals(k.jmbg)) {
-					Klijent k2 = encryptKlijent(jmbg, pib, naziv, adresa,telefon, eMail, fax, tipLica, sifrarnikDelatnosti);
-					k.jmbg = k2.getJmbg();
-					k.pib = k2.getPib();
-					k.naziv = k2.getNaziv();
-					k.adresa = k2.getAdresa();
-					k.telefon = k2.getTelefon();
-					k.eMail = k2.geteMail();
-					k.fax = k2.getFax();
-					k.tipLica = k2.getTipLica();
+	public static void edit(Long id, String jmbg, Integer pib, @Required String naziv, @Required String adresa, String telefon, String eMail, String fax, @Required String tipLica, Long sifrarnikDelatnosti) {
+				validation.maxSize(tipLica, 1);
+				if(validation.hasErrors()) {
+			          validation.keep();
+			          session.put("mode", "add");
+			  		  session.put("s", null);
+			          show();
+			    }
+				Long s = null;
+				if(id != null) {
+					Klijent k = Klijent.findById(id);
+					k.jmbg = jmbg;
+					k.pib = pib;
+					k.naziv = naziv;
+					k.adresa = adresa;
+					k.telefon = telefon;
+					k.eMail = eMail;
+					k.fax = fax;
+					k.tipLica = tipLica;
 					SifrarnikDelatnosti sd = SifrarnikDelatnosti.findById(sifrarnikDelatnosti);
 					k.sifrarnikDelatnosti = sd;
 					k.save();
 					s = id;
+				} else if (jmbg != null){
+					List<Klijent> klijenti = Klijent.findAll();
+					for(Klijent k:klijenti){
+						if(jmbg.equals(k.jmbg)) {
+							k.jmbg = jmbg;
+							k.pib = pib;
+							k.naziv = naziv;
+							k.adresa = adresa;
+							k.telefon = telefon;
+							k.eMail = eMail;
+							k.fax = fax;
+							k.tipLica = tipLica;
+							SifrarnikDelatnosti sd = SifrarnikDelatnosti.findById(sifrarnikDelatnosti);
+							k.sifrarnikDelatnosti = sd;
+							k.save();
+							s = id;
+						}
+					}
+					
+				} else if(pib != null) {
+					List<Klijent> klijenti = Klijent.findAll();
+					for(Klijent k:klijenti){
+						if(pib.equals(k.pib)) {
+							k.jmbg = jmbg;
+							k.pib = pib;
+							k.naziv = naziv;
+							k.adresa = adresa;
+							k.telefon = telefon;
+							k.eMail = eMail;
+							k.fax = fax;
+							k.tipLica = tipLica;
+							SifrarnikDelatnosti sd = SifrarnikDelatnosti.findById(sifrarnikDelatnosti);
+							k.sifrarnikDelatnosti = sd;
+							k.save();
+							s = id;
+						}
+					}
 				}
+				session.put("mode", "edit");
+				session.put("s", s);
+				show();
 			}
-			
-		} else if(pib != null) {
-			List<Klijent> klijenti = Klijent.findAll();
-			for(Klijent k:klijenti){
-				if(pib.equals(k.pib)) {
-					Klijent k2 = encryptKlijent(jmbg, pib, naziv, adresa,telefon, eMail, fax, tipLica, sifrarnikDelatnosti);
-					k.jmbg = k2.getJmbg();
-					k.pib = k2.getPib();
-					k.naziv = k2.getNaziv();
-					k.adresa = k2.getAdresa();
-					k.telefon = k2.getTelefon();
-					k.eMail = k2.geteMail();
-					k.fax = k2.getFax();
-					k.tipLica = k2.getTipLica();
-					SifrarnikDelatnosti sd = SifrarnikDelatnosti.findById(sifrarnikDelatnosti);
-					k.sifrarnikDelatnosti = sd;
-					k.save();
-					s = id;
-				}
-			}
-		}
-		session.put("mode", "edit");
-		session.put("s", s);
-		show(); 
-	}
 	
 	
 	
@@ -173,7 +164,7 @@ public class Klijenti extends Controller {
 		}
 	}
 	
-	public static Klijent encryptKlijent (String jmbg, String pib, String naziv, String adresa, String telefon, String eMail, String fax, String tipLica, Long sifrarnikDelatnosti) throws NoSuchProviderException {
+/*	public static Klijent encryptKlijent (String jmbg, String pib, String naziv, String adresa, String telefon, String eMail, String fax, String tipLica, Long sifrarnikDelatnosti) throws NoSuchProviderException {
 		
 		String alias = "admin";
 		String passKeyS = "admin";
@@ -235,7 +226,7 @@ public class Klijenti extends Controller {
 		
 		
 	}
-
+*/
 	
 	 public static void shownext() {
 		/*String modeN = "";

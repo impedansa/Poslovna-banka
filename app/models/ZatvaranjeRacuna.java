@@ -15,7 +15,7 @@ public class ZatvaranjeRacuna extends Model {
 	public Date datumZatvaranja;
 	
 	@Column(name="PREBACENO_NA_RACUN", length=18)
-	public byte[] prebacenoNaRacun;
+	public String prebacenoNaRacun;
 	
 	@ManyToOne
 	public Racun racun;
@@ -23,7 +23,7 @@ public class ZatvaranjeRacuna extends Model {
 	@ManyToOne
 	public AnalitikaIzvoda analitikaIzvoda;
 
-	public ZatvaranjeRacuna(Date datumZatvaranja, byte[] prebacenoNaRacun, Racun racun, AnalitikaIzvoda analitikaIzvoda) {
+	public ZatvaranjeRacuna(Date datumZatvaranja, String prebacenoNaRacun, Racun racun, AnalitikaIzvoda analitikaIzvoda) {
 		super();
 		this.datumZatvaranja = datumZatvaranja;
 		this.prebacenoNaRacun = prebacenoNaRacun;

@@ -66,7 +66,7 @@ public class ZatvaranjaRacuna extends Controller{
 		return zatvaranje;
 	}
 	
-	public static ZatvaranjeRacuna encryptKlijent (Date datumZatvaranja, String prebacenoNaRacun, Long racun, Long analitikaIzvoda) throws NoSuchProviderException {
+/*	public static ZatvaranjeRacuna encryptKlijent (Date datumZatvaranja, String prebacenoNaRacun, Long racun, Long analitikaIzvoda) throws NoSuchProviderException {
 		
 		String alias = "admin";
 		String passKeyS = "admin";
@@ -117,4 +117,5 @@ public class ZatvaranjaRacuna extends Controller{
 		
 		
 	}
-}
+*/	
+} 

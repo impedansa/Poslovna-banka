@@ -10,10 +10,10 @@ import play.db.jpa.Model;
 public class Racun extends Model {
 	
 	@Column(name="BROJ_RACUNA", length=18)
-	public byte[] brojRacuna;
+	public String brojRacuna;
 	
 	@Column(name="STATUS_RACUNA", length=1)
-	public byte[] statusRacuna;
+	public String statusRacuna;
 	
 	@ManyToOne
 	public Klijent klijent;
@@ -24,7 +24,7 @@ public class Racun extends Model {
 	@ManyToOne
 	public Valuta valuta;
 
-	public Racun(byte[] brojRacuna, byte[] statusRacuna, Klijent klijent, Banka banka, Valuta valuta) {
+	public Racun(String brojRacuna, String statusRacuna, Klijent klijent, Banka banka, Valuta valuta) {
 		super();
 		this.brojRacuna = brojRacuna;
 		this.statusRacuna = statusRacuna;
@@ -33,31 +33,21 @@ public class Racun extends Model {
 		this.valuta = valuta;
 	}
 
-
-
-	public byte[] getBrojRacuna() {
+	public String getBrojRacuna() {
 		return brojRacuna;
 	}
 
-
-
-	public void setBrojRacuna(byte[] brojRacuna) {
+	public void setBrojRacuna(String brojRacuna) {
 		this.brojRacuna = brojRacuna;
 	}
 
-
-
-	public byte[] getStatusRacuna() {
+	public String getStatusRacuna() {
 		return statusRacuna;
 	}
 
-
-
-	public void setStatusRacuna(byte[] statusRacuna) {
+	public void setStatusRacuna(String statusRacuna) {
 		this.statusRacuna = statusRacuna;
 	}
-
-
 
 	public Klijent getKlijent() {
 		return klijent;
@@ -82,5 +72,6 @@ public class Racun extends Model {
 	public void setValuta(Valuta valuta) {
 		this.valuta = valuta;
 	}
+	
 
 }

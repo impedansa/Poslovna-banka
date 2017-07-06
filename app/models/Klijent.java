@@ -10,34 +10,34 @@ import javax.persistence.ManyToOne;
 public class Klijent extends Model {
 	
 	@Column(name="JMBG", length=13)
-	public byte[] jmbg;
+	public String jmbg;
 	
 	@Column(name="PIB")
-	public byte[] pib;
+	public int pib;
 	
 	@Column(name="NAZIV")
-	public byte[] naziv;
+	public String naziv;
 	
 	@Column(name="ADRESA")
-	public byte[] adresa;
+	public String adresa;
 	
 	@Column(name="TELEFON")
-	public byte[] telefon;
+	public String telefon;
 	
 	@Column(name="E_MAIL")
-	public byte[] eMail;
+	public String eMail;
 	
 	@Column(name="FAX")
-	public byte[] fax;
+	public String fax;
 	
 	@Column(name="TIP_LICA", length=1)
-	public byte[] tipLica;
+	public String tipLica;
 
 	@ManyToOne
 	public SifrarnikDelatnosti sifrarnikDelatnosti;
 	
-	public Klijent(byte[] jmbg, byte[] pib, byte[] naziv, byte[] adresa,
-			byte[] telefon, byte[] eMail, byte[] fax, byte[] tipLica, SifrarnikDelatnosti sifrarnikDelatnosti) {
+	public Klijent(String jmbg, int pib, String naziv, String adresa,
+			String telefon, String eMail, String fax, String tipLica, SifrarnikDelatnosti sifrarnikDelatnosti) {
 		super();
 		this.jmbg = jmbg;
 		this.pib = pib;
@@ -50,67 +50,67 @@ public class Klijent extends Model {
 		this.sifrarnikDelatnosti = sifrarnikDelatnosti;
 	}
 
-	public byte[] getJmbg() {
+	public String getJmbg() {
 		return jmbg;
 	}
 
-	public void setJmbg(byte[] jmbg) {
+	public void setJmbg(String jmbg) {
 		this.jmbg = jmbg;
 	}
 
-	public byte[] getPib() {
+	public int getPib() {
 		return pib;
 	}
 
-	public void setPib(byte[] pib) {
+	public void setPib(int pib) {
 		this.pib = pib;
 	}
 
-	public byte[] getNaziv() {
+	public String getNaziv() {
 		return naziv;
 	}
 
-	public void setNaziv(byte[] naziv) {
+	public void setNaziv(String naziv) {
 		this.naziv = naziv;
 	}
 
-	public byte[] getAdresa() {
+	public String getAdresa() {
 		return adresa;
 	}
 
-	public void setAdresa(byte[] adresa) {
+	public void setAdresa(String adresa) {
 		this.adresa = adresa;
 	}
 
-	public byte[] getTelefon() {
+	public String getTelefon() {
 		return telefon;
 	}
 
-	public void setTelefon(byte[] telefon) {
+	public void setTelefon(String telefon) {
 		this.telefon = telefon;
 	}
 
-	public byte[] geteMail() {
+	public String geteMail() {
 		return eMail;
 	}
 
-	public void seteMail(byte[] eMail) {
+	public void seteMail(String eMail) {
 		this.eMail = eMail;
 	}
 
-	public byte[] getFax() {
+	public String getFax() {
 		return fax;
 	}
 
-	public void setFax(byte[] fax) {
+	public void setFax(String fax) {
 		this.fax = fax;
 	}
 
-	public byte[] getTipLica() {
+	public String getTipLica() {
 		return tipLica;
 	}
 
-	public void setTipLica(byte[] tipLica) {
+	public void setTipLica(String tipLica) {
 		this.tipLica = tipLica;
 	}
 
@@ -121,8 +121,6 @@ public class Klijent extends Model {
 	public void setSifrarnikDelatnosti(SifrarnikDelatnosti sifrarnikDelatnosti) {
 		this.sifrarnikDelatnosti = sifrarnikDelatnosti;
 	}
-
-	
 
 
 }
