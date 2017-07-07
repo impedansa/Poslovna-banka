@@ -30,6 +30,6 @@ POST 	 /{controller}/createNext				 {controller}.createNext
 POST	 /{controller}/filterNext				 {controller}.filterNext
 POST 	 /{controller}/editPassword				 {controller}.editPassword
 GET 	 /{controller}/promenaLozinke			 {controller}.promenaLozinke
-
+GET /{controller}/xmlexport {controller}.xmlexport
 
 

@@ -39,7 +39,9 @@ function next() {
 	console.log(dr_id)
 }
 
-
+function xmlexport(id) {
+	$(location).attr('href', '/MedjubankarskiPrenosi/xmlexport?id='+id);
+}
 
 
 
@@ -61,6 +63,7 @@ function next() {
   <li class="tb-listitem"><a  id = "add"><img src="@{'/public/images/add.gif'}"/></a></li>
   <li class="tb-listitem"><a href="#" id = "remove"><img src="@{'/public/images/remove.gif'}"/></a></li>
   <li class="tb-listitem"><a href="#" id = "nextform"><img src="@{'/public/images/nextform.gif'}"/></a></li>
+  <li class="tb-listitem"><a href="#" id = "xmlexport" data-toggle="tooltip" title="Export u XML"><img src="@{'/public/images/xml-export.png'}"/></a></li>
 </ul>
 </p>
 

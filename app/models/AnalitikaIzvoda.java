@@ -39,7 +39,7 @@ public class AnalitikaIzvoda extends Model {
 	public String racunDuznika;
 	
 	@Column(name="MODEL_ZADUZENJA", nullable = true)
-	public int modelZaduzenja;
+	public Integer modelZaduzenja;
 	
 	@Column(name="POZIV_NA_BROJ_ZADUZENJA", nullable = true, length = 20)
 	public String pozivNaBrojZaduzenja;
@@ -48,7 +48,7 @@ public class AnalitikaIzvoda extends Model {
 	public String racunPoverioca;
 	
 	@Column(name="MODEL_ODOBRENJA", nullable = true)
-	public int modelOdobrenja;
+	public Integer modelOdobrenja;
 	
 	@Column(name="POZIV_NA_BROJ_ODOBRENJA", nullable = true, length = 20)
 	public String pozivNaBrojOdobrenja;
@@ -57,10 +57,10 @@ public class AnalitikaIzvoda extends Model {
 	public boolean hitno;
 	
 	@Column(name="IZNOS", nullable = false)
-	public long iznos;
+	public Long iznos;
 	
 	@Column(name="TIP_GRESKE", nullable = false)
-	public int tipGreske;
+	public Integer tipGreske;
 	
 	@Column(name="STATUS", nullable = true, length=1)
 	public String status;
@@ -71,7 +71,7 @@ public class AnalitikaIzvoda extends Model {
 	@OneToMany(mappedBy = "analitikaIzvoda", cascade=CascadeType.ALL)
 	public List<StavkaPrenosa> stavkaPrenosa;
 	
-	public AnalitikaIzvoda(Date datumAnalitike, String smer, String duznikNalogodavac, String svrhaPlacanja, String poverilacPrimalac, Date datumPrijema, Date datumValute, String racunDuznika, int modelZaduzenja, String pozivNaBrojZaduzenja, String racunPoverioca, int modelOdobrenja, String pozivNaBrojOdobrenja, boolean hitno, long iznos, int tipGreske, String status, DnevnoStanjeRacuna dnevnoStanjeRacuna) {
+	public AnalitikaIzvoda(Date datumAnalitike, String smer, String duznikNalogodavac, String svrhaPlacanja, String poverilacPrimalac, Date datumPrijema, Date datumValute, String racunDuznika, Integer modelZaduzenja, String pozivNaBrojZaduzenja, String racunPoverioca, Integer modelOdobrenja, String pozivNaBrojOdobrenja, boolean hitno, Long iznos, Integer tipGreske, String status, DnevnoStanjeRacuna dnevnoStanjeRacuna) {
 		
 		super();
 		this.datumAnalitike = datumAnalitike;

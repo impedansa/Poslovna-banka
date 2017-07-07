@@ -97,6 +97,13 @@ $(document).ready(function(){
 		next(id)
 	})
 
+	$("#xmlexport").on('click', function() {
+ 		highlighted = $(".highlighted");
+ 		if (highlighted.length != 0) {
+ 			id = highlighted.find(".id").html();
+ 			xmlexport(id);
+ 		}
+  });
 	
 	
 });

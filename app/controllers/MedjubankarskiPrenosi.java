@@ -1,13 +1,17 @@
 package controllers;
 
-import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+
+import marshallers.MTMarshaller;
+import models.AnalitikaIzvoda;
 import models.Banka;
-import models.Drzava;
 import models.MedjubankarskiPrenos;
-import models.NaseljenoMesto;
+import models.StavkaPrenosa;
 import play.mvc.Controller;
 
 public class MedjubankarskiPrenosi extends Controller{
@@ -57,5 +61,18 @@ public class MedjubankarskiPrenosi extends Controller{
 		//List<MedjubankarskiPrenos> medjubankarskiPrenosi = MedjubankarskiPrenos.find("byVrstaPorukeAndDatumAndUkupanIznosAndBankaPrimalacAndBankaPosiljalac", vrstaPoruke, datum, ukupanIznos, bpr, bpo).fetch();
 		//List<MedjubankarskiPrenos> medjubankarskiPrenosi = MedjubankarskiPrenos.find("byBankaPosiljalacAndBankaPrimalac", bpo, bpr).fetch();
 		return medjubankarskiPrenosi;
+	}
+	
+	public static void xmlexport(Long id) throws ParserConfigurationException, TransformerException {
+		System.out.println("USAO SAM TU");
+		MedjubankarskiPrenos mp = MedjubankarskiPrenos.findById(id);
+		List<StavkaPrenosa> sp = StavkaPrenosa.find("byMedjubankarskiPrenos", mp).fetch();
+		List<AnalitikaIzvoda> nalozi = new ArrayList<AnalitikaIzvoda>();
+		for (StavkaPrenosa stavka: sp){
+			AnalitikaIzvoda ai = AnalitikaIzvoda.findById(stavka.analitikaIzvoda.id);
+			nalozi.add(ai);
+		}
+		MTMarshaller.createXml(mp, nalozi);
+		show();
 	}
 }
