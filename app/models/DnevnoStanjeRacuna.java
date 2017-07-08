@@ -18,16 +18,16 @@ public class DnevnoStanjeRacuna extends Model {
 	public Date datum;
 	
 	@Column(name="PRETHODNO_STANJE", nullable = false)
-	public long prethodnoStanje;
+	public Long prethodnoStanje;
 	
 	@Column(name="PROMET_NA_TERET", nullable = false)
-	public long prometNaTeret;
+	public Long prometNaTeret;
 	
 	@Column(name="PROMET_U_KORIST", nullable = false)
-	public long prometUKorist;
+	public Long prometUKorist;
 	
 	@Column(name="NOVO_STANJE", nullable = false)
-	public long novoStanje;
+	public Long novoStanje;
 	
 	@ManyToOne
 	public Racun racun;
@@ -35,10 +35,11 @@ public class DnevnoStanjeRacuna extends Model {
 	@OneToMany(mappedBy = "dnevnoStanjeRacuna", cascade=CascadeType.ALL)
 	public List<AnalitikaIzvoda> analitikaIzvoda;
 	
-	DnevnoStanjeRacuna(Date datum, long prometNaTeret, long PrometUKorist, long novoStanje, Racun racun) {
+	public DnevnoStanjeRacuna(Date datum, Long prethodnoStanje, Long prometNaTeret, Long PrometUKorist, Long novoStanje, Racun racun) {
 		
 		super();
 		this.datum = datum;
+		this.prethodnoStanje = prethodnoStanje;
 		this.prometNaTeret = prometNaTeret;
 		this.prometUKorist = PrometUKorist;
 		this.novoStanje = novoStanje;

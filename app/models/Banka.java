@@ -12,7 +12,7 @@ public class Banka extends Model {
 	public String nazivBanke;
 	
 	@Column(name="SIFRA_BANKE", length=3)
-	public int sifraBanke;
+	public String sifraBanke;
 
 	@Column(name="SWIFT_KOD", length=8)
 	public String swiftKod;
@@ -20,7 +20,7 @@ public class Banka extends Model {
 	@Column(name="OBRACUNSKI_RACUN", length=18)
 	public String obracunskiRacun;
 	
-	public Banka(String nazivBanke, int sifraBanke, String swiftKod, String obracunskiRacun) {
+	public Banka(String nazivBanke, String sifraBanke, String swiftKod, String obracunskiRacun) {
 		
 		this.nazivBanke = nazivBanke;
 		this.sifraBanke = sifraBanke;

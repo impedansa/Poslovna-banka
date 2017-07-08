@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<nalog>
+<valuta>RSD</valuta>
+<duznik>Ja</duznik>
+<svrha_placanja>hfdihf</svrha_placanja>
+<poverilac></poverilac>
+<datum_prijema>2012-01-01</datum_prijema>
+<datum_valute>2012-01-01</datum_valute>
+<racun_duznika></racun_duznika>
+<model_zaduzenja>50</model_zaduzenja>
+<poziv_na_broj_zaduzenja>50</poziv_na_broj_zaduzenja>
+<racun_poverioca>3333</racun_poverioca>
+<model_odobrenja>50</model_odobrenja>
+<poziv_na_broj_odobrenja>50</poziv_na_broj_odobrenja>
+<hitno>false</hitno>
+<iznos>500</iznos>
+</nalog>

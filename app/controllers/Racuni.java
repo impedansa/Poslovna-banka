@@ -1,24 +1,18 @@
 package controllers;
 
-import java.io.File;
 import java.io.IOException;
 import java.security.NoSuchProviderException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.crypto.SecretKey;
-
 import models.Banka;
 import models.Klijent;
 import models.Racun;
-import models.RacunD;
 import models.Valuta;
 import play.Logger;
 import play.data.validation.Required;
 import play.mvc.Controller;
-import play.mvc.With;
-import controllers.deadbolt.Deadbolt;
-import controllers.deadbolt.Restrict;
+import procedures.UkidanjeRacunaProcedure;
 
 
 public class Racuni extends Controller {
@@ -101,7 +95,7 @@ public class Racuni extends Controller {
 	}
 	
 	
-	public static void create(@Required String brojRacuna,@Required String statusRacuna, Long klijent, Long banka, Long valuta) throws NoSuchProviderException, IOException {
+	public static void create(@Required String brojRacuna,@Required Boolean statusRacuna, Long klijent, Long banka, Long valuta) throws NoSuchProviderException, IOException {
 		Logger.info("Zaposleni sa ID-jem: "+session.get("user")+" pokusao kreiranje racuna sa IP adrese: "+ Logovi.getClientIp());
 		checkAuthenticity();
 		validation.minSize(brojRacuna, 18);
@@ -150,7 +144,7 @@ public class Racuni extends Controller {
 	
 	
 	
-	public static void edit(Long id,String brojRacuna,String statusRacuna, Long klijent, Long banka, Long valuta) {
+	public static void edit(Long id,String brojRacuna,Boolean statusRacuna, Long klijent, Long banka, Long valuta) {
 				validation.minSize(brojRacuna, 18);
 				validation.maxSize(brojRacuna, 18);
 				validation.maxSize(statusRacuna, 1);
@@ -304,5 +298,19 @@ public static RacunD decryptRacuna (Long id, byte[] brojRacuna, byte[] statusRac
 		
 	} 
 */
+	public static void ukidanjeracuna(Long id, Long idPrenosa) {
+		Racun zaBrisanje = Racun.findById(id);
+		
+		if (idPrenosa != null){
+			Racun zaPrenos = Racun.findById(idPrenosa);			
+			UkidanjeRacunaProcedure.ukidanjeRacuna(zaBrisanje, zaPrenos);
+			show();
+			
+		} else {
+			
+		}
+		
+		
+	}
 
 }

@@ -82,6 +82,7 @@ function sync(item){
   <li class="tb-listitem"><a id = "add"><img src="@{'/public/images/add.gif'}"/></a></li>
   <li class="tb-listitem"><a id = "remove"><img src="@{'/public/images/remove.gif'}"/></a></li>
   <li class="tb-listitem"><a href="#" id = "nextform"><img src="@{'/public/images/nextform.gif'}"/></a></li>
+  <li data-toggle="tooltip" title="Import naloga"><a href="#" id = "export" data-toggle="modal" data-target="#importModal"><img src="@{'/public/images/import-naloga.png'}"/></a></li>
 </ul>
 </p>
 
@@ -124,16 +125,16 @@ function sync(item){
 		<td class = "racunDuznika">${analitikaIzvoda.racunDuznika}</td>
 		<td class = "modelZaduzenja">${analitikaIzvoda.modelZaduzenja}</td>
 		<td class = "pozivNaBrojZaduzenja">${analitikaIzvoda.pozivNaBrojZaduzenja}</td>
-		<td class = "racunPoverioca">${analitikaIzvoda.racunPoverioca}</td>
+		n<td class = "racunPoverioca">${analitikaIzvoda.racunPoverioca}</td>
 		<td class = "modelOdobrenja">${analitikaIzvoda.modelOdobrenja}</td>
 		<td class = "pozivNaBrojOdobrenja">${analitikaIzvoda.pozivNaBrojOdobrenja}</td>
 		<td class = "hitno">#{if analitikaIzvoda.hitno} Da #{/if}#{else} Ne #{/else}</td>
 		<td class = "iznos">${analitikaIzvoda.iznos}</td>
 		<td class = "tipGreske">${analitikaIzvoda.tipGreske}</td>
 		<td class = "status">${analitikaIzvoda.status}</td>
-		<td class = "dnevnoStanjeRacuna">${analitikaIzvoda.dnevnoStanjeRacuna.datum.format()}</td>
+		<td class = "dnevnoStanjeRacuna">#{if analitikaIzvoda.dnevnoStanjeRacuna}${analitikaIzvoda.dnevnoStanjeRacuna.datum.format()}#{/if}</td>
 		<td style = "visibility: hidden; max-width: 0px" class = "id">${analitikaIzvoda.id}</td>
-		<td style = "visibility: hidden; max-width: 0px" class = "dsr_id">${analitikaIzvoda.dnevnoStanjeRacuna.id}</td>
+		<td style = "visibility: hidden; max-width: 0px" class = "dsr_id">>#{if analitikaIzvoda.dnevnoStanjeRacuna}${analitikaIzvoda.dnevnoStanjeRacuna.id}#{/if}</td>
 		<td style = "visibility: hidden; max-width: 0px" class = "hitno?">${analitikaIzvoda.hitno}</td>
 	</tr>
 #{/list}
@@ -279,6 +280,33 @@ function sync(item){
 	</p>
 </div>
 
+
+<!-- Import stavki Modal -->
+	  <div class="modal fade" id="importModal" role="dialog">
+	    <div class="modal-dialog">
+	      <!-- Modal content-->
+	      <div style="width: 100%; margin-left: 0%" class="modal-content">
+	      <div class="modal-header">
+	      	Import naloga
+	      </div>
+	      <div class="modal-body">
+	      
+    			#{form @AnalitikeIzvoda.uploadxml(), enctype:'multipart/form-data'}
+    				<input type="file" id="stavkeplacanja" name="stavkeplacanja" multiple/>    	
+    				<!--<label for="nalogodavac"> Nalogodavac: </label>	-->	
+    				<!--<select name = "nalogodavac" id = "nalogodavac">
+    					<option value = ""></option>
+						<option value = "duznik">duznik</option>	
+						<option value = "poverilac">poverilac</option>
+					</select> -->
+    			
+    				<input type="submit" value="Potvrda" />
+				#{/}
+			</div>
+	      </div>
+	    </div>
+	   </div>
+
  <!-- Modal -->
  	<div class="modal fade" id="dnevnaStanjaRacunaModal" role="dialog">
   	<div class="modal-dialog">
@@ -320,4 +348,9 @@ function sync(item){
   	</div>
 	</div>
 </div>
+</div>
+
+
+	
+
 </div>

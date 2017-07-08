@@ -10,6 +10,17 @@ $(document).ready(function(){
 		$("select").val(kl_id);
 		$('#klijentiModal').modal('toggle');
 	});
+
+	$("#racunPickup").click(function() {
+		highlighted = $(".highlighted");
+		if (highlighted.length != 0) {
+			id = highlighted.find(".id").html();
+			prenos_id = $('#racun').val();
+			
+			$(location).attr('href', '/racuni/ukidanjeracuna?id='+id+'&idPrenosa='+prenos_id);
+		}
+		$('#ukidanjeModal').modal('toggle');
+	});
 });
 $(document).ready(function(){
 	$("#bankaPickup").click(function(){
@@ -82,7 +93,7 @@ function next() {
   <li class="tb-listitem"><a  id = "next"><img src="@{'/public/images/next.gif'}"/></a></li>
   <li class="tb-listitem"><a  id = "last"><img src="@{'/public/images/last.gif'}"/></a></li>
   <li class="tb-listitem"><a #{if session.mode == 'locked edit' || session.mode == 'locked search'} href="javascript:addlocked(${session.get('id')})" #{/if} #{else} href="javascript:add()" #{/else} id = "add"><img src="@{'/public/images/add.gif'}"/></a></li>
-  <li class="tb-listitem"><a href="#" id = "remove"><img src="@{'/public/images/remove.gif'}"/></a></li>
+  <li class="tb-listitem"><a href="#" id = "ukidanje" data-toggle="modal" data-target="#ukidanjeModal"><img src="@{'/public/images/remove.gif'}"/></a></li>
   <li class="tb-listitem"><a href="#" id = "nextform"><img src="@{'/public/images/nextform.gif'}"/></a></li>
 </ul>
 </p>
@@ -158,9 +169,9 @@ function next() {
 				</p>
 				<p>
 				#{field 'statusRacuna'}
-					<label for = "${field.id}">Status racuna</label>
-					<input type = "text" name = "${field.name}" id = "${field.id}"/>
-					<span>#{error field.name /}</span>
+						<label for = "${field.id}">Status racuna</label>
+						<input type = "checkbox" name = "${field.name}" id = "${field.name}"/>
+						<span>#{error 'statusRacuna' /}</span>
 				#{/}
 				</p>
 				<p>
@@ -208,6 +219,34 @@ function next() {
 		</form>
 	</p>
 </div>
+
+<!-- Ukidanje Modal -->
+	  <div class="modal fade" id="ukidanjeModal" role="dialog">
+	    <div class="modal-dialog">
+	      <!-- Modal content-->
+	      <div style="width: 100%; margin-left: 0%" class="modal-content">
+	      <div class="modal-header">
+	      	Prebaciti na racun:
+	      </div>
+	      <div class="modal-body">
+	      
+	      	#{field 'racun'}
+    			<label for = "${field.id}">Racun</label>
+				<select name = "${field.name}" id = "${field.id}">
+				#{list items:racuni, as:'racun'}
+				<option value = "${racun.id}">${racun.brojRacuna}</option>
+				#{/list}
+				</select>
+			#{/}
+
+		    
+			<div class="modal-footer">
+				<input id = "racunPickup" type = "button" value = "izbor"/>
+			</div>
+			</div>
+	      </div>
+	    </div>
+	   </div>
 
  <!-- Modal -->
  	<div class="modal fade" id="klijentiModal" role="dialog">

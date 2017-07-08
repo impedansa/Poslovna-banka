@@ -12,8 +12,8 @@ public class Racun extends Model {
 	@Column(name="BROJ_RACUNA", length=18)
 	public String brojRacuna;
 	
-	@Column(name="STATUS_RACUNA", length=1)
-	public String statusRacuna;
+	@Column(name="STATUS_RACUNA")
+	public Boolean statusRacuna;
 	
 	@ManyToOne
 	public Klijent klijent;
@@ -24,7 +24,7 @@ public class Racun extends Model {
 	@ManyToOne
 	public Valuta valuta;
 
-	public Racun(String brojRacuna, String statusRacuna, Klijent klijent, Banka banka, Valuta valuta) {
+	public Racun(String brojRacuna, Boolean statusRacuna, Klijent klijent, Banka banka, Valuta valuta) {
 		super();
 		this.brojRacuna = brojRacuna;
 		this.statusRacuna = statusRacuna;
@@ -41,11 +41,11 @@ public class Racun extends Model {
 		this.brojRacuna = brojRacuna;
 	}
 
-	public String getStatusRacuna() {
+	public Boolean getStatusRacuna() {
 		return statusRacuna;
 	}
 
-	public void setStatusRacuna(String statusRacuna) {
+	public void setStatusRacuna(Boolean statusRacuna) {
 		this.statusRacuna = statusRacuna;
 	}
 

@@ -26,7 +26,7 @@ public class Banke extends Controller{
 		render(banke);
 	}
 	
-	public static void create(@Required String nazivBanke, @Required int sifraBanke, @Required String swiftKod, @Required String obracunskiRacun) {
+	public static void create(@Required String nazivBanke, @Required String sifraBanke, @Required String swiftKod, @Required String obracunskiRacun) {
 		checkAuthenticity();
 		validation.maxSize(swiftKod, 8);
 		validation.maxSize(obracunskiRacun, 18);
@@ -44,7 +44,7 @@ public class Banke extends Controller{
 		show();
 	}
 	
-	public static void edit(Long id, String nazivBanke, int sifraBanke, String swiftKod, String obracunskiRacun) {
+	public static void edit(Long id, String nazivBanke, String sifraBanke, String swiftKod, String obracunskiRacun) {
 		checkAuthenticity();
 		validation.maxSize(swiftKod, 8);
 		validation.maxSize(obracunskiRacun, 18);
@@ -63,7 +63,7 @@ public class Banke extends Controller{
 			banka.obracunskiRacun = obracunskiRacun;
 			banka.save();
 			s = id;
-		} else if (sifraBanke != 0) {
+		} else if (!sifraBanke.equals("0")) {
 			List<Banka> banke = Banka.findAll();
 			for(Banka banka: banke) {
 				if(sifraBanke == banka.sifraBanke){
