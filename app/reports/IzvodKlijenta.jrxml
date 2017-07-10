@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="IzvodKlijenta" pageWidth="842" pageHeight="595" orientation="Landscape" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="edadaeb6-ecf3-479e-b1a4-9f98b0add2d2">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="id_Banke" class="java.lang.String"/>
+	<parameter name="id_Klijenta" class="java.lang.Long"/>
+	<parameter name="datumPocetka" class="java.util.Date"/>
+	<parameter name="datumKraja" class="java.util.Date"/>
+	<queryString>
+		<![CDATA[SELECT
+     Racun.`id` AS Racun_id,
+     Racun.`BROJ_RACUNA` AS Racun_BROJ_RACUNA,
+     Racun.`banka_id` AS Racun_banka_id,
+     Racun.`klijent_id` AS Racun_klijent_id,
+     Racun.`valuta_id` AS Racun_valuta_id,
+     Banka.`id` AS Banka_id,
+     Banka.`NAZIV_BANKE` AS Banka_NAZIV_BANKE,
+     Klijent.`id` AS Klijent_id,
+     Klijent.`NAZIV` AS Klijent_NAZIV,
+     DnevnoStanjeRacuna.`id` AS DnevnoStanjeRacuna_id,
+     DnevnoStanjeRacuna.`DATUM` AS DnevnoStanjeRacuna_DATUM,
+     DnevnoStanjeRacuna.`NOVO_STANJE` AS DnevnoStanjeRacuna_NOVO_STANJE,
+     DnevnoStanjeRacuna.`PRETHODNO_STANJE` AS DnevnoStanjeRacuna_PRETHODNO_STANJE,
+     DnevnoStanjeRacuna.`PROMET_NA_TERET` AS DnevnoStanjeRacuna_PROMET_NA_TERET,
+     DnevnoStanjeRacuna.`PROMET_U_KORIST` AS DnevnoStanjeRacuna_PROMET_U_KORIST,
+     DnevnoStanjeRacuna.`racun_id` AS DnevnoStanjeRacuna_racun_id,
+     Valuta.`id` AS Valuta_id,
+     Valuta.`SIFRA_VALUTE` AS Valuta_SIFRA_VALUTE
+FROM
+     `Banka` Banka INNER JOIN `Racun` Racun ON Banka.`id` = Racun.`banka_id`
+     INNER JOIN `Klijent` Klijent ON Racun.`klijent_id` = Klijent.`id`
+     INNER JOIN `DnevnoStanjeRacuna` DnevnoStanjeRacuna ON Racun.`id` = DnevnoStanjeRacuna.`racun_id`
+     INNER JOIN `Valuta` Valuta ON Racun.`valuta_id` = Valuta.`id`
+WHERE
+     Banka.`id` = $P{id_Banke}
+ AND Klijent.`id` = $P{id_Klijenta} AND date(DnevnoStanjeRacuna.`DATUM`) >= date($P{datumPocetka}) AND date(DnevnoStanjeRacuna.`DATUM`) <= date($P{datumKraja})]]>
+	</queryString>
+	<field name="Racun_id" class="java.lang.Long"/>
+	<field name="Racun_BROJ_RACUNA" class="java.lang.String"/>
+	<field name="Racun_banka_id" class="java.lang.Long"/>
+	<field name="Racun_klijent_id" class="java.lang.Long"/>
+	<field name="Racun_valuta_id" class="java.lang.Long"/>
+	<field name="Banka_id" class="java.lang.Long"/>
+	<field name="Banka_NAZIV_BANKE" class="java.lang.String"/>
+	<field name="Klijent_id" class="java.lang.Long"/>
+	<field name="Klijent_NAZIV" class="java.lang.String"/>
+	<field name="DnevnoStanjeRacuna_id" class="java.lang.Long"/>
+	<field name="DnevnoStanjeRacuna_DATUM" class="java.sql.Timestamp"/>
+	<field name="DnevnoStanjeRacuna_NOVO_STANJE" class="java.lang.Float"/>
+	<field name="DnevnoStanjeRacuna_PRETHODNO_STANJE" class="java.lang.Float"/>
+	<field name="DnevnoStanjeRacuna_PROMET_NA_TERET" class="java.lang.Float"/>
+	<field name="DnevnoStanjeRacuna_PROMET_U_KORIST" class="java.lang.Float"/>
+	<field name="DnevnoStanjeRacuna_racun_id" class="java.lang.Long"/>
+	<field name="Valuta_id" class="java.lang.Long"/>
+	<field name="Valuta_SIFRA_VALUTE" class="java.lang.String"/>
+	<sortField name="Racun_BROJ_RACUNA"/>
+	<sortField name="DnevnoStanjeRacuna_DATUM"/>
+	<variable name="sumUKorist" class="java.lang.Float" resetType="Group" resetGroup="Racuni" calculation="Sum">
+		<variableExpression><![CDATA[$F{DnevnoStanjeRacuna_PROMET_U_KORIST}]]></variableExpression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="sumNaTeret" class="java.lang.Float" resetType="Group" resetGroup="Racuni" calculation="Sum">
+		<variableExpression><![CDATA[$F{DnevnoStanjeRacuna_PROMET_NA_TERET}]]></variableExpression>
+	</variable>
+	<group name="Racuni">
+		<groupExpression><![CDATA[$F{Racun_BROJ_RACUNA}]]></groupExpression>
+		<groupFooter>
+			<band height="50">
+				<line>
+					<reportElement x="558" y="0" width="243" height="1" uuid="391b6930-d259-4a2f-a0bd-3aae43d1c020"/>
+				</line>
+				<staticText>
+					<reportElement x="558" y="1" width="39" height="15" uuid="af0c7d1c-b5c9-4804-9a13-b88d5132a62f"/>
+					<text><![CDATA[Ukupno:]]></text>
+				</staticText>
+				<textField pattern="#,##0.00">
+					<reportElement x="607" y="1" width="81" height="15" uuid="50876d7a-1e0f-4e35-932b-425cdad21094"/>
+					<textFieldExpression><![CDATA[$V{sumUKorist}]]></textFieldExpression>
+				</textField>
+				<textField pattern="#,##0.00">
+					<reportElement x="727" y="1" width="81" height="15" uuid="21c18eb4-bffc-4f3e-ad03-7297a7678e1e"/>
+					<textFieldExpression><![CDATA[$V{sumNaTeret}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<pageHeader>
+		<band height="69" splitType="Stretch">
+			<staticText>
+				<reportElement x="317" y="2" width="163" height="33" uuid="19efd27b-a66c-4732-a8dc-ad7c4bb3baad"/>
+				<textElement textAlignment="Center">
+					<font size="24" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Izvod klijenta]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="0" y="0" width="125" height="15" uuid="646a7940-3770-4d0e-8953-365c73d35545"/>
+				<textFieldExpression><![CDATA[$F{Banka_NAZIV_BANKE}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="681" y="15" width="80" height="15" uuid="a9ccb37e-5fdb-45fd-b6a0-9d768479304c"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="761" y="15" width="40" height="15" uuid="7516a87b-c065-4ba6-a941-d63df3c1d7a0"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="15" width="63" height="15" uuid="e286237f-3f73-4037-903a-ba2a8046e1aa"/>
+				<text><![CDATA[Za period od:]]></text>
+			</staticText>
+			<textField pattern="dd.MM.yyyy.">
+				<reportElement x="63" y="15" width="55" height="15" uuid="704bd86b-e1ac-4e19-9f9c-cb111d4be9b3"/>
+				<textFieldExpression><![CDATA[$P{datumPocetka}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="118" y="15" width="16" height="15" uuid="f488668c-5bea-441b-8658-317b66b71161"/>
+				<text><![CDATA[do:]]></text>
+			</staticText>
+			<textField pattern="dd.MM.yyyy.">
+				<reportElement x="134" y="15" width="55" height="15" uuid="6c80d0c2-0c49-4b02-a5bf-348001a2b16c"/>
+				<textFieldExpression><![CDATA[$P{datumKraja}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="336" y="35" width="125" height="15" uuid="de15c10a-a619-4c09-a987-d612b43679f6"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{Klijent_NAZIV}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="53" width="63" height="15" uuid="3db9fc69-e5a4-4555-9125-5d6a4b5dd1fe"/>
+				<text><![CDATA[Broj računa]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="68" width="802" height="1" uuid="e266cd94-c8d9-487d-9deb-c432c862b114"/>
+			</line>
+			<staticText>
+				<reportElement x="118" y="53" width="63" height="15" uuid="4f2fc98a-b73d-422b-b9f9-2e7915ba77d8"/>
+				<text><![CDATA[Datum]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="216" y="53" width="74" height="15" uuid="0d700aab-e0fb-48db-9975-44b6d6aec393"/>
+				<text><![CDATA[Početno stanje]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="336" y="53" width="74" height="15" uuid="93834fb3-2e69-49f5-9371-caba24c667bd"/>
+				<text><![CDATA[Krajnje stanje]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="461" y="53" width="74" height="15" uuid="7118a239-056e-43de-8c64-dcd3473ec75c"/>
+				<text><![CDATA[Valuta]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="607" y="53" width="74" height="15" uuid="15ebe0c2-7389-4ad7-a615-9a2932857c38"/>
+				<text><![CDATA[U korist]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="727" y="53" width="74" height="15" uuid="fc97c697-a42d-4290-8d0c-b43bf8f0411f"/>
+				<text><![CDATA[Na teret]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="17" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="105" height="15" uuid="7357ba90-1670-40e7-ac26-78e9baa26e9f"/>
+				<textFieldExpression><![CDATA[$F{Racun_BROJ_RACUNA}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd.MM.yyyy.">
+				<reportElement x="118" y="0" width="81" height="15" uuid="56fbebb0-2396-4f6a-af8e-ef794c03b288"/>
+				<textFieldExpression><![CDATA[$F{DnevnoStanjeRacuna_DATUM}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="216" y="0" width="81" height="15" uuid="4b21bb02-27c6-4086-85a6-04b2093ef50a"/>
+				<textFieldExpression><![CDATA[$F{DnevnoStanjeRacuna_PRETHODNO_STANJE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="336" y="0" width="81" height="15" uuid="fd14a12e-418e-429f-ac7f-a7be46eb6cfc"/>
+				<textFieldExpression><![CDATA[$F{DnevnoStanjeRacuna_NOVO_STANJE}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="607" y="0" width="81" height="15" uuid="2ef126d2-ac64-4b7f-b4f6-1c7f3810c82d"/>
+				<textFieldExpression><![CDATA[$F{DnevnoStanjeRacuna_PROMET_U_KORIST}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="727" y="0" width="81" height="15" uuid="6616d9b0-80fd-44fb-beae-44ff05fbeb34"/>
+				<textFieldExpression><![CDATA[$F{DnevnoStanjeRacuna_PROMET_NA_TERET}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0.00">
+				<reportElement x="461" y="0" width="81" height="15" uuid="0a323244-e9b6-464e-8c29-46bf90c38fd7"/>
+				<textFieldExpression><![CDATA[$F{Valuta_SIFRA_VALUTE}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

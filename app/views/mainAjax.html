@@ -144,6 +144,34 @@ function v() {
 			window.location.replace("@{Valute.show()}"); 
 		}
 	});
+	
+function sr() {
+	var showRoute = #{jsRoute @SpisakRacuna.show() /}
+	$.ajax({
+		method:"GET",
+		url: showRoute.url(),
+		type: showRoute.method,
+		data: {'mode': 'edit', 's': '0'},
+		dataType: "html",
+		success: function(){
+			window.location.replace("@{SpisakRacuna.show().secure()}"); 
+		}
+	});
+}
+
+function ik() {
+	var showRoute = #{jsRoute @IzvodKlijenta.show() /}
+	$.ajax({
+		method:"GET",
+		url: showRoute.url(),
+		type: showRoute.method,
+		data: {'mode': 'edit', 's': '0'},
+		dataType: "html",
+		success: function(){
+			window.location.replace("@{IzvodKlijenta.show().secure()}"); 
+		}
+	});
+}
 }
 
 function sd() {
@@ -202,6 +230,34 @@ function dsr() {
 	});
 }
 
+function sr() {
+	var showRoute = #{jsRoute @SpisakRacuna.show() /}
+	$.ajax({
+		method:"GET",
+		url: showRoute.url(),
+		type: showRoute.method,
+		data: {'mode': 'edit', 's': '0'},
+		dataType: "html",
+		success: function(){
+			window.location.replace("@{SpisakRacuna.show()}"); 
+		}
+	});
+}
+
+function ik() {
+	var showRoute = #{jsRoute @IzvodKlijenta.show() /}
+	$.ajax({
+		method:"GET",
+		url: showRoute.url(),
+		type: showRoute.method,
+		data: {'mode': 'edit', 's': '0'},
+		dataType: "html",
+		success: function(){
+			window.location.replace("@{IzvodKlijenta.show()}"); 
+		}
+	});
+}
+
 
 </script>
 
@@ -225,6 +281,8 @@ function dsr() {
       <a class="dropdown-item" href="javascript:sd()">Sifrarnik delatnosti</a>
       <a class="dropdown-item" href="javascript:k()">Klijenti</a>
       <a class="dropdown-item" href="javascript:dsr()">Dnevna stanja racuna</a>
+      <a class="dropdown-item" href="javascript:sr()">Spisak računa</a>
+      <a class="dropdown-item" href="javascript:ik()">Izvod klijenta</a>
       <div class="dropdown-divider"></div>
       <a class="dropdown-item" href="javascript:pl()">Promena lozinke</a>
       <a class="dropdown-item" href="/logout">Odjava</a>

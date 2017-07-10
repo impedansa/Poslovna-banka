@@ -1,0 +1,150 @@
+#{extends 'main.html'/}
+#{set title:'Izvod klijenta' /}
+
+<script>
+$(document).ready(function(){
+	$("#bankaPickup").click(function(){
+		ba_id = $(".highlighted").find(".ba_id").html();
+		$("select").val(ba_id);
+		$('#bankeModal').modal('toggle');
+	});
+
+	$("#klijentPickup").click(function(){
+		kl_id = $(".highlighted").find(".kl_id").html();
+		$("select").val(kl_id);
+		$('#klijentiModal').modal('toggle');
+	});
+	
+	$('#pocetakIntervala').datepicker({dateFormat: "dd-mm-yy"}).val();
+	$('#krajIntervala').datepicker({dateFormat: "dd-mm-yy"}).val();
+});
+</script>
+
+<div id="promenaLozinke">
+	
+	<h1 align="center">Izvod klijenta</h1>
+			<form action="@{IzvodKlijenta.getReport()}" method = "post">
+				<p>
+				#{field 'banka'}
+					<label for = "${field.id}">Banka</label>
+					<select name = "${field.name}" id = "${field.id}"/>
+					#{list items:banke, as:'banka'}
+					<option value = "${banka.id}">${banka.nazivBanke}</option>
+					#{/list}
+					</select>
+					
+					 <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#bankeModal">... </button>
+				#{/}
+				</p>
+				<p>
+				#{field 'klijent'}
+					<label for = "${field.id}">Klijent</label>
+					<select name = "${field.name}" id = "${field.id}"/>
+					#{list items:klijenti, as:'klijent'}
+					<option value = "${klijent.id}">${klijent.naziv}</option>
+					#{/list}
+					</select>
+					
+					 <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#klijentiModal">... </button>
+				#{/}
+				</p>
+				<p>
+				#{field 'pocetakIntervala'}
+					<label for = "${field.id}">Početak intervala</label>
+					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+					<span>#{error field.name /}</span>
+				#{/}
+				</p>
+				<p>
+				#{field 'krajIntervala'}
+					<label for = "${field.id}">Kraj intervala</label>
+					<input type = "text" name = "${field.name}" id = "${field.id}"/>
+					<span>#{error field.name /}</span>
+				#{/}
+				</p>
+				
+				<div id = "formActions">
+					<input type = "submit" value = "Potvrda" style="margin-left:6em"/>
+				</div>
+				
+			</form>
+	
+</div>
+
+<!-- Modal -->
+ 	<div class="modal fade" id="klijentiModal" role="dialog">
+  	<div class="modal-dialog">
+    	<div class="modal-content">
+    		 <div class="modal-header">
+      	Klijenti
+      </div>
+      <div class="modal-body">
+      	<div>
+      	<p>
+      	<input oninput="w3.filterHTML('#tableD', '.item', this.value)">
+      	</p>
+      	</div>
+	    <table style = "padding:2em" id="tableD">
+		<tr class = "header">
+		   <th>Naziv klijenta</th>
+		   <th>Tip klijenta</th> 
+		</tr>
+		#{list items:klijenti, as:'klijent'}
+		<tr class = "item">
+			<td class = "kl_naziv">${klijent.naziv}</td>
+			<td class = "kl_tipKlijenta">${klijent.naziv}</td>
+			<td style = "visibility: hidden; max-width: 0px" class = "kl_id">${klijent.id}</td>
+		</tr>
+		#{/list}
+		</table>
+	
+		<div class="modal-footer">
+			<input id = "klijentPickup" type = "button" value = "izbor"/>
+		</div>
+		</div>
+    	</div>
+  	</div>
+	</div>
+	
+	<div class="modal fade" id="bankeModal" role="dialog">
+  	<div class="modal-dialog">
+    	<div class="modal-content">
+    		 <div class="modal-header">
+      	Banke
+      </div>
+      <div class="modal-body">
+      	<div>
+      	<p>
+      	<input oninput="w3.filterHTML('#tableD', '.item', this.value)">
+      	</p>
+      	</div>
+	    <table style = "padding:2em" id="tableD">
+		<tr class = "header">
+		   <th>Naziv Banke</th>
+		   <th>Sifra Banke</th>
+		   <th>Swift kod</th>
+		   <th>Obracunski racun</th> 
+		</tr>
+		#{list items:banke, as:'banka'}
+		<tr class = "item">
+			<td class = "ba_nazivBanke">${banka.nazivBanke}</td>
+			<td class = "ba_sifraBanke">${banka.sifraBanke}</td>
+			<td class = "ba_swiftKod">${banka.swiftKod}</td>
+			<td class = "ba_obracunskiRacun">${banka.obracunskiRacun}</td>
+			<td style = "visibility: hidden; max-width: 0px" class = "ba_id">${banka.id}</td>
+		</tr>
+		#{/list}
+		</table>
+	
+		<div class="modal-footer">
+			<input id = "bankaPickup" type = "button" value = "izbor"/>
+		</div>
+		</div>
+    	</div>
+  	</div>
+	</div>
+	
+	 	
+	
+</div>
+</div>

@@ -33,3 +33,4 @@ GET 	 /{controller}/promenaLozinke			 {controller}.promenaLozinke
 GET /{controller}/xmlexport {controller}.xmlexport
 GET /{controller}/ukidanjeracuna {controller}.ukidanjeracuna
 POST /{controller}/uploadxml {controller}.uploadxml
+POST /{controller}/getReport {controller}.getReport
