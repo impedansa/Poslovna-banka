@@ -48,8 +48,8 @@ function next() {
 <p>
 
 <ul class="tb-ulist">
-  <li class="tb-listitem"><a #{if session.mode == 'locked edit' || session.mode == 'locked add'} href="javascript:searchlocked(${session.get('id')})" #{/if} #{else} href="javascript:search()" #{/else}  id = "search"><img src="@{'/public/images/search.gif'}"/></a></li>
-  <li class="tb-listitem"><a #{if session.mode == 'locked edit' || session.mode == 'locked add' || session.mode == 'locked search'} href="javascript:refreshlocked(${session.get('id')})" #{/if} #{else} href="javascript:refresh()" #{/else}  id = "refresh"><img src="@{'/public/images/refresh.gif'}"/></a></li>
+  <li class="tb-listitem"><a #{if session.mode == 'locked search for Analitika'} href="javascript:searchlockedAnalitika(${session.get('a_id')})" #{/if} #{elseif session.mode == 'locked search for Racun'} href="javascript:searchlockedRacun(${session.get('r_id')})" #{/elseif} #{else} href="javascript:search()" #{/else}  id = "search"><img src="@{'/public/images/search.gif'}"/></a></li>
+  <li class="tb-listitem"><a #{if session.mode == 'locked search for Analitika'} href="javascript:refreshlockedAnalitika(${session.get('a_id')})" #{/if} #{elseif session.mode == 'locked search for Racun'} href="javascript:refreshlockedRacun(${session.get('r_id')})" #{/elseif} #{else} href="javascript:refresh()" #{/else}  id = "refresh"><img src="@{'/public/images/refresh.gif'}"/></a></li>
   <li class="tb-listitem"><a href="#" id = "pickup"><img src="@{'/public/images/zoom-pickup.gif'}"/></a></li>
   <li class="tb-listitem"><a href="#" id = "help"><img src="@{'/public/images/help.gif'}"/></a></li>
   <li class="tb-listitem"><a  id = "first"><img src="@{'/public/images/first.gif'}"/></a></li>
@@ -93,14 +93,17 @@ function next() {
 </table>
 
 #{set 'action'}
-    #{elseif session.mode== 'locked search'} 
-        @{MedjubankarskiPrenosi.filterNext()}
+    #{if session.mode== 'locked search for Analitika'} 
+        @{ZatvaranjaRacuna.filterNext()}
+    #{/if}
+    #{elseif session.mode== 'locked search for Racun'} 
+        @{ZatvaranjaRacuna.filterNext()}
     #{/elseif}
     #{else}
-       @{MedjubankarskiPrenosi.filter()}
+       @{ZatvaranjaRacuna.filter()}
     #{/else}
   #{/set}
-  
+
 <div class = "panel">
 	<p>
 	
@@ -151,7 +154,7 @@ function next() {
 				
 				<div id = "formActions">
 					<input type = "submit" value = "Potvrda" style="margin-left:6em"/>
-					<a #{if session.mode == 'locked edit' || session.mode == 'locked add' || session.mode == 'locked search'} href="javascript:refreshlocked(${session.get('id')})" #{/if} #{else} href="javascript:refresh()" #{/else}  id="rollback" style="margin-left:1em">Rollback</a>
+					<a #{if session.mode == 'locked search for Analitika'} href="javascript:refreshlockedAnalitika(${session.get('a_id')})" #{/if} #{elseif session.mode == 'locked search for Racun'} href="javascript:refreshlockedRacun(${session.get('r_id')})" #{/elseif} #{else} href="javascript:refresh()" #{/else}  id="rollback" style="margin-left:1em">Rollback</a>
 				</div>			
 				
 		</form>

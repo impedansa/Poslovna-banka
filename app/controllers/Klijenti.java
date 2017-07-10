@@ -42,7 +42,7 @@ public class Klijenti extends Controller {
 	
 	
 	
-	public static void filter(String jmbg, String pib, String naziv, String adresa, String telefon, String eMail, String fax, String tipLica, Long sifrarnikDelatnosti) {
+	public static void filter(String jmbg, Integer pib, String naziv, String adresa, String telefon, String eMail, String fax, String tipLica, Long sifrarnikDelatnosti) {
 		SifrarnikDelatnosti sd = SifrarnikDelatnosti.findById(sifrarnikDelatnosti);
 		List<Klijent> klijenti;
 		if(pib == null)
@@ -164,6 +164,134 @@ public class Klijenti extends Controller {
 		}
 	}
 	
+	 public static void shownext() {
+			String modeN = "";
+			String sN = "";
+			String id = "0";
+			if(params.get("mode") != null) {
+				modeN = params.get("mode");
+				sN = params.get("s");
+				id = params.get("id");
+			} else {
+				modeN = session.get("mode");
+				sN = session.get("s");
+				id = session.get("id");
+				if(modeN == null || modeN =="") {
+					modeN = "locked edit";
+				}
+			}
+			session.put("mode", modeN);
+			session.put("s", sN);
+			session.put("id", id);
+			List<SifrarnikDelatnosti> sifrarniciDelatnosti = new ArrayList<SifrarnikDelatnosti>();
+			sifrarniciDelatnosti.add(SifrarnikDelatnosti.findById(Long.parseLong(id)));
+			List<Klijent> klijenti = Klijent.find("bySifrarnikDelatnosti", sifrarniciDelatnosti.get(0)).fetch();
+			renderTemplate("Klijenti/show.html", klijenti, sifrarniciDelatnosti, id);
+			
+		} 
+		
+		public static void filterNext(String jmbg, Integer pib, String naziv, String adresa, String telefon, String eMail, String fax, String tipLica, Long sifrarnikDelatnosti) {
+			SifrarnikDelatnosti sd = SifrarnikDelatnosti.findById(sifrarnikDelatnosti);
+			List<Klijent> klijenti;
+			if(pib == null)
+				klijenti = Klijent.find("byJmbgLikeAndNazivLikeAndAdresaLikeAndTelefonLikeAndEMailLikeAndFaxLikeAndTipLicaLikeAndSifrarnikDelatnosti", "%"+jmbg+"%", "%"+naziv+"%", "%"+adresa+"%", "%"+telefon+"%", "%"+eMail+"%", "%"+fax+"%", "%"+tipLica+"%", sd).fetch();
+			else
+				klijenti = Klijent.find("byJmbgLikeAndPibAndNazivLikeAndAdresaLikeAndTelefonLikeAndEMailLikeAndFaxLikeAndTipLicaLikeAndSifrarnikDelatnosti", "%"+jmbg+"%", pib, "%"+naziv+"%", "%"+adresa+"%", "%"+telefon+"%", "%"+eMail+"%", "%"+fax+"%", "%"+tipLica+"%", sd).fetch();
+			
+			session.put("mode", "locked edit");
+			session.put("s", null);
+			session.put("id", sifrarnikDelatnosti);
+			renderTemplate("Klijenti/show.html",klijenti, sifrarnikDelatnosti); 
+		}
+		
+		public static void createNext(String jmbg, String pib, @Required String naziv, @Required String adresa, String telefon, String eMail, String fax, @Required String tipLica, Long sifrarnikDelatnosti) throws IOException {
+			checkAuthenticity();
+			validation.maxSize(tipLica, 1);
+			if(validation.hasErrors()) {
+		          validation.keep();
+		          session.put("mode", "add");
+		  		  session.put("s", null);
+		          show();
+		    }
+			SifrarnikDelatnosti sd = SifrarnikDelatnosti.findById(sifrarnikDelatnosti);
+			Integer p = Integer.parseInt(pib);
+			Klijent k = new Klijent(jmbg, p, naziv, adresa, telefon, eMail, fax, tipLica, sd);
+			k.save();
+			session.put("mode", "locked add");
+			session.put("s", k.id);
+			session.put("id", sifrarnikDelatnosti);
+			shownext(); 
+		}
+		
+		public static void editNext(Long id, String jmbg, String pib, @Required String naziv, @Required String adresa, String telefon, String eMail, String fax, @Required String tipLica, Long sifrarnikDelatnosti) throws IOException {
+			checkAuthenticity();
+			validation.maxSize(tipLica, 1);
+			if(validation.hasErrors()) {
+		          validation.keep();
+		          session.put("mode", "add");
+		  		  session.put("s", null);
+		          show();
+		    }
+			Integer p = Integer.parseInt(pib);
+			Long s = null;
+			if(id != null) {
+				Klijent k = Klijent.findById(id);
+				k.jmbg = jmbg;
+				k.pib = p;
+				k.naziv = naziv;
+				k.adresa = adresa;
+				k.telefon = telefon;
+				k.eMail = eMail;
+				k.fax = fax;
+				k.tipLica = tipLica;
+				SifrarnikDelatnosti sd = SifrarnikDelatnosti.findById(sifrarnikDelatnosti);
+				k.sifrarnikDelatnosti = sd;
+				k.save();
+				s = id;
+			} else if (jmbg != null){
+				List<Klijent> klijenti = Klijent.findAll();
+				for(Klijent k:klijenti){
+					if(jmbg.equals(k.jmbg)) {
+						k.jmbg = jmbg;
+						k.pib = p;
+						k.naziv = naziv;
+						k.adresa = adresa;
+						k.telefon = telefon;
+						k.eMail = eMail;
+						k.fax = fax;
+						k.tipLica = tipLica;
+						SifrarnikDelatnosti sd = SifrarnikDelatnosti.findById(sifrarnikDelatnosti);
+						k.sifrarnikDelatnosti = sd;
+						k.save();
+						s = id;
+					}
+				}
+				
+			} else if(pib != null) {
+				List<Klijent> klijenti = Klijent.findAll();
+				for(Klijent k:klijenti){
+					if(pib.equals(k.pib)) {
+						k.jmbg = jmbg;
+						k.pib = p;
+						k.naziv = naziv;
+						k.adresa = adresa;
+						k.telefon = telefon;
+						k.eMail = eMail;
+						k.fax = fax;
+						k.tipLica = tipLica;
+						SifrarnikDelatnosti sd = SifrarnikDelatnosti.findById(sifrarnikDelatnosti);
+						k.sifrarnikDelatnosti = sd;
+						k.save();
+						s = id;
+					}
+				}
+			}
+			session.put("mode", "locked edit");
+			session.put("s", s);
+			session.put("id", sifrarnikDelatnosti);
+			shownext(); 
+		}
+	
 /*	public static Klijent encryptKlijent (String jmbg, String pib, String naziv, String adresa, String telefon, String eMail, String fax, String tipLica, Long sifrarnikDelatnosti) throws NoSuchProviderException {
 		
 		String alias = "admin";
@@ -227,132 +355,6 @@ public class Klijenti extends Controller {
 		
 	}
 */
-	
-	 public static void shownext() {
-		/*String modeN = "";
-		String sN = "";
-		String id = "0";
-		if(params.get("mode") != null) {
-			modeN = params.get("mode");
-			sN = params.get("s");
-			id = params.get("id");
-		} else {
-			modeN = session.get("mode");
-			sN = session.get("s");
-			id = session.get("id");
-			if(modeN == null || modeN =="") {
-				modeN = "locked edit";
-			}
-		}
-		session.put("mode", modeN);
-		session.put("s", sN);
-		session.put("id", id);
-		List<SifrarnikDelatnosti> sifrarniciDelatnosti = new ArrayList<SifrarnikDelatnosti>();
-		sifrarniciDelatnosti.add(SifrarnikDelatnosti.findById(Long.parseLong(id)));
-		List<Klijent> klijenti = Klijent.find("bySifrarnikDelatnosti", sifrarniciDelatnosti.get(0)).fetch();
-		renderTemplate("Klijenti/show.html", klijenti, sifrarniciDelatnosti, id);
-		*/
-	} 
-	
-	public static void filterNext(String jmbg, String pib, String naziv, String adresa, String telefon, String eMail, String fax, String tipLica, Long sifrarnikDelatnosti) {
-		/*SifrarnikDelatnosti sd = SifrarnikDelatnosti.findById(sifrarnikDelatnosti);
-		List<Klijent> klijenti;
-		if(pib == null)
-			klijenti = Klijent.find("byJmbgLikeAndNazivLikeAndAdresaLikeAndTelefonLikeAndEMailLikeAndFaxLikeAndTipLicaLikeAndSifrarnikDelatnosti", "%"+jmbg+"%", "%"+naziv+"%", "%"+adresa+"%", "%"+telefon+"%", "%"+eMail+"%", "%"+fax+"%", "%"+tipLica+"%", sd).fetch();
-		else
-			klijenti = Klijent.find("byJmbgLikeAndPibAndNazivLikeAndAdresaLikeAndTelefonLikeAndEMailLikeAndFaxLikeAndTipLicaLikeAndSifrarnikDelatnosti", "%"+jmbg+"%", pib, "%"+naziv+"%", "%"+adresa+"%", "%"+telefon+"%", "%"+eMail+"%", "%"+fax+"%", "%"+tipLica+"%", sd).fetch();
-		
-		session.put("mode", "locked edit");
-		session.put("s", null);
-		session.put("id", sifrarnikDelatnosti);
-		renderTemplate("Klijenti/show.html",klijenti, sifrarnikDelatnosti); */
-	}
-	
-	public static void createNext(String jmbg, String pib, @Required String naziv, @Required String adresa, String telefon, String eMail, String fax, @Required String tipLica, Long sifrarnikDelatnosti) throws IOException {
-		/*checkAuthenticity();
-		validation.maxSize(tipLica, 1);
-		if(validation.hasErrors()) {
-	          validation.keep();
-	          session.put("mode", "add");
-	  		  session.put("s", null);
-	          show();
-	    }
-		SifrarnikDelatnosti sd = SifrarnikDelatnosti.findById(sifrarnikDelatnosti);
-		Klijent k = new Klijent(jmbg, pib, naziv, adresa, telefon, eMail, fax, tipLica, sd);
-		k.save();
-		session.put("mode", "locked add");
-		session.put("s", k.id);
-		session.put("id", sifrarnikDelatnosti);
-		shownext(); */
-	}
-	
-	public static void editNext(Long id, String jmbg, String pib, @Required String naziv, @Required String adresa, String telefon, String eMail, String fax, @Required String tipLica, Long sifrarnikDelatnosti) throws IOException {
-		/*checkAuthenticity();
-		validation.maxSize(tipLica, 1);
-		if(validation.hasErrors()) {
-	          validation.keep();
-	          session.put("mode", "add");
-	  		  session.put("s", null);
-	          show();
-	    }
-		Long s = null;
-		if(id != null) {
-			Klijent k = Klijent.findById(id);
-			k.jmbg = jmbg;
-			k.pib = pib;
-			k.naziv = naziv;
-			k.adresa = adresa;
-			k.telefon = telefon;
-			k.eMail = eMail;
-			k.fax = fax;
-			k.tipLica = tipLica;
-			SifrarnikDelatnosti sd = SifrarnikDelatnosti.findById(sifrarnikDelatnosti);
-			k.sifrarnikDelatnosti = sd;
-			k.save();
-			s = id;
-		} else if (jmbg != null){
-			List<Klijent> klijenti = Klijent.findAll();
-			for(Klijent k:klijenti){
-				if(jmbg.equals(k.jmbg)) {
-					k.jmbg = jmbg;
-					k.pib = pib;
-					k.naziv = naziv;
-					k.adresa = adresa;
-					k.telefon = telefon;
-					k.eMail = eMail;
-					k.fax = fax;
-					k.tipLica = tipLica;
-					SifrarnikDelatnosti sd = SifrarnikDelatnosti.findById(sifrarnikDelatnosti);
-					k.sifrarnikDelatnosti = sd;
-					k.save();
-					s = id;
-				}
-			}
-			
-		} else if(pib != null) {
-			List<Klijent> klijenti = Klijent.findAll();
-			for(Klijent k:klijenti){
-				if(pib.equals(k.pib)) {
-					k.jmbg = jmbg;
-					k.pib = pib;
-					k.naziv = naziv;
-					k.adresa = adresa;
-					k.telefon = telefon;
-					k.eMail = eMail;
-					k.fax = fax;
-					k.tipLica = tipLica;
-					SifrarnikDelatnosti sd = SifrarnikDelatnosti.findById(sifrarnikDelatnosti);
-					k.sifrarnikDelatnosti = sd;
-					k.save();
-					s = id;
-				}
-			}
-		}
-		session.put("mode", "locked edit");
-		session.put("s", s);
-		session.put("id", sifrarnikDelatnosti);
-		shownext(); */
-	}
 	
 	
 	

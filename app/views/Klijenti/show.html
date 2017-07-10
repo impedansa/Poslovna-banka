@@ -47,9 +47,21 @@ function remove(id) {
 	});
 }
 
-function next() {
-	sd_id = $(".highlighted").find(".sd_id").html()
-	console.log(sd_id)
+function next(id) {
+	console.log(id);
+	var id_id = id.toString();
+	var showRoute = #{jsRoute @Racuni.shownextKlijent() /}
+	$.ajax({
+	method:"GET",
+	url: showRoute.url(),
+	type: showRoute.method,
+	data: {'mode': 'locked edit for Klijent', 's': '0', 'k_id': id_id},
+	dataType: "html",
+	success: function(){
+		window.location.replace("@{Racuni.shownextKlijent()}"); 
+	}
+	});
+	
 }
 
 function bin2String(array) {

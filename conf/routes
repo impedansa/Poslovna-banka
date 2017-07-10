@@ -24,6 +24,13 @@ POST 	 /{controller}/create					 {controller}.create
 POST	 /{controller}/filter					 {controller}.filter
 DELETE   /{controller}/delete/{id}				 {controller}.delete
 GET      /{controller}/shownext				     {controller}.shownext
+GET      /{controller}/shownextValuta			 {controller}.shownextValuta
+GET      /{controller}/shownextBanka			 {controller}.shownextBanka
+GET      /{controller}/shownextKlijent			 {controller}.shownextKlijent
+GET      /{controller}/shownextAnalitika		 {controller}.shownextAnalitika
+GET      /{controller}/shownextMedjubankarski	 {controller}.shownextMedjubankarski
+GET      /{controller}/shownextAnalitikaZR		 {controller}.shownextAnalitikaZR
+GET      /{controller}/shownextRacun		     {controller}.shownextRacun
 DELETE   /{controller}/shownext					 {controller}.shownext
 POST 	 /{controller}/editNext					 {controller}.editNext
 POST 	 /{controller}/createNext				 {controller}.createNext

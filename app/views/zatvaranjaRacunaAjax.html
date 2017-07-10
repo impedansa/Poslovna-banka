@@ -16,6 +16,35 @@ function search() {
 	});
 }
 
+function searchlockedAnalitika(id) {
+	var showRoute = #{jsRoute @ZatvaranjaRacuna.shownextAnalitikaZR() /}
+	$.ajax({
+	method:"GET",
+	url: showRoute.url(),
+	type: showRoute.method,
+	data: {'mode': 'locked search for Analitika', 's': '0', 'a_id': id},
+	dataType: "html",
+	success: function(){
+		window.location.href = 'http://localhost:8080/zatvaranjaRacuna/shownextAnalitikaZR';
+	}
+	});
+}
+
+function searchlockedRacun(id) {
+	var showRoute = #{jsRoute @ZatvaranjaRacuna.shownextRacun() /}
+	$.ajax({
+	method:"GET",
+	url: showRoute.url(),
+	type: showRoute.method,
+	data: {'mode': 'locked search for Racun', 's': '0', 'r_id': id},
+	dataType: "html",
+	success: function(){
+		window.location.href = 'http://localhost:8080/zatvaranjaRacuna/shownextRacun';
+	}
+	});
+}
+
+
 
 function refresh() {
 	var showRoute = #{jsRoute @ZatvaranjaRacuna.show() /}
@@ -27,6 +56,34 @@ function refresh() {
 	dataType: "html",
 	success: function(){
 		window.location.href = 'http://localhost:8080/zatvaranjaRacuna/show';
+	}
+	});
+}
+
+function refreshlockedAnalitika(id) {
+	var showRoute = #{jsRoute @ZatvaranjaRacuna.shownextAnalitikaZR() /}
+	$.ajax({
+	method:"GET",
+	url: showRoute.url(),
+	type: showRoute.method,
+	data: {'mode': 'locked search for Analitika', 's': '0', 'a_id':id},
+	dataType: "html",
+	success: function(){
+		window.location.href = 'http://localhost:8080/zatvaranjaRacuna/shownextAnalitikaZR';
+	}
+	});
+}
+
+function refreshlockedRacun(id) {
+	var showRoute = #{jsRoute @ZatvaranjaRacuna.shownextRacun() /}
+	$.ajax({
+	method:"GET",
+	url: showRoute.url(),
+	type: showRoute.method,
+	data: {'mode': 'locked search for Racun', 's': '0', 'r_id':id},
+	dataType: "html",
+	success: function(){
+		window.location.href = 'http://localhost:8080/zatvaranjaRacuna/shownextRacun';
 	}
 	});
 }

@@ -31,13 +31,31 @@ function sync(item){
     $("select").val(racun_id);
 }
 
+function next(id) {
+	console.log(id);
+	var id_id = id.toString();
+	var showRoute = #{jsRoute @AnalitikeIzvoda.shownext() /}
+	$.ajax({
+	method:"GET",
+	url: showRoute.url(),
+	type: showRoute.method,
+	data: {'mode': 'locked search', 's': '0', 'id': id_id},
+	dataType: "html",
+	success: function(){
+		window.location.replace("@{AnalitikeIzvoda.shownext()}"); 
+	}
+	});
+	
+}
+
+
 </script>
 
 <div class="container">
 <p>
 <ul class="tb-ulist">
-  <li class="tb-listitem"><a id = "search"><img src="@{'/public/images/search.gif'}"/></a></li>
-  <li class="tb-listitem"><a id = "refresh"><img src="@{'/public/images/refresh.gif'}"/></a></li>
+  <li class="tb-listitem"><a #{if session.mode == 'locked search'} href="javascript:searchlocked(${session.get('id')})" #{/if} #{else} href="javascript:search()" #{/else} id = "search"><img src="@{'/public/images/search.gif'}"/></a></li>
+  <li class="tb-listitem"><a #{if session.mode == 'locked search'} href="javascript:refreshlocked(${session.get('id')})" #{/if} #{else} href="javascript:refresh()" #{/else} id = "refresh"><img src="@{'/public/images/refresh.gif'}"/></a></li>
   <li class="tb-listitem"><a href="#" id = "pickup"><img src="@{'/public/images/zoom-pickup.gif'}"/></a></li>
   <li class="tb-listitem"><a href="#" id = "help"><img src="@{'/public/images/help.gif'}"/></a></li>
   <li class="tb-listitem"><a id = "first"><img src="@{'/public/images/first.gif'}"/></a></li>
@@ -49,6 +67,15 @@ function sync(item){
   <li class="tb-listitem"><a href="#" id = "nextform"><img src="@{'/public/images/nextform.gif'}"/></a></li>
 </ul>
 </p>
+
+#{set 'action'}
+    #{if session.mode== 'locked search'} 
+        @{DnevnaStanjaRacuna.filterNext()}
+    #{/if}
+    #{else}
+       @{DnevnaStanjaRacuna.filter()}
+    #{/else}
+  #{/set}
 
 <div class = "container-fluid">
 
@@ -63,7 +90,7 @@ function sync(item){
 	   <th>Promet na teret</th>
 	   <th>Promet u korist</th>
 	   <th>Novo stanje</th>
-	   <th>Račun</th>
+	   <th>RaÄ�un</th>
 	</tr>
 #{list items:dnevnaStanjaRacuna, as:'dnevnoStanjeRacuna'}
 %{
@@ -142,7 +169,7 @@ function sync(item){
 				
 				<div id = "formActions">
 					<input type = "submit" value = "Potvrda" style="margin-left:6em"/>
-					<a #{if session.mode == 'locked edit' || session.mode == 'locked add' || session.mode == 'locked search'} href="javascript:refreshlocked(${session.get('id')})" #{/if} #{else} href="javascript:refresh()" #{/else}  id="rollback" style="margin-left:1em">Rollback</a>
+					<a #{if session.mode == 'locked search'} href="javascript:refreshlocked(${session.get('id')})" #{/if} #{else} href="javascript:refresh()" #{/else}  id="rollback" style="margin-left:1em">Rollback</a>
 				</div>			
 				
 		</form>

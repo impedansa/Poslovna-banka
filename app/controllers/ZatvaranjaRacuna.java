@@ -3,6 +3,7 @@ package controllers;
 import java.io.File;
 import java.io.IOException;
 import java.security.NoSuchProviderException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -42,27 +43,97 @@ public class ZatvaranjaRacuna extends Controller{
 		render(zatvaranjeRacuna, racuni, analitikeIzvoda);
 	}
 	
-	public static void filter(Date datumZatvaranja, String prebacenoNaRacun, Long racun, Long analitikaIzvoda) {
+
+	public static void shownextAnalitikaZR(){
 		
-		List<ZatvaranjeRacuna> zatvaranje = filterBasic(datumZatvaranja, prebacenoNaRacun, racun, analitikaIzvoda);
+		String mode = "";
+		String s = "";
+		String azr_id = "0";
+		if(params.get("mode") != null) {
+			mode = params.get("mode");
+			s = params.get("s");
+			azr_id = params.get("azr_id");
+		} else {
+			mode = session.get("mode");
+			s = session.get("s");
+			azr_id = session.get("azr_id");
+			if(mode == null || mode =="") {
+				mode = "search";
+			}
+		}
+		session.put("mode", mode);
+		session.put("s", s);
+		session.put("azr_id", azr_id);
+		
+		List<Racun> racuni = Racun.findAll();
+		List<AnalitikaIzvoda> analitikeIzvoda = new ArrayList<AnalitikaIzvoda> ();
+		analitikeIzvoda.add(AnalitikaIzvoda.findById(Long.parseLong(azr_id)));
+		List<ZatvaranjeRacuna> zatvaranjeRacuna = ZatvaranjeRacuna.find("byAnalitikaIzvoda", analitikeIzvoda.get(0)).fetch();
+		renderTemplate("ZatvaranjaRacuna/show.html",zatvaranjeRacuna, racuni, analitikeIzvoda, azr_id);
+	}
+	
+	public static void shownextRacun(){
+		
+		String mode = "";
+		String s = "";
+		String r_id = "0";
+		if(params.get("mode") != null) {
+			mode = params.get("mode");
+			s = params.get("s");
+			r_id = params.get("r_id");
+		} else {
+			mode = session.get("mode");
+			s = session.get("s");
+			r_id = session.get("r_id");
+			if(mode == null || mode =="") {
+				mode = "search";
+			}
+		}
+		session.put("mode", mode);
+		session.put("s", s);
+		session.put("r_id", r_id);
+
+		List<Racun> racuni = new ArrayList<Racun> ();
+		racuni.add(Racun.findById(Long.parseLong(r_id)));
+		List<AnalitikaIzvoda> analitikeIzvoda = AnalitikaIzvoda.findAll();
+		List<ZatvaranjeRacuna> zatvaranjeRacuna = ZatvaranjeRacuna.find("byRacun", racuni.get(0)).fetch();
+		renderTemplate("ZatvaranjaRacuna/show.html",zatvaranjeRacuna, racuni, analitikeIzvoda, r_id);
+	}
+	public static void filter(Date datumZatvaranja, String prebacenoNaRacun, Long racun, Long analitikeIzvoda) {
+		List<ZatvaranjeRacuna> zatvaranjeRacuna = filterBasic(datumZatvaranja, prebacenoNaRacun, racun, analitikeIzvoda);
 		session.put("mode", "search");
 		session.put("s", null);
-		renderTemplate("ZatvaranjaRacuna/show.html", zatvaranje);
+		renderTemplate("ZatvaranjaRacuna/show.html", zatvaranjeRacuna);
 	}
 	
-/*	public static void filterNext(String oznaka, String naziv, Integer postanskiBroj, Long drzava) {
-		Long id = drzava;
-		List<NaseljenoMesto> naseljenaMesta = filterBasic(oznaka, naziv, postanskiBroj, drzava);
-		session.put("mode", "locked edit");
-		session.put("s", null);
-		session.put("id", drzava);
-		renderTemplate("NaseljenaMesta/show.html",naseljenaMesta, id);
+	public static void filterNext(Date datumZatvaranja, String prebacenoNaRacun, Long racun, Long analitikeIzvoda) {
+		Long a_id = analitikeIzvoda;
+		Long r_id = racun;
+		List<ZatvaranjeRacuna> zatvaranjeRacuna = filterBasic(datumZatvaranja, prebacenoNaRacun, racun, analitikeIzvoda);
+		if (session.get("mode").equals("locked search for Analitika")){
+			session.put("mode", "locked search for Analitika");
+			session.put("s", null);
+			session.put("a_id", a_id);
+			renderTemplate("ZatvaranjaRacuna/show.html", zatvaranjeRacuna, a_id);
+		} else {
+			session.put("mode", "locked search for Racun");
+			session.put("s", null);
+			session.put("r_id", r_id);
+			renderTemplate("ZatvaranjaRacuna/show.html", zatvaranjeRacuna, r_id);
+		}
 	}
-*/
+
 	
-	public static List<ZatvaranjeRacuna> filterBasic(Date datumZatvaranja, String prebacenoNaRacun, Long racun, Long analitikaIzvoda) {
-		
-		List<ZatvaranjeRacuna> zatvaranje = ZatvaranjeRacuna.find("byDatumZatvaranjaAndPrebacenoNaRacunAndRacunAndAnalitikaIzvoda", datumZatvaranja, prebacenoNaRacun, racun, analitikaIzvoda).fetch();
+	public static List<ZatvaranjeRacuna> filterBasic(Date datumZatvaranja, String prebacenoNaRacun, Long racun, Long analitikeIzvoda) {
+		Racun r = Racun.findById(racun);
+		AnalitikaIzvoda a = AnalitikaIzvoda.findById(analitikeIzvoda);
+		List<ZatvaranjeRacuna> zatvaranje;
+		if(datumZatvaranja == null) {
+			zatvaranje = ZatvaranjeRacuna.find("byPrebacenoNaRacunLikeAndRacunAndAnalitikaIzvoda", "%"+prebacenoNaRacun+"%", r, a).fetch();
+		} else {
+			zatvaranje = ZatvaranjeRacuna.find("byDatumZatvaranjaAndPrebacenoNaRacunLikeAndRacunAndAnalitikaIzvoda", datumZatvaranja, "%"+prebacenoNaRacun+"%", r, a).fetch();
+		} 
+		System.out.println(zatvaranje.get(0).getId().toString());
 		return zatvaranje;
 	}
 	

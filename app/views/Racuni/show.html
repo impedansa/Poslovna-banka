@@ -64,13 +64,38 @@ function remove(id) {
 	});
 }
 
-function next() {
-	kl_id = $(".highlighted").find(".kl_id").html()
-	ba_id = $(".highlighted").find(".ba_id").html()
-	va_id = $(".highlighted").find(".va_id").html()
-	console.log(kl_id)
-	console.log(ba_id)
-	console.log(va_id)
+function nextDS() {
+	highlighted = $(".highlighted");
+	id_id = highlighted.find(".id").html();
+	var showRoute = #{jsRoute @DnevnaStanjaRacuna.shownext() /}
+	$.ajax({
+	method:"GET",
+	url: showRoute.url(),
+	type: showRoute.method,
+	data: {'mode': 'locked search', 's': '0', 'id': id_id},
+	dataType: "html",
+	success: function(){
+		window.location.replace("@{DnevnaStanjaRacuna.shownext()}"); 
+	}
+	});
+	
+}
+
+function nextZR() {
+	highlighted = $(".highlighted");
+	id_id = highlighted.find(".id").html();
+	var showRoute = #{jsRoute @ZatvaranjaRacuna.shownextRacun() /}
+	$.ajax({
+	method:"GET",
+	url: showRoute.url(),
+	type: showRoute.method,
+	data: {'mode': 'locked search for Racun', 's': '0', 'r_id': id_id},
+	dataType: "html",
+	success: function(){
+		window.location.replace("@{ZatvaranjaRacuna.shownextRacun()}"); 
+	}
+	});
+	
 }
 
 
@@ -84,17 +109,22 @@ function next() {
 <p>
 
 <ul class="tb-ulist">
-  <li class="tb-listitem"><a #{if session.mode == 'locked edit' || session.mode == 'locked add'} href="javascript:searchlocked(${session.get('id')})" #{/if} #{else} href="javascript:search()" #{/else}  id = "search"><img src="@{'/public/images/search.gif'}"/></a></li>
-  <li class="tb-listitem"><a #{if session.mode == 'locked edit' || session.mode == 'locked add' || session.mode == 'locked search'} href="javascript:refreshlocked(${session.get('id')})" #{/if} #{else} href="javascript:refresh()" #{/else}  id = "refresh"><img src="@{'/public/images/refresh.gif'}"/></a></li>
+  <li class="tb-listitem"><a #{if session.mode == 'locked edit for Banka' || session.mode == 'locked add for Banka'} href="javascript:searchlockedBanka(${session.get('b_id')})" #{/if} #{elseif session.mode == 'locked edit for Klijent' || session.mode == 'locked add for Klijent'} href="javascript:searchlockedKlijent(${session.get('k_id')})" #{/elseif} #{elseif session.mode == 'locked edit for Valuta' || session.mode == 'locked add for Valuta'} href="javascript:searchlockedValuta(${session.get('v_id')})" #{/elseif} #{else} href="javascript:search()" #{/else}  id = "search"><img src="@{'/public/images/search.gif'}"/></a></li>
+  <li class="tb-listitem"><a #{if session.mode == 'locked edit for Banka' || session.mode == 'locked add for Banka' || session.mode == 'locked search for Banka'} href="javascript:refreshlockedBanka(${session.get('b_id')})" #{/if} #{elseif session.mode == 'locked edit for Klijent' || session.mode == 'locked add for Klijent' || session.mode == 'locked search for Klijent'} href="javascript:refreshlockedKlijent(${session.get('k_id')})" #{/elseif} #{elseif session.mode == 'locked edit for Valuta' || session.mode == 'locked add for Valuta' || session.mode == 'locked search for Valuta'} href="javascript:refreshlockedValuta(${session.get('v_id')})" #{/elseif} #{else} href="javascript:refresh()" #{/else}  id = "refresh"><img src="@{'/public/images/refresh.gif'}"/></a></li>
   <li class="tb-listitem"><a href="#" id = "pickup"><img src="@{'/public/images/zoom-pickup.gif'}"/></a></li>
   <li class="tb-listitem"><a href="javascript:b()" id = "help"><img src="@{'/public/images/help.gif'}"/></a></li>
   <li class="tb-listitem"><a  id = "first"><img src="@{'/public/images/first.gif'}"/></a></li>
   <li class="tb-listitem"><a  id = "prev"><img src="@{'/public/images/prev.gif'}"/></a></li>
   <li class="tb-listitem"><a  id = "next"><img src="@{'/public/images/next.gif'}"/></a></li>
   <li class="tb-listitem"><a  id = "last"><img src="@{'/public/images/last.gif'}"/></a></li>
-  <li class="tb-listitem"><a #{if session.mode == 'locked edit' || session.mode == 'locked search'} href="javascript:addlocked(${session.get('id')})" #{/if} #{else} href="javascript:add()" #{/else} id = "add"><img src="@{'/public/images/add.gif'}"/></a></li>
+  <li class="tb-listitem"><a #{if session.mode == 'locked edit for Banka' || session.mode == 'locked search for Banka'} href="javascript:addlockedBanka(${session.get('b_id')})" #{/if} #{elseif session.mode == 'locked edit for Klijent' || session.mode == 'locked search for Klijent'} href="javascript:addlockedKlijent(${session.get('k_id')})" #{/elseif} #{elseif session.mode == 'locked edit for Valuta' || session.mode == 'locked search for Valuta'} href="javascript:addlockedValuta(${session.get('v_id')})" #{/elseif} #{else} href="javascript:add()" #{/else} id = "add"><img src="@{'/public/images/add.gif'}"/></a></li>
   <li class="tb-listitem"><a href="#" id = "ukidanje" data-toggle="modal" data-target="#ukidanjeModal"><img src="@{'/public/images/remove.gif'}"/></a></li>
-  <li class="tb-listitem"><a href="#" id = "nextform"><img src="@{'/public/images/nextform.gif'}"/></a></li>
+  <li class="nav-item dropdown"><a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"><img src="@{'/public/images/nextform.gif'}"/></a>
+  <div class="dropdown-menu">
+  	<a class="dropdown-item" href="javascript:nextDS()"  id="nextMB">Dnevno stanje</a>
+    <a class="dropdown-item" href="javascript:nextZR()" id="nextR">Zatvaranje racuna</a>
+  </div>
+  </li>
 </ul>
 </p>
 
@@ -134,16 +164,34 @@ function next() {
     #{if session.mode == 'add'}
         @{Racuni.create()}
     #{/if}
-    #{elseif session.mode == 'locked add'} 
+    #{elseif session.mode == 'locked add for Banka'} 
+        @{Racuni.createNext()}
+    #{/elseif}
+    #{elseif session.mode == 'locked add for Klijent'} 
+        @{Racuni.createNext()}
+    #{/elseif}
+    #{elseif session.mode == 'locked add for Valuta'} 
         @{Racuni.createNext()}
     #{/elseif}
     #{elseif session.mode == 'edit'}
         @{Racuni.edit()}
     #{/elseif}
-    #{elseif session.mode== 'locked edit'} 
+    #{elseif session.mode== 'locked edit for Banka'} 
         @{Racuni.editNext()}
     #{/elseif}
-    #{elseif session.mode== 'locked search'} 
+    #{elseif session.mode== 'locked edit for Klijent'} 
+        @{Racuni.editNext()}
+    #{/elseif}
+    #{elseif session.mode== 'locked edit for Valuta'} 
+        @{Racuni.editNext()}
+    #{/elseif}
+    #{elseif session.mode== 'locked search for Banka'} 
+        @{Racuni.filterNext()}
+    #{/elseif}
+    #{elseif session.mode== 'locked search for Klijent'} 
+        @{Racuni.filterNext()}
+    #{/elseif}
+    #{elseif session.mode== 'locked search for Valuta'} 
         @{Racuni.filterNext()}
     #{/elseif}
     #{else}
@@ -213,7 +261,7 @@ function next() {
 				<div id = "formActions">
 					#{authenticityToken /}
 					<input type = "submit" value = "Potvrda" style="margin-left:6em"/>
-					<a #{if session.mode == 'locked edit' || session.mode == 'locked add' || session.mode == 'locked search'} href="javascript:refreshlocked(${session.get('id')})" #{/if} #{else} href="javascript:refresh()" #{/else}  id="rollback" style="margin-left:1em">Rollback</a>
+					<a #{if session.mode == 'locked edit for Banka' || session.mode == 'locked add for Banka' || session.mode == 'locked search for Banka'} href="javascript:refreshlockedBanka(${session.get('b_id')})" #{/if} #{elseif session.mode == 'locked edit for Klijent' || session.mode == 'locked add for Klijent' || session.mode == 'locked search for Klijent'} href="javascript:refreshlockedKlijent(${session.get('k_id')})" #{/elseif} #{elseif session.mode == 'locked edit for Valuta' || session.mode == 'locked add for Valuta' || session.mode == 'locked search for Valuta'} href="javascript:refreshlockedValuta(${session.get('v_id')})" #{/elseif} #{else} href="javascript:refresh()" #{/else}  id="rollback" style="margin-left:1em">Rollback</a>
 				</div>			
 				
 		</form>

@@ -2,7 +2,12 @@
 #{set title:'Analitike izvoda' /}
 
 #{set 'action'}
-	@{AnalitikeIzvoda.filter()}
+	#{if session.mode == 'locked search'}
+		@{AnalitikeIzvoda.filterNext()}
+	#{/if}
+	#{else}
+		@{AnalitikeIzvoda.filter()}
+	#{/else}
 #{/set}
 
 <script>
@@ -65,14 +70,48 @@ function sync(item){
     $("select").val(dsr_id);
 }
 
+function nextSP() {
+	highlighted = $(".highlighted");
+	id_id = highlighted.find(".id").html();
+	var showRoute = #{jsRoute @StavkePrenosa.shownextAnalitika() /}
+	$.ajax({
+	method:"GET",
+	url: showRoute.url(),
+	type: showRoute.method,
+	data: {'mode': 'locked search for Analitika', 's': '0', 'a_id': id_id},
+	dataType: "html",
+	success: function(){
+		window.location.replace("@{StavkePrenosa.shownextAnalitika()}"); 
+	}
+	});
+	
+}
+
+function nextZR() {
+	highlighted = $(".highlighted");
+	id_id = highlighted.find(".id").html();
+	var showRoute = #{jsRoute @ZatvaranjaRacuna.shownextAnalitikaZR() /}
+	$.ajax({
+	method:"GET",
+	url: showRoute.url(),
+	type: showRoute.method,
+	data: {'mode': 'locked search for Analitika', 's': '0', 'azr_id': id_id},
+	dataType: "html",
+	success: function(){
+		window.location.replace("@{ZatvaranjaRacuna.shownextAnalitikaZR()}"); 
+	}
+	});
+	
+}
+
 </script>
 
 <div class="container">
 
 <p>
 <ul class="tb-ulist">
-  <li class="tb-listitem"><a id = "search"><img src="@{'/public/images/search.gif'}"/></a></li>
-  <li class="tb-listitem"><a id = "refresh"><img src="@{'/public/images/refresh.gif'}"/></a></li>
+  <li class="tb-listitem"><a  #{if session.mode == 'locked search'} href="javascript:searchlocked(${session.get('id')})" #{/if} #{else} href="javascript:search()" #{/else} id = "search"><img src="@{'/public/images/search.gif'}"/></a></li>
+  <li class="tb-listitem"><a #{if session.mode == 'locked search'} href="javascript:refreshlocked(${session.get('id')})" #{/if} #{else} href="javascript:refresh()" #{/else} id = "refresh"><img src="@{'/public/images/refresh.gif'}"/></a></li>
   <li class="tb-listitem"><a href="#" id = "pickup"><img src="@{'/public/images/zoom-pickup.gif'}"/></a></li>
   <li class="tb-listitem"><a href="#" id = "help"><img src="@{'/public/images/help.gif'}"/></a></li>
   <li class="tb-listitem"><a id = "first"><img src="@{'/public/images/first.gif'}"/></a></li>
@@ -81,7 +120,12 @@ function sync(item){
   <li class="tb-listitem"><a id = "last"><img src="@{'/public/images/last.gif'}"/></a></li>
   <li class="tb-listitem"><a id = "add"><img src="@{'/public/images/add.gif'}"/></a></li>
   <li class="tb-listitem"><a id = "remove"><img src="@{'/public/images/remove.gif'}"/></a></li>
-  <li class="tb-listitem"><a href="#" id = "nextform"><img src="@{'/public/images/nextform.gif'}"/></a></li>
+  <li class="nav-item dropdown"><a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"><img src="@{'/public/images/nextform.gif'}"/></a>
+  <div class="dropdown-menu">
+  	<a class="dropdown-item" href="javascript:nextSP()"  id="nextMB">Stavke prenosa</a>
+    <a class="dropdown-item" href="javascript:nextZR()" id="nextR">Zatvaranje racuna</a>
+  </div>
+  </li>
   <li data-toggle="tooltip" title="Import naloga"><a href="#" id = "export" data-toggle="modal" data-target="#importModal"><img src="@{'/public/images/import-naloga.png'}"/></a></li>
 </ul>
 </p>

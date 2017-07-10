@@ -19,12 +19,16 @@ public class ZatvaranjeRacuna extends Model {
 	
 	@ManyToOne
 	public Racun racun;
+	
+	@ManyToOne
+	public AnalitikaIzvoda analitikaIzvoda;
 
-	public ZatvaranjeRacuna(Date datumZatvaranja, String prebacenoNaRacun, Racun racun) {
+	public ZatvaranjeRacuna(Date datumZatvaranja, String prebacenoNaRacun, Racun racun, AnalitikaIzvoda analitikaIzvoda) {
 		super();
 		this.datumZatvaranja = datumZatvaranja;
 		this.prebacenoNaRacun = prebacenoNaRacun;
 		this.racun = racun;
+		this.analitikaIzvoda = analitikaIzvoda;
 	}
 
 }

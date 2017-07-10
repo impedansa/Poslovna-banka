@@ -44,15 +44,15 @@ function remove(id) {
 function next(id) {
 	console.log(id);
 	var id_id = id.toString();
-	var showRoute = #{jsRoute @Racuni.shownext() /}
+	var showRoute = #{jsRoute @Racuni.shownextValuta() /}
 	$.ajax({
 	method:"GET",
 	url: showRoute.url(),
 	type: showRoute.method,
-	data: {'mode': 'locked edit', 's': '0', 'id': id_id},
+	data: {'mode': 'locked edit for Valuta', 's': '0', 'v_id': id_id},
 	dataType: "html",
 	success: function(){
-		window.location.replace("@{Racuni.shownext()}"); 
+		window.location.replace("@{Racuni.shownextValuta()}"); 
 	}
 	});
 	

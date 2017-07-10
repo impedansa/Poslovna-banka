@@ -49,7 +49,7 @@ public class UkidanjeRacunaProcedure {
 					
 					AnalitikaIzvodaProcedure.startProcedure(ai, zaUkidanje.banka);
 					
-					ZatvaranjeRacuna u = new ZatvaranjeRacuna(datumPrijema, zaPrenos.brojRacuna, zaUkidanje);
+					ZatvaranjeRacuna u = new ZatvaranjeRacuna(datumPrijema, zaPrenos.brojRacuna, zaUkidanje, ai);
 					u.save();
 					
 					zaUkidanje.statusRacuna = false;

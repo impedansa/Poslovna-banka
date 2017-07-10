@@ -83,12 +83,9 @@ public class Banke extends Controller{
 		show();
 	}
 	
-	public static void filter(String nazivBanke, int sifraBanke, String swiftKod, String obracunskiRacun) {
+	public static void filter(String nazivBanke, String sifraBanke, String swiftKod, String obracunskiRacun) {
 		List<Banka> banke;
-		if(sifraBanke==0)
-			banke = Banka.find("byNazivBankeLikeAndSwiftKodLikeAndObracunskiRacunLike", "%"+nazivBanke+"%", "%"+swiftKod+"%", "%"+obracunskiRacun+"%").fetch();
-		else
-			banke = Banka.find("byNazivBankeLikeAndSifraBankeAndSwiftKodLikeAndObracunskiRacunLike", "%"+nazivBanke+"%", sifraBanke, "%"+swiftKod+"%", "%"+obracunskiRacun+"%").fetch();
+		banke = Banka.find("byNazivBankeLikeAndSifraBankeLikeAndSwiftKodLikeAndObracunskiRacunLike", "%"+nazivBanke+"%", "%"+sifraBanke+"%", "%"+swiftKod+"%", "%"+obracunskiRacun+"%").fetch();
 		session.put("mode", "edit");
  		session.put("s", null);
 		renderTemplate("Banke/show.html", banke);

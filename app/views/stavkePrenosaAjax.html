@@ -1,7 +1,6 @@
 #{extends 'standardForm.html' /}
 <script>
 
-
 function search() {
 	var showRoute = #{jsRoute @StavkePrenosa.show() /}
 	$.ajax({
@@ -16,6 +15,35 @@ function search() {
 	});
 }
 
+function searchlockedAnalitika(id) {
+	var showRoute = #{jsRoute @StavkePrenosa.shownextAnalitika() /}
+	$.ajax({
+	method:"GET",
+	url: showRoute.url(),
+	type: showRoute.method,
+	data: {'mode': 'locked search for Analitika', 's': '0', 'a_id':id},
+	dataType: "html",
+	success: function(){
+		window.location.href = 'http://localhost:8080/stavkePrenosa/shownextAnalitika';
+	}
+	});
+}
+
+function searchlockedMedjubankarski(id) {
+	var showRoute = #{jsRoute @StavkePrenosa.shownextMedjubankarski() /}
+	$.ajax({
+	method:"GET",
+	url: showRoute.url(),
+	type: showRoute.method,
+	data: {'mode': 'locked search for Medjubankarski', 's': '0', 'm_id':id},
+	dataType: "html",
+	success: function(){
+		window.location.href = 'http://localhost:8080/stavkePrenosa/shownextMedjubankarski';
+	}
+	});
+}
+
+
 function refresh() {
 	var showRoute = #{jsRoute @StavkePrenosa.show() /}
 	$.ajax({
@@ -26,6 +54,34 @@ function refresh() {
 	dataType: "html",
 	success: function(){
 		window.location.href = 'http://localhost:8080/stavkePrenosa/show';
+	}
+	});
+}
+
+function refreshlockedAnalitika(id) {
+	var showRoute = #{jsRoute @StavkePrenosa.shownextAnalitika() /}
+	$.ajax({
+	method:"GET",
+	url: showRoute.url(),
+	type: showRoute.method,
+	data: {'mode': 'locked search for Analitika', 's': '0', 'a_id':id},
+	dataType: "html",
+	success: function(){
+		window.location.href = 'http://localhost:8080/stavkePrenosa/shownextAnalitika';
+	}
+	});
+}
+
+function refreshlockedMedjubankarski(id) {
+	var showRoute = #{jsRoute @StavkePrenosa.shownextMedjubankarski() /}
+	$.ajax({
+	method:"GET",
+	url: showRoute.url(),
+	type: showRoute.method,
+	data: {'mode': 'locked search for Medjubankarski', 's': '0', 'm_id':id},
+	dataType: "html",
+	success: function(){
+		window.location.href = 'http://localhost:8080/stavkePrenosa/shownextMedjubankarski';
 	}
 	});
 }

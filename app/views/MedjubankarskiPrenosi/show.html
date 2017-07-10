@@ -34,9 +34,21 @@ function sync(item){
     $("select").val(bpr_id);
 }
 
-function next() {
-	dr_id = $(".highlighted").find(".dr_id").html()
-	console.log(dr_id)
+function next(id) {
+	console.log(id);
+	var id_id = id.toString();
+	var showRoute = #{jsRoute @StavkePrenosa.shownextMedjubankarski() /}
+	$.ajax({
+	method:"GET",
+	url: showRoute.url(),
+	type: showRoute.method,
+	data: {'mode': 'locked search for Medjubankarski', 's': '0', 'm_id': id_id},
+	dataType: "html",
+	success: function(){
+		window.location.replace("@{StavkePrenosa.shownextMedjubankarski()}"); 
+	}
+	});
+	
 }
 
 function xmlexport(id) {
@@ -52,8 +64,8 @@ function xmlexport(id) {
 <p>
 
 <ul class="tb-ulist">
-  <li class="tb-listitem"><a #{if session.mode == 'locked edit' || session.mode == 'locked add'} href="javascript:searchlocked(${session.get('id')})" #{/if} #{else} href="javascript:search()" #{/else}  id = "search"><img src="@{'/public/images/search.gif'}"/></a></li>
-  <li class="tb-listitem"><a #{if session.mode == 'locked edit' || session.mode == 'locked add' || session.mode == 'locked search'} href="javascript:refreshlocked(${session.get('id')})" #{/if} #{else} href="javascript:refresh()" #{/else}  id = "refresh"><img src="@{'/public/images/refresh.gif'}"/></a></li>
+  <li class="tb-listitem"><a #{if session.mode == 'locked search'} href="javascript:searchlocked(${session.get('id')})" #{/if} #{else} href="javascript:search()" #{/else}  id = "search"><img src="@{'/public/images/search.gif'}"/></a></li>
+  <li class="tb-listitem"><a #{if session.mode == 'locked search'} href="javascript:refreshlocked(${session.get('id')})" #{/if} #{else} href="javascript:refresh()" #{/else}  id = "refresh"><img src="@{'/public/images/refresh.gif'}"/></a></li>
   <li class="tb-listitem"><a href="#" id = "pickup"><img src="@{'/public/images/zoom-pickup.gif'}"/></a></li>
   <li class="tb-listitem"><a href="#" id = "help"><img src="@{'/public/images/help.gif'}"/></a></li>
   <li class="tb-listitem"><a  id = "first"><img src="@{'/public/images/first.gif'}"/></a></li>
@@ -165,7 +177,7 @@ function xmlexport(id) {
 				
 				<div id = "formActions">
 					<input type = "submit" value = "Potvrda" style="margin-left:6em"/>
-					<a #{if session.mode == 'locked edit' || session.mode == 'locked add' || session.mode == 'locked search'} href="javascript:refreshlocked(${session.get('id')})" #{/if} #{else} href="javascript:refresh()" #{/else}  id="rollback" style="margin-left:1em">Rollback</a>
+					<a #{if session.mode == 'locked search'} href="javascript:refreshlocked(${session.get('id')})" #{/if} #{else} href="javascript:refresh()" #{/else}  id="rollback" style="margin-left:1em">Rollback</a>
 				</div>			
 				
 		</form>

@@ -37,6 +37,36 @@ public class MedjubankarskiPrenosi extends Controller{
 		render(medjubankarskiPrenosi, bankePrimaoci, bankePosiljaoci);
 	}
 	
+public static void shownext(){
+		
+		String mode = "";
+		String s = "";
+		String id = "0";
+		if(params.get("mode") != null) {
+			mode = params.get("mode");
+			s = params.get("s");
+			id = params.get("id");
+		} else {
+			mode = session.get("mode");
+			s = session.get("s");
+			id = session.get("id");
+			if(mode == null || mode =="") {
+				mode = "locked search";
+			}
+		}
+		session.put("mode", mode);
+		session.put("s", s);
+		session.put("id", id);
+		List<Banka> bankePosiljaoci = Banka.findAll();
+		List<Banka> bankePrimaoci = new ArrayList<Banka>();
+		System.out.println(id);
+		bankePrimaoci.add(Banka.findById(Long.parseLong(id)));
+		System.out.println(bankePrimaoci.get(0).getId().toString());
+		List<MedjubankarskiPrenos> medjubankarskiPrenosi = MedjubankarskiPrenos.find("byBankaPrimalac", bankePrimaoci.get(0)).fetch();
+		System.out.println(medjubankarskiPrenosi.get(0).getBankaPrimalac().getId().toString());
+		renderTemplate("MedjubankarskiPrenosi/show.html", medjubankarskiPrenosi, bankePrimaoci, bankePosiljaoci, id);
+	}
+	
 	public static void filter(String vrstaPoruke, Date datum, Long ukupanIznos, Long bankePosiljaoci, Long bankePrimaoci) {
 		List<MedjubankarskiPrenos> medjubankarskiPrenosi = filterBasic(vrstaPoruke, datum, ukupanIznos, bankePosiljaoci, bankePrimaoci);
 		session.put("mode", "search");
@@ -44,22 +74,29 @@ public class MedjubankarskiPrenosi extends Controller{
 		renderTemplate("MedjubankarskiPrenosi/show.html", medjubankarskiPrenosi);
 	}
 	
-/*	public static void filterNext(String oznaka, String naziv, Integer postanskiBroj, Long drzava) {
-		Long id = drzava;
-		List<NaseljenoMesto> naseljenaMesta = filterBasic(oznaka, naziv, postanskiBroj, drzava);
+	public static void filterNext(String vrstaPoruke, Date datum, Long ukupanIznos, Long bankePosiljaoci, Long bankePrimaoci) {
+		Long id = bankePrimaoci;
+		List<MedjubankarskiPrenos> medjubankarskiPrenosi = filterBasic(vrstaPoruke, datum, ukupanIznos, bankePosiljaoci, bankePrimaoci);
 		session.put("mode", "locked edit");
 		session.put("s", null);
-		session.put("id", drzava);
-		renderTemplate("NaseljenaMesta/show.html",naseljenaMesta, id);
+		session.put("id", id);
+		renderTemplate("MedjubankarskiPrenosi/show.html",medjubankarskiPrenosi, id); 
 	}
-*/
+
 	
 	public static List<MedjubankarskiPrenos> filterBasic(String vrstaPoruke, Date datum, Long ukupanIznos, Long bankePosiljaoci, Long bankePrimaoci) {
 		Banka bpo = Banka.findById(bankePosiljaoci);
 		Banka bpr = Banka.findById(bankePrimaoci);
-		List<MedjubankarskiPrenos> medjubankarskiPrenosi = MedjubankarskiPrenos.find("byVrstaPorukeLikeAndDatumAndBankaPrimalacAndBankaPosiljalac", "%"+vrstaPoruke+"%",  datum, bpr, bpo).fetch();
-		//List<MedjubankarskiPrenos> medjubankarskiPrenosi = MedjubankarskiPrenos.find("byVrstaPorukeAndDatumAndUkupanIznosAndBankaPrimalacAndBankaPosiljalac", vrstaPoruke, datum, ukupanIznos, bpr, bpo).fetch();
-		//List<MedjubankarskiPrenos> medjubankarskiPrenosi = MedjubankarskiPrenos.find("byBankaPosiljalacAndBankaPrimalac", bpo, bpr).fetch();
+		List<MedjubankarskiPrenos> medjubankarskiPrenosi;
+		if(datum == null && ukupanIznos == null) {
+			medjubankarskiPrenosi = MedjubankarskiPrenos.find("byVrstaPorukeLikeAndBankaPosiljalacAndBankaPrimalac", "%"+vrstaPoruke+"%", bpo, bpr).fetch();
+		} else if (datum == null) {
+			medjubankarskiPrenosi = MedjubankarskiPrenos.find("byVrstaPorukeLikeAndUkupanIznosAndBankaPosiljalacAndBankaPrimalac", "%"+vrstaPoruke+"%",  ukupanIznos, bpo, bpr).fetch();
+		} else if (ukupanIznos == null) {
+			medjubankarskiPrenosi = MedjubankarskiPrenos.find("byVrstaPorukeLikeAndDatumAndBankaPosiljalacAndBankaPrimalac", "%"+vrstaPoruke+"%",  datum, bpo, bpr).fetch();
+		} else {
+			medjubankarskiPrenosi = MedjubankarskiPrenos.find("byVrstaPorukeLikeAndDatumAndUkupanIznosAndBankaPosiljalacAndBankaPrimalac", "%"+vrstaPoruke+"%",  datum, ukupanIznos, bpo, bpr).fetch();
+		}
 		return medjubankarskiPrenosi;
 	}
 	

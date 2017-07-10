@@ -77,15 +77,15 @@ public class SifrarniciDelatnosti extends Controller{
 		show();
 	}
 	
-	public static void filter(int sifraDelatnosti, String nazivDelatnosti) {
+	public static void filter(Integer sifraDelatnosti, String nazivDelatnosti) {
 		List<SifrarnikDelatnosti> sifrarniciDelatnosti;
-		if(sifraDelatnosti == 0)
+		if(sifraDelatnosti == null)
 			sifrarniciDelatnosti = SifrarnikDelatnosti.find("byNazivDelatnostiLike", "%"+nazivDelatnosti+"%").fetch();
 		else
 			sifrarniciDelatnosti = SifrarnikDelatnosti.find("bySifraDelatnostiAndNazivDelatnostiLike", sifraDelatnosti, "%"+nazivDelatnosti+"%" ).fetch();
 		session.put("mode", "edit");
  		session.put("s", null);
-		renderTemplate("Valute/show.html", sifrarniciDelatnosti);
+		renderTemplate("SifrarniciDelatnosti/show.html", sifrarniciDelatnosti);
 	}
 	
 	public static void delete(Long id) {

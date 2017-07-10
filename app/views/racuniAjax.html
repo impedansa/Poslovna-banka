@@ -1,15 +1,43 @@
 #{extends 'standardForm.html' /}
 <script>
-function addlocked(id) {
-	var showRoute = #{jsRoute @Racuni.shownext() /}
+function addlockedBanka(id) {
+	var showRoute = #{jsRoute @Racuni.shownextBanka() /}
 	$.ajax({
 	method:"GET",
 	url: showRoute.url(),
 	type: showRoute.method,
-	data: {'mode': 'locked add', 's': '0', 'id':id},
+	data: {'mode': 'locked add for Banka', 's': '0', 'b_id':id},
 	dataType: "html",
 	success: function(){
-		window.location.href = 'http://localhost:8080/racuni/shownext';
+		window.location.href = 'http://localhost:8080/racuni/shownextBanka';
+	}
+	});
+}
+
+function addlockedKlijent(id) {
+	var showRoute = #{jsRoute @Racuni.shownextKlijent() /}
+	$.ajax({
+	method:"GET",
+	url: showRoute.url(),
+	type: showRoute.method,
+	data: {'mode': 'locked add for Klijent', 's': '0', 'k_id':id},
+	dataType: "html",
+	success: function(){
+		window.location.href = 'http://localhost:8080/racuni/shownextKlijent';
+	}
+	});
+}
+
+function addlockedValuta(id) {
+	var showRoute = #{jsRoute @Racuni.shownextValuta() /}
+	$.ajax({
+	method:"GET",
+	url: showRoute.url(),
+	type: showRoute.method,
+	data: {'mode': 'locked add for Valuta', 's': '0', 'v_id':id},
+	dataType: "html",
+	success: function(){
+		window.location.href = 'http://localhost:8080/racuni/shownextValuta';
 	}
 	});
 }
@@ -28,16 +56,44 @@ function add() {
 	});
 }
 
-function searchlocked(id) {
-	var showRoute = #{jsRoute @Racuni.shownext() /}
+function searchlockedBanka(id) {
+	var showRoute = #{jsRoute @Racuni.shownextBanka() /}
 	$.ajax({
 	method:"GET",
 	url: showRoute.url(),
 	type: showRoute.method,
-	data: {'mode': 'locked search', 's': '0', 'id':id},
+	data: {'mode': 'locked search for Banka', 's': '0', 'b_id':id},
 	dataType: "html",
 	success: function(){
-		window.location.href = 'http://localhost:8080/racuni/shownext';
+		window.location.href = 'http://localhost:8080/racuni/shownextBanka';
+	}
+	});
+}
+
+function searchlockedKlijent(id) {
+	var showRoute = #{jsRoute @Racuni.shownextKlijent() /}
+	$.ajax({
+	method:"GET",
+	url: showRoute.url(),
+	type: showRoute.method,
+	data: {'mode': 'locked search for Klijent', 's': '0', 'k_id':id},
+	dataType: "html",
+	success: function(){
+		window.location.href = 'http://localhost:8080/racuni/shownextKlijent';
+	}
+	});
+}
+
+function searchlockedValuta(id) {
+	var showRoute = #{jsRoute @Racuni.shownextValuta() /}
+	$.ajax({
+	method:"GET",
+	url: showRoute.url(),
+	type: showRoute.method,
+	data: {'mode': 'locked search for Valuta', 's': '0', 'v_id':id},
+	dataType: "html",
+	success: function(){
+		window.location.href = 'http://localhost:8080/racuni/shownextValuta';
 	}
 	});
 }
@@ -56,19 +112,48 @@ function search() {
 	});
 }
 
-function refreshlocked(id) {
-	var showRoute = #{jsRoute @Racuni.shownext() /}
+function refreshlockedBanka(id) {
+	var showRoute = #{jsRoute @Racuni.shownextBanka() /}
 	$.ajax({
 	method:"GET",
 	url: showRoute.url(),
 	type: showRoute.method,
-	data: {'mode': 'locked edit', 's': '0', 'id':id},
+	data: {'mode': 'locked edit for Banka', 's': '0', 'b_id':id},
 	dataType: "html",
 	success: function(){
-		window.location.href = 'http://localhost:8080/racuni/shownext';
+		window.location.href = 'http://localhost:8080/racuni/shownextBanka';
 	}
 	});
 }
+
+function refreshlockedKlijent(id) {
+	var showRoute = #{jsRoute @Racuni.shownextKlijent() /}
+	$.ajax({
+	method:"GET",
+	url: showRoute.url(),
+	type: showRoute.method,
+	data: {'mode': 'locked edit for Klijent', 's': '0', 'k_id':id},
+	dataType: "html",
+	success: function(){
+		window.location.href = 'http://localhost:8080/racuni/shownextKlijent';
+	}
+	});
+}
+
+function refreshlockedValuta(id) {
+	var showRoute = #{jsRoute @Racuni.shownextValuta() /}
+	$.ajax({
+	method:"GET",
+	url: showRoute.url(),
+	type: showRoute.method,
+	data: {'mode': 'locked edit for Valuta', 's': '0', 'v_id':id},
+	dataType: "html",
+	success: function(){
+		window.location.href = 'http://localhost:8080/racuni/shownextValuta';
+	}
+	});
+}
+
 
 function refresh() {
 	var showRoute = #{jsRoute @Racuni.show() /}

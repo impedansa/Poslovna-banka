@@ -45,18 +45,35 @@ function remove(id) {
 	});
 }
 
-function next(id) {
-	console.log(id);
-	var id_id = id.toString();
-	var showRoute = #{jsRoute @Racuni.shownext() /}
+function nextMB() {
+	highlighted = $(".highlighted");
+	id_id = highlighted.find(".id").html();
+	var showRoute = #{jsRoute @MedjubankarskiPrenosi.shownext() /}
 	$.ajax({
 	method:"GET",
 	url: showRoute.url(),
 	type: showRoute.method,
-	data: {'mode': 'locked edit', 's': '0', 'id': id_id},
+	data: {'mode': 'locked search', 's': '0', 'id': id_id},
 	dataType: "html",
 	success: function(){
-		window.location.replace("@{Racuni.shownext()}"); 
+		window.location.replace("@{MedjubankarskiPrenosi.shownext()}"); 
+	}
+	});
+	
+}
+
+function nextR() {
+	highlighted = $(".highlighted");
+	id_id = highlighted.find(".id").html();
+	var showRoute = #{jsRoute @Racuni.shownextBanka() /}
+	$.ajax({
+	method:"GET",
+	url: showRoute.url(),
+	type: showRoute.method,
+	data: {'mode': 'locked edit for Banka', 's': '0', 'b_id': id_id},
+	dataType: "html",
+	success: function(){
+		window.location.replace("@{Racuni.shownextBanka()}"); 
 	}
 	});
 	
@@ -79,7 +96,12 @@ function next(id) {
   <li class="tb-listitem"><a id = "last"><img src="@{'/public/images/last.gif'}"/></a></li>
   <li class="tb-listitem"><a id = "add"><img src="@{'/public/images/add.gif'}"/></a></li>
   <li class="tb-listitem"><a id = "remove"><img src="@{'/public/images/remove.gif'}"/></a></li>
-  <li class="tb-listitem"><a href="#" id = "nextform"><img src="@{'/public/images/nextform.gif'}"/></a></li>
+  <li class="nav-item dropdown"><a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#"><img src="@{'/public/images/nextform.gif'}"/></a>
+  <div class="dropdown-menu">
+  	<a class="dropdown-item" href="javascript:nextMB()"  id="nextMB">Medjubankarski Prenos</a>
+    <a class="dropdown-item" href="javascript:nextR()" id="nextR">Racuni</a>
+  </div>
+  </li>
 </ul>
 </p>
 

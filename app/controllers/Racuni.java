@@ -41,61 +41,128 @@ public class Racuni extends Controller {
 			}
 			
 	
-
-	public static void shownext() {
+	public static void shownextKlijent() {
 		String modeN = "";
 		String sN = "";
-		String id = "0";
+		String k_id = "0";
 		if(params.get("mode") != null) {
 			modeN = params.get("mode");
 			sN = params.get("s");
-			id = params.get("id");
+			k_id = params.get("k_id");
 		} else {
 			modeN = session.get("mode");
 			sN = session.get("s");
-			id = session.get("id");
+			k_id = session.get("k_id");
 			if(modeN == null || modeN =="") {
-				modeN = "locked edit";
+				modeN = "locked edit for Klijent";
 			}
 		}
 		session.put("mode", modeN);
 		session.put("s", sN);
-		session.put("id", id);
+		session.put("k_id", k_id);
 		List<Klijent> klijenti = new ArrayList<Klijent>();
-		klijenti.add(Klijent.findById(Long.parseLong(id)));
-		List<Banka> banke = new ArrayList<Banka>();
-		banke.add(Banka.findById(Long.parseLong(id)));
+		klijenti.add(Klijent.findById(Long.parseLong(k_id)));
+		List<Banka> banke = Banka.findAll();
+		List<Valuta> valute = Valuta.findAll();
+		List<Racun> racuni = Racun.find("byKlijent", klijenti.get(0)).fetch();
+		
+		renderTemplate("Racuni/show.html", racuni, klijenti, banke, valute, k_id);
+	}
+	public static void shownextValuta() {
+		String modeN = "";
+		String sN = "";
+		String v_id = "0";
+		if(params.get("mode") != null) {
+			modeN = params.get("mode");
+			sN = params.get("s");
+			v_id = params.get("v_id");
+		} else {
+			modeN = session.get("mode");
+			sN = session.get("s");
+			v_id = session.get("v_id");
+			if(modeN == null || modeN =="") {
+				modeN = "locked edit for Valuta";
+			}
+		}
+		session.put("mode", modeN);
+		session.put("s", sN);
+		session.put("v_id", v_id);
+		List<Klijent> klijenti = Klijent.findAll();
+		List<Banka> banke = Banka.findAll();
 		List<Valuta> valute = new ArrayList<Valuta>();
-		valute.add(Valuta.findById(Long.parseLong(id)));
-		List<Racun> racuni = Racun.find("byKlijentAndBankaAndValuta", klijenti.get(0), banke.get(0), valute.get(0)).fetch();
-		renderTemplate("Racuni/show.html", racuni, klijenti, banke, valute, id);
+		valute.add(Valuta.findById(Long.parseLong(v_id)));
+		List<Racun> racuni = Racun.find("byValuta", valute.get(0)).fetch();
+		System.out.println(racuni.get(0).getId());
+		
+		renderTemplate("Racuni/show.html", racuni, klijenti, banke, valute, v_id);
+		
 	}
 	
+	public static void shownextBanka() {
+		String modeN = "";
+		String sN = "";
+		String b_id = "0";
+		if(params.get("mode") != null) {
+			modeN = params.get("mode");
+			sN = params.get("s");
+			b_id = params.get("b_id");
+		} else {
+			modeN = session.get("mode");
+			sN = session.get("s");
+			b_id = session.get("b_id");
+			if(modeN == null || modeN =="") {
+				modeN = "locked edit for Banka";
+			}
+		}
+		session.put("mode", modeN);
+		session.put("s", sN);
+		session.put("b_id", b_id);
+		List<Klijent> klijenti = Klijent.findAll();
+		List<Banka> banke = new ArrayList<Banka>();
+		banke.add(Banka.findById(Long.parseLong(b_id)));
+		List<Valuta> valute = Valuta.findAll();
+		List<Racun> racuni = Racun.find("byBanka", banke.get(0)).fetch();
+		
+		renderTemplate("Racuni/show.html", racuni, klijenti, banke, valute, b_id);
+	}
 
-	public static void filter(String brojRacuna, String statusRacuna, Long klijent, Long banka, Long valuta) {
+	public static void filter(String brojRacuna, boolean statusRacuna, Long klijent, Long banka, Long valuta) {
 		Klijent k = Klijent.findById(klijent);
 		Banka b = Banka.findById(banka);
 		Valuta v = Valuta.findById(valuta);
-		List<Racun> racuni = Racun.find("byBrojRacunaLikeAndNazivRacunaLikeAndKlijentAndBankaAndValuta",  "%"+brojRacuna+"%", "%"+statusRacuna+"%", k, b, v).fetch();
+		List<Racun> racuni = Racun.find("byBrojRacunaLikeAndStatusRacunaAndKlijentAndBankaAndValuta",  "%"+brojRacuna+"%", statusRacuna, k, b, v).fetch();
 		session.put("mode", "edit");
 		session.put("s", null);
 		renderTemplate("Racuni/show.html",racuni);
 	}
 	
 	
-	public static void filterNext(String brojRacuna, String statusRacuna, Long klijent, Long banka, Long valuta) {
+	public static void filterNext(String brojRacuna, boolean statusRacuna, Long klijent, Long banka, Long valuta) {
 		Klijent k = Klijent.findById(klijent);
 		Banka b = Banka.findById(banka);
 		Valuta v = Valuta.findById(valuta);
-		List<Racun> racuni = Racun.find("byBrojRacunaLikeAndNazivRacunaLikeAndKlijentAndBankaAndValuta",  "%"+brojRacuna+"%", "%"+statusRacuna+"%", k, b, v).fetch();
-		session.put("mode", "locked edit");
-		session.put("s", null);
-		session.put("id", klijent);
-		renderTemplate("Racuni/show.html",racuni, klijent);
+		List<Racun> racuni = Racun.find("byBrojRacunaLikeAndStatusRacunaAndKlijentAndBankaAndValuta",  "%"+brojRacuna+"%", statusRacuna, k, b, v).fetch();
+		if (session.get("mode").equals("locked search for Banka")) {
+			session.put("mode", "locked edit for Banka");
+			session.put("s", null);
+			session.put("b_id", banka);
+			renderTemplate("Racuni/show.html",racuni, banka); 
+		} else if (session.get("mode").equals("locked search for Klijent")) {
+			session.put("mode", "locked edit for Klijent");
+			session.put("s", null);
+			session.put("k_id", klijent);
+			renderTemplate("Racuni/show.html",racuni, klijent); 
+		} else {
+			session.put("mode", "locked edit for Valuta");
+			session.put("s", null);
+			session.put("v_id", valuta);
+			renderTemplate("Racuni/show.html",racuni, valuta); 
+		}
+		
 	}
 	
 	
-	public static void create(@Required String brojRacuna,@Required Boolean statusRacuna, Long klijent, Long banka, Long valuta) throws NoSuchProviderException, IOException {
+	public static void create(@Required String brojRacuna,@Required boolean statusRacuna, Long klijent, Long banka, Long valuta) throws NoSuchProviderException, IOException {
 		Logger.info("Zaposleni sa ID-jem: "+session.get("user")+" pokusao kreiranje racuna sa IP adrese: "+ Logovi.getClientIp());
 		checkAuthenticity();
 		validation.minSize(brojRacuna, 18);
@@ -120,8 +187,8 @@ public class Racuni extends Controller {
 	}
 	
 	
-	public static void createNext(@Required String brojRacuna,@Required String statusRacuna, Long klijent, Long banka, Long valuta) throws NoSuchProviderException, IOException {
-		/*checkAuthenticity();
+	public static void createNext(@Required String brojRacuna,@Required boolean statusRacuna, Long klijent, Long banka, Long valuta) throws NoSuchProviderException, IOException {
+		checkAuthenticity();
 		validation.minSize(brojRacuna, 18);
 		validation.maxSize(brojRacuna, 18);
 		validation.maxSize(statusRacuna, 1);
@@ -136,15 +203,27 @@ public class Racuni extends Controller {
 		Valuta v = Valuta.findById(valuta);
 		Racun r = new Racun(brojRacuna, statusRacuna, k, b, v);
 		r.save();
-		session.put("mode", "locked add");
-		session.put("s", r.id);
-		session.put("id", klijent);
-		shownext(); */
+		if (session.get("mode").equals("locked add for Banka")) {
+			session.put("mode", "locked add for Banka");
+			session.put("s", r.id);
+			session.put("b_id", banka);
+			shownextBanka(); 
+		} else if (session.get("mode").equals("locked add for Klijent")) {
+			session.put("mode", "locked add for Klijent");
+			session.put("s", r.id);
+			session.put("k_id", klijent);
+			shownextKlijent(); 
+		} else {
+			session.put("mode", "locked add for Valuta");
+			session.put("s", r.id);
+			session.put("v_id", valuta);
+			shownextValuta(); 
+		}
 	}
 	
 	
 	
-	public static void edit(Long id,String brojRacuna,Boolean statusRacuna, Long klijent, Long banka, Long valuta) {
+	public static void edit(Long id,String brojRacuna, boolean statusRacuna, Long klijent, Long banka, Long valuta) {
 				validation.minSize(brojRacuna, 18);
 				validation.maxSize(brojRacuna, 18);
 				validation.maxSize(statusRacuna, 1);
@@ -190,8 +269,8 @@ public class Racuni extends Controller {
 				show();
 			}
 	
-	public static void editNext(Long id,String brojRacuna,String statusRacuna, Long klijent, Long banka, Long valuta) throws NoSuchProviderException, IOException {
-		/*checkAuthenticity();
+	public static void editNext(Long id,String brojRacuna, boolean statusRacuna, Long klijent, Long banka, Long valuta) throws NoSuchProviderException, IOException {
+		checkAuthenticity();
 		validation.minSize(brojRacuna, 18);
 		validation.maxSize(brojRacuna, 18);
 		validation.maxSize(statusRacuna, 1);
@@ -232,10 +311,23 @@ public class Racuni extends Controller {
 			}
 			
 		} 
-		session.put("mode", "locked edit");
-		session.put("s", s);
-		session.put("id", klijent);
-		shownext(); */
+		
+		if (session.get("mode").equals("locked edit for Banka")) {
+			session.put("mode", "locked edit for Banka");
+			session.put("s", s);
+			session.put("b_id", banka);
+			shownextBanka(); 
+		} else if (session.get("mode").equals("locked edit for Klijent")) {
+			session.put("mode", "locked edit for Klijent");
+			session.put("s", s);
+			session.put("k_id", klijent);
+			shownextKlijent(); 
+		} else {
+			session.put("mode", "locked edit for Valuta");
+			session.put("s", s);
+			session.put("v_id", valuta);
+			shownextValuta(); 
+		}
 	}
 	
 	
