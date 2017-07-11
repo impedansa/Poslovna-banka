@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
 
 import models.deadbolt.Role;
 import models.deadbolt.RoleHolder;
@@ -19,11 +20,14 @@ public class Zaposleni extends Model implements RoleHolder {
 	@Column(name="LOZINKA", unique = true)
 	public String lozinka;
 	
+	@ManyToOne
+	public Banka banka;
 	
-	public Zaposleni(String korisnickoIme, String lozinka) {
+	public Zaposleni(String korisnickoIme, String lozinka, Banka banka) {
 		
 		this.korisnickoIme = korisnickoIme;
 		this.lozinka = lozinka;
+		this.banka = banka;
 
 	}
 

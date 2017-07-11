@@ -33,6 +33,7 @@ public class Security extends Secure.Security{
 		}
         
 		return zaposlen != null && password_verified;
+		
     }
 	
 	static void onDisconnect() {

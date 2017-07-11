@@ -192,7 +192,7 @@ function next() {
 			<td class = "ai_iznos">${analitika.iznos}</td>
 			<td class = "ai_tipGreske">${analitika.tipGreske}</td>
 			<td class = "ai_status">${analitika.status}</td>
-			<td class = "ai_dnevnoStanjeRacuna">${analitika.dnevnoStanjeRacuna.datum}</td>
+			<td class = "ai_dnevnoStanjeRacuna">#{if analitika.dnevnoStanjeRacuna} ${analitika.dnevnoStanjeRacuna.datum} #{/if}</td>
 			<td style = "visibility: hidden; max-width: 0px" class = "bpo_id">${analitika.id}</td>
 		</tr>
 		#{/list}
@@ -231,7 +231,7 @@ function next() {
 		#{list items:medjubankarskiPrenos, as:'medjubankarski'}
 		<tr class = "item">
 			<td class = "mp_vrstaPoruke">${medjubankarski.vrstaPoruke}</td>
-			<td class = "mp_datum">${medjubankarski.datum}</td>
+			<td class = "mp_datum">#{if medjubankarski.datum} ${medjubankarski.datum} #{/if}</td>
 			<td class = "mp_ukupanIznos">${medjubankarski.ukupanIznos}</td>
 			<td class = "mp_bankaPosiljalac">${medjubankarski.bankaPosiljalac.nazivBanke}</td>
 			<td class = "mp_bankaPrimalac">${medjubankarski.bankaPrimalac.nazivBanke}</td>

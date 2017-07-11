@@ -25,7 +25,7 @@ public class IzvodKlijenta extends Controller{
 		render(banke, klijenti);
 	}
 	
-	public static void getReport(Long banka, Long klijent, Date pocetakIntervala, Date krajIntervala){
+	/*public static void getReport(Long banka, Long klijent, Date pocetakIntervala, Date krajIntervala){
 		Map reportParams = new HashMap(4);
 		reportParams.put("id_Banke", banka);
 		reportParams.put("id_Klijenta", klijent);
@@ -35,6 +35,6 @@ public class IzvodKlijenta extends Controller{
 	    //jrxml and jasper files should be in app/reports
 		Klijent k = Klijent.findById(klijent);
 	    renderBinary(reports.BaseJasperReport.generateReport("IzvodKlijenta", reportParams), "IzvodKlijenta_" + k.naziv + ".pdf");
-	}
+	}*/
 	
 }

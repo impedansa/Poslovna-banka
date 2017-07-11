@@ -20,13 +20,13 @@ public class AnalitikaIzvoda extends Model {
 	@Column(name="SMER", length=1)
 	public String smer;
 	
-	@Column(name="DUZNIK_NALOGODAVAC", nullable = false, length = 256)
+	@Column(name="DUZNIK_NALOGODAVAC", length = 256)
 	public String duznikNalogodavac;
 	
-	@Column(name="SVRHA_PLACANJA", nullable = false, length = 256)
+	@Column(name="SVRHA_PLACANJA", length = 256)
 	public String svrhaPlacanja;
 	
-	@Column(name="POVERILAC_PRIMALAC", nullable = false, length = 256)
+	@Column(name="POVERILAC_PRIMALAC", length = 256)
 	public String poverilacPrimalac;
 	
 	@Column(name="DATUM_PRIJEMA")
@@ -35,34 +35,34 @@ public class AnalitikaIzvoda extends Model {
 	@Column(name="DATUM_VALUTE")
 	public Date datumValute;
 	
-	@Column(name="RACUN_DUZNIKA", nullable = true, length = 18)
+	@Column(name="RACUN_DUZNIKA", length = 18)
 	public String racunDuznika;
 	
-	@Column(name="MODEL_ZADUZENJA", nullable = true)
+	@Column(name="MODEL_ZADUZENJA")
 	public Integer modelZaduzenja;
 	
-	@Column(name="POZIV_NA_BROJ_ZADUZENJA", nullable = true, length = 20)
+	@Column(name="POZIV_NA_BROJ_ZADUZENJA", length = 20)
 	public String pozivNaBrojZaduzenja;
 	
-	@Column(name="RACUN_POVERIOCA", nullable = true, length = 18)
+	@Column(name="RACUN_POVERIOCA", length = 18)
 	public String racunPoverioca;
 	
-	@Column(name="MODEL_ODOBRENJA", nullable = true)
+	@Column(name="MODEL_ODOBRENJA")
 	public Integer modelOdobrenja;
 	
-	@Column(name="POZIV_NA_BROJ_ODOBRENJA", nullable = true, length = 20)
+	@Column(name="POZIV_NA_BROJ_ODOBRENJA", length = 20)
 	public String pozivNaBrojOdobrenja;
 	
-	@Column(name="HITNO", nullable = true)
+	@Column(name="HITNO")
 	public boolean hitno;
 	
-	@Column(name="IZNOS", nullable = false)
+	@Column(name="IZNOS")
 	public Long iznos;
 	
-	@Column(name="TIP_GRESKE", nullable = false)
+	@Column(name="TIP_GRESKE")
 	public Integer tipGreske;
 	
-	@Column(name="STATUS", nullable = true, length=1)
+	@Column(name="STATUS", length=1)
 	public String status;
 
 	@ManyToOne

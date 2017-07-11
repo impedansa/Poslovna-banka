@@ -256,7 +256,7 @@ function next() {
 			<td class = "ai_iznos">${analitika.iznos}</td>
 			<td class = "ai_tipGreske">${analitika.tipGreske}</td>
 			<td class = "ai_status">${analitika.status}</td>
-			<td class = "ai_dnevnoStanjeRacuna">${analitika.dnevnoStanjeRacuna.datum}</td>
+			<td class = "ai_dnevnoStanjeRacuna">#{if analitika.dnevnoStanjeRacuna} ${analitika.dnevnoStanjeRacuna.datum} #{/if}</td>
 			<td style = "visibility: hidden; max-width: 0px" class = "bpo_id">${analitika.id}</td>
 		</tr>
 		#{/list}

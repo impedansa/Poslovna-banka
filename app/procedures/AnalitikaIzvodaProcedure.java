@@ -149,7 +149,7 @@ public class AnalitikaIzvodaProcedure {
 			if (datumPoslednjegPrometa == null) {
 				// na racunu nije bilo nikakvog prometa do sad,
 				// kreiramo prvo dnevno stanje za racun klijenta
-				DnevnoStanjeRacuna dnevnoStanje = new DnevnoStanjeRacuna(ai.datumPrijema, 0L, ai.iznos, 0L,
+				DnevnoStanjeRacuna dnevnoStanje = new DnevnoStanjeRacuna(ai.datumPrijema, 0L, 0L, ai.iznos,
 						ai.iznos, racun);
 				dnevnoStanje.save();
 				ai.dnevnoStanjeRacuna = dnevnoStanje;
@@ -157,10 +157,10 @@ public class AnalitikaIzvodaProcedure {
 				// datum poslednjeg dnevnog stanja (poslednjeg prometa) je manji od datuma prijema naloga
 				// kreiramo novo dnevno stanje i azuriramo ga sa prethodnim dnevnim stanjem
 				DnevnoStanjeRacuna prethodnoDnevnoStanje = (DnevnoStanjeRacuna) DnevnoStanjeRacuna
-						.find("byDatumPrometaAndRacunPravnihLica", datumPoslednjegPrometa, racun).fetch()
+						.find("byDatumAndRacun", datumPoslednjegPrometa, racun).fetch()
 						.get(0);
 				DnevnoStanjeRacuna novoDnevnoStanje = new DnevnoStanjeRacuna(ai.datumPrijema,
-						prethodnoDnevnoStanje.novoStanje, ai.iznos, 0L, prethodnoDnevnoStanje.novoStanje + ai.iznos,
+						prethodnoDnevnoStanje.novoStanje, 0L, ai.iznos, prethodnoDnevnoStanje.novoStanje + ai.iznos,
 						racun);
 				novoDnevnoStanje.save();
 				ai.dnevnoStanjeRacuna = novoDnevnoStanje;
@@ -168,7 +168,7 @@ public class AnalitikaIzvodaProcedure {
 				// na datum prijema naloga je vec bilo transakcija pa postoji dnevno stanje za taj datum
 				// azuriramo aktuelno dnevno stanje racuna
 				DnevnoStanjeRacuna aktuelnoDnevnoStanje = (DnevnoStanjeRacuna) DnevnoStanjeRacuna
-						.find("byDatumPrometaAndRacun", datumPoslednjegPrometa, racun).fetch()
+						.find("byDatumAndRacun", datumPoslednjegPrometa, racun).fetch()
 						.get(0);
 				aktuelnoDnevnoStanje.prometUKorist += ai.iznos;
 				aktuelnoDnevnoStanje.novoStanje += ai.iznos;
@@ -181,7 +181,7 @@ public class AnalitikaIzvodaProcedure {
 			if (datumPoslednjegPrometaDuznika == null) {
 				// na racunu nije bilo nikakvog prometa do sad,
 				// kreiramo prvo dnevno stanje za racun klijenta
-				DnevnoStanjeRacuna dnevnoStanje = new DnevnoStanjeRacuna(ai.datumPrijema, 0L, 0L, ai.iznos, 
+				DnevnoStanjeRacuna dnevnoStanje = new DnevnoStanjeRacuna(ai.datumPrijema, 0L, ai.iznos, 0L, 
 						-ai.iznos, racun);
 				dnevnoStanje.save();
 				ai.dnevnoStanjeRacuna = dnevnoStanje;
@@ -194,7 +194,7 @@ public class AnalitikaIzvodaProcedure {
 						.find("byDatumAndRacun", datumPoslednjegPrometaDuznika, racun)
 						.fetch().get(0);
 				DnevnoStanjeRacuna novoDnevnoStanje = new DnevnoStanjeRacuna(ai.datumPrijema,
-						prethodnoDnevnoStanje.novoStanje, 0L, ai.iznos, prethodnoDnevnoStanje.novoStanje - ai.iznos,
+						prethodnoDnevnoStanje.novoStanje, ai.iznos, 0L, prethodnoDnevnoStanje.novoStanje - ai.iznos,
 						racun);
 				novoDnevnoStanje.save();
 				ai.dnevnoStanjeRacuna = novoDnevnoStanje;

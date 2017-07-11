@@ -158,7 +158,8 @@ function nextZR() {
   num=analitikaIzvoda.id;
   analitikaIzvodaId=num.toString();
 }%
-	<tr  #{if session.s == analitikaIzvodaId} class = "highlighted" #{/if}>
+	#{if analitikaIzvoda.dnevnoStanjeRacuna} 
+		<tr  #{if session.s == analitikaIzvodaId} class = "highlighted" #{/if}>
 		<td class = "datumAnalitike">#{if analitikaIzvoda.datumAnalitike} ${analitikaIzvoda.datumAnalitike.format()} #{/if}</td>
 		<td class = "smer">${analitikaIzvoda.smer}</td>
 		<td class = "duznikNalogodavac">${analitikaIzvoda.duznikNalogodavac}</td>
@@ -169,7 +170,7 @@ function nextZR() {
 		<td class = "racunDuznika">${analitikaIzvoda.racunDuznika}</td>
 		<td class = "modelZaduzenja">${analitikaIzvoda.modelZaduzenja}</td>
 		<td class = "pozivNaBrojZaduzenja">${analitikaIzvoda.pozivNaBrojZaduzenja}</td>
-		n<td class = "racunPoverioca">${analitikaIzvoda.racunPoverioca}</td>
+		<td class = "racunPoverioca">${analitikaIzvoda.racunPoverioca}</td>
 		<td class = "modelOdobrenja">${analitikaIzvoda.modelOdobrenja}</td>
 		<td class = "pozivNaBrojOdobrenja">${analitikaIzvoda.pozivNaBrojOdobrenja}</td>
 		<td class = "hitno">#{if analitikaIzvoda.hitno} Da #{/if}#{else} Ne #{/else}</td>
@@ -181,6 +182,7 @@ function nextZR() {
 		<td style = "visibility: hidden; max-width: 0px" class = "dsr_id">>#{if analitikaIzvoda.dnevnoStanjeRacuna}${analitikaIzvoda.dnevnoStanjeRacuna.id}#{/if}</td>
 		<td style = "visibility: hidden; max-width: 0px" class = "hitno?">${analitikaIzvoda.hitno}</td>
 	</tr>
+	#{/if}
 #{/list}
 </table>
 

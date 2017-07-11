@@ -2,6 +2,7 @@ package controllers;
 
 import java.util.List;
 
+import models.Banka;
 import models.Zaposleni;
 
 import org.mindrot.jbcrypt.BCrypt;
@@ -11,9 +12,7 @@ import play.mvc.Controller;
 import play.mvc.With;
 import controllers.deadbolt.Deadbolt;
 import controllers.deadbolt.Restrict;
-import controllers.deadbolt.Restrictions;
 
-@With(Deadbolt.class)
 public class Zaposlenii extends Controller{
 	
 	public Zaposlenii() {
@@ -21,7 +20,6 @@ public class Zaposlenii extends Controller{
 		// TODO Auto-generated constructor stub
 	}
 
-	@Restrict("zaposleni.view")
 	public static void show(){
 		List<Zaposleni> zaposleni = Zaposleni.findAll();
 		String mode = "";
@@ -41,21 +39,19 @@ public class Zaposlenii extends Controller{
 		render(zaposleni);
 	}
 	
-	@Restrict("zaposleni.create")
-	public static void create(@Required String korisnickoIme,@Required String lozinka) {
+	public static void create(@Required String korisnickoIme,@Required String lozinka, @Required Banka banka) {
 		if(validation.hasErrors()) {
 	          validation.keep(); 
 	          renderTemplate("Zaposlenii/show.html");
 	    }
 		String hashedPassword = BCrypt.hashpw(lozinka, BCrypt.gensalt(12));
-		Zaposleni z = new Zaposleni(korisnickoIme, hashedPassword);
+		Zaposleni z = new Zaposleni(korisnickoIme, hashedPassword, banka);
 		z.save();
 		session.put("mode", "add");
  		session.put("s", z.id);
 		show();
 	}
 	
-	@Restrict("zaposleni.view")
 	public static void filter(String korisnickoIme, String lozinka) {
 		List<Zaposleni> zaposleni = Zaposleni.find("byKorisnickoImeLike", "%"+korisnickoIme+"%").fetch();
 		session.put("mode", "search");
@@ -63,7 +59,6 @@ public class Zaposlenii extends Controller{
 		renderTemplate("Zaposlenii/show.html", zaposleni);
 	}
 	
-	@Restrict("zaposleni.remove")
 	public static void delete(Long id) {
 		Long s = null;
 		List<Zaposleni> zaposleni = Zaposleni.findAll();
