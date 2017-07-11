@@ -11,6 +11,28 @@ $(document).ready(function(){
 		$('#klijentiModal').modal('toggle');
 	});
 
+	$("#datumOdDoPickup").click(function(){
+		
+		highlighted = $(".highlighted");
+		if (highlighted.length != 0) {
+			
+			id = highlighted.find(".id").html();
+			datumOd = $('#datumOd').datepicker('getDate')
+			datumDo = $('#datumDo').datepicker('getDate')
+			
+			datOd = datumOd.getDate()+"-"+(datumOd.getMonth()+1)+"-"+datumOd.getFullYear();
+			datDo = datumDo.getDate()+"-"+(datumDo.getMonth()+1)+"-"+datumDo.getFullYear();
+			
+			$(location).attr('href', '/racuni/xmlexport?id='+id+'&datumOd='+datOd+'&datumDo='+datDo);
+
+		}		
+		$('#datumiModal').modal('toggle');
+	});
+
+	$('#datumOd').datepicker({dateFormat: "dd-mm-yy"}).val();
+	
+	$('#datumDo').datepicker({dateFormat: "dd-mm-yy"}).val();
+
 	$("#racunPickup").click(function() {
 		highlighted = $(".highlighted");
 		if (highlighted.length != 0) {
@@ -125,6 +147,7 @@ function nextZR() {
     <a class="dropdown-item" href="javascript:nextZR()" id="nextR">Zatvaranje racuna</a>
   </div>
   </li>
+  <li data-toggle="tooltip" title="Export izvoda u XML"><a href="#" id = "export" data-toggle="modal" data-target="#datumiModal"><img src="@{'/public/images/xml-export.png'}"/></a></li>
 </ul>
 </p>
 
@@ -267,6 +290,30 @@ function nextZR() {
 		</form>
 	</p>
 </div>
+
+<!-- Izvod Modal -->
+	  <div class="modal fade" id="datumiModal" role="dialog">
+	    <div class="modal-dialog">
+	      <!-- Modal content-->
+	      <div style="width: 100%; margin-left: 0%" class="modal-content">
+	      <div class="modal-header">
+	      	Period Izvoda
+	      </div>
+	      <div class="modal-body">
+	      
+    				<label for="datumOd"> Datum od:</label>
+    				<input type="text" id="datumOd" name="datumOd"/></br>    	
+    				<label for="datumOd"> Datum od:</label>
+    				<input type="text" id="datumDo" name="datumDo"/>
+
+		    
+			<div class="modal-footer">
+				<input id = "datumOdDoPickup" type = "button" value = "izbor"/>
+			</div>
+			</div>
+	      </div>
+	    </div>
+	   </div>
 
 <!-- Ukidanje Modal -->
 	  <div class="modal fade" id="ukidanjeModal" role="dialog">

@@ -2,10 +2,18 @@ package controllers;
 
 import java.io.IOException;
 import java.security.NoSuchProviderException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+
+import marshallers.IzvodMarshaller;
 import models.Banka;
+import models.DnevnoStanjeRacuna;
 import models.Klijent;
 import models.Racun;
 import models.Valuta;
@@ -403,6 +411,20 @@ public static RacunD decryptRacuna (Long id, byte[] brojRacuna, byte[] statusRac
 		}
 		
 		
+	}
+	
+	public static void xmlexport(Long id, String datumOd, String datumDo) throws ParseException, ParserConfigurationException, TransformerException {		
+		Date dOd = new SimpleDateFormat("dd-MM-yyyy").parse(datumOd);
+		//System.out.println(datumOd);
+		//System.out.println(dOd.toString());
+		Date dDo = new SimpleDateFormat("dd-MM-yyyy").parse(datumDo);
+		//System.out.println(datumDo);
+		//System.out.println(dDo.toString());
+		Racun racun = Racun.findById(id);
+		List<DnevnoStanjeRacuna> dsrList = DnevnoStanjeRacuna.find("byRacun", racun).fetch();
+		//System.out.println(dsrList.size());
+		IzvodMarshaller.createXml(dsrList, racun, dOd, dDo);
+		show();
 	}
 
 }

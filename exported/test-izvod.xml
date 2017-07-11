@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<izvod_za_period datum-do="29-07-2017" datum-od="14-12-2015">
+  <zaglavlje>
+    <sifra_banke>160</sifra_banke>
+    <broj_racuna>160000000040396308</broj_racuna>
+    <klijent>ISP Gard Net</klijent>
+    <prethodno_stanje_za_period>80000</prethodno_stanje_za_period>
+    <u_korist_ukupno>210050</u_korist_ukupno>
+    <na_teret_ukupno>0</na_teret_ukupno>
+    <novo_stanje_za_period>109950</novo_stanje_za_period>
+  </zaglavlje>
+  <dnevna_stanja>
+    <promet_na_dan datum="05-07-2017">
+      <prethodno_stanje>80000</prethodno_stanje>
+      <promet_u_korist>20000</promet_u_korist>
+      <promet_na_teret>0</promet_na_teret>
+      <novo_stanje>100000</novo_stanje>
+      <analitike_izvoda/>
+    </promet_na_dan>
+    <promet_na_dan datum="06-07-2017">
+      <prethodno_stanje>100000</prethodno_stanje>
+      <promet_u_korist>10000</promet_u_korist>
+      <promet_na_teret>30000</promet_na_teret>
+      <novo_stanje>80000</novo_stanje>
+      <analitike_izvoda/>
+    </promet_na_dan>
+    <promet_na_dan datum="07-07-2017">
+      <prethodno_stanje>80000</prethodno_stanje>
+      <promet_u_korist>20000</promet_u_korist>
+      <promet_na_teret>50000</promet_na_teret>
+      <novo_stanje>50000</novo_stanje>
+      <analitike_izvoda/>
+    </promet_na_dan>
+    <promet_na_dan datum="09-07-2017">
+      <prethodno_stanje>50000</prethodno_stanje>
+      <promet_u_korist>70000</promet_u_korist>
+      <promet_na_teret>10050</promet_na_teret>
+      <novo_stanje>109950</novo_stanje>
+      <analitike_izvoda>
+        <nalog id="4">
+          <duznik_nalogodavac>Ja</duznik_nalogodavac>
+          <svrha_placanja>hfdihf</svrha_placanja>
+          <primalac_poverilac>Jajajaja</primalac_poverilac>
+          <datum_naloga>2017-07-09 00:00:00.0</datum_naloga>
+          <racun_duznika>160000000040396308</racun_duznika>
+          <model_zaduzenja>50</model_zaduzenja>
+          <poziv_na_broj_zaduzenja>50</poziv_na_broj_zaduzenja>
+          <racun_poverioca>160000000037389405</racun_poverioca>
+          <model_odobrenja>50</model_odobrenja>
+          <poziv_na_broj_odobrenja>50</poziv_na_broj_odobrenja>
+          <iznos>25</iznos>
+        </nalog>
+      </analitike_izvoda>
+    </promet_na_dan>
+  </dnevna_stanja>
+</izvod_za_period>
