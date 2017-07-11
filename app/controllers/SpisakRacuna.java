@@ -22,7 +22,7 @@ public class SpisakRacuna extends Controller{
 		render(banke);
 	}
 	
-	/*public static void getReport(Long banka, Date datum){
+	public static void getReport(Long banka, Date datum){
 		Map reportParams = new HashMap(2);
 		reportParams.put("id_Banke", banka);
 		reportParams.put("datum", datum);
@@ -30,6 +30,6 @@ public class SpisakRacuna extends Controller{
 		Calendar cal = Calendar.getInstance();
 	    cal.setTime(datum);
 	    renderBinary(reports.BaseJasperReport.generateReport("SpisakRacuna", reportParams), "SpisakRacuna_" + cal.get(Calendar.DAY_OF_MONTH) + "." + (cal.get(Calendar.MONTH)+1) + ".pdf");
-	}*/
+	}
 	
 }
